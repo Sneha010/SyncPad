@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#00796B</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="lightPrimaryColor">#B2DFDB</color>
+    <color name="textPrimaryColor">#FFFFFF</color>
+    <color name="primaryTextColor">#212121</color>
+    <color name="secondaryTextColor">#727272</color>
+    <color name="dividerColor">#B6B6B6</color>
+    <color name="rippleAccentColor">#D81B60</color>
+    <color name="ripplePrimaryColor">#00897B</color>
+
+    <color name="black">#000000</color>
+    <color name="trans_black">#cc353535</color>
+    <color name="white">#FFFFFF</color>
+    <array name="progress_colors">
+        <item>#00796B</item>
+        <item>#009688</item>
+        <item>#6ecc69</item>
+    </array>
+</resources>
