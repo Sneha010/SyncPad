@@ -24,4 +24,5 @@ dependencies {
     compile "com.android.support:design:${SUPPORT_LIBRARY_VERSION}"
 
     compile 'com.github.rey5137:material:1.2.4'
+    compile 'com.android.support:support-v4:24.2.1'
 }
