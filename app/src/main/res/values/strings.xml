@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">SyncPad</string>
 
+    <!--Landing buttons-->
     <string name="meeting_center_button1">Start a \nnew Meeting</string>
     <string name="meeting_center_button2">Join a \nMeeting</string>
+
+    <!--For uploading profile picture of an user-->
+    <string name="gallery">Galley</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="select_action">Select Action</string>
+    <string name="select_pic">Select Picture</string>
+    <string name="no_storage">No storage found.</string>
+    <string name="me_please_click_image">Please click a photo.</string>
+    <string name="me_please_select_image">Please select a photo.</string>
 </resources>

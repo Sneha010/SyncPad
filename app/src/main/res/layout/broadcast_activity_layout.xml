@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:local="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        local:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        local:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        />
+    <TextView
+        android:id="@+id/startMeetingText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Meeting"
+        android:drawableLeft="@drawable/start_btn"
+        android:drawablePadding="5dp"
+        android:textSize="15sp"
+        android:textColor="@color/colorPrimary"
+        android:gravity="center_vertical"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp"
+        android:layout_below="@id/toolbar"
+        />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/chatParticipantListView"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_below="@id/startMeetingText"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_above="@+id/ll_writeNotes"
+        app:stackFromEnd="true"
+        app:reverseLayout="true"
+        />
+
+    <LinearLayout
+        android:id="@+id/ll_writeNotes"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/edtMeetingNotes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="5dp"
+            android:hint="Add your notes here.."
+            android:textSize="18sp"
+            android:layout_below="@id/add_name_text"
+            android:textColor="@android:color/black"
+            android:lines="2"
+            android:background="@color/lightPrimaryColor"
+            android:padding="5dp"
+            android:textColorHint="@color/secondaryTextColor" />
+
+        <ImageView
+            android:id="@+id/send_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/send_button"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"/>
+
+        </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_ParticipantsAttendance"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/white"
+        android:visibility="gone">
+
+        <include layout="@layout/participants_attendance_layout"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
