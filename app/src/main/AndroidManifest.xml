@@ -16,10 +16,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ActiveMeetingActivity" >
+        <activity android:name=".ActiveMeetingActivity"
+            android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name=".MyProfileActivity" >
+        <activity android:name=".MyProfileActivity"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

@@ -23,17 +23,13 @@ import android.widget.Toast;
 
 import com.nearby.syncpad.storedata.ProfileStore;
 import com.nearby.syncpad.util.GeneralUtils;
+import com.rey.material.widget.Button;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 
 
 public class MyProfileActivity extends AppCompatActivity {
@@ -45,6 +41,8 @@ public class MyProfileActivity extends AppCompatActivity {
     TextInputLayout myNameTIL;
     TextInputLayout myRoleTIL;
     TextInputLayout myEmailTIL;
+    Button btnSave;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +68,22 @@ public class MyProfileActivity extends AppCompatActivity {
         myNameTIL = (TextInputLayout) findViewById(R.id.myNameTIL);
         myRoleTIL = (TextInputLayout) findViewById(R.id.myRoleTIL);
         myEmailTIL = (TextInputLayout) findViewById(R.id.myEmailTIL);
+        btnSave = (Button) findViewById(R.id.buttonSave);
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveProfileData();
+                finish();
+            }
+        });
+
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCameraAndSavePhoto(v);
+            }
+        });
     }
 
     //To show the earlier saved data filled in the form fields
@@ -85,7 +99,6 @@ public class MyProfileActivity extends AppCompatActivity {
 
 
     //Click on save button on profile
-    @OnClick(R.id.buttonSave)
     public void saveProfileData() {
 
         if (TextUtils.isEmpty(myName.getText().toString())) {
@@ -119,7 +132,6 @@ public class MyProfileActivity extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.profileImage)
     public void openCameraAndSavePhoto(View v) {
 
         uploadPhoto(v);
