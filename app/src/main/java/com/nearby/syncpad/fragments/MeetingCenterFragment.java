@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,7 +62,7 @@ public class MeetingCenterFragment extends BaseFragment implements View.OnClickL
                 break;
 
             case R.id.btnJoinMeeting:
-
+                scanNearbyMeetings();
                 break;
         }
     }
@@ -155,7 +156,10 @@ public class MeetingCenterFragment extends BaseFragment implements View.OnClickL
         dialog.setCanceledOnTouchOutside(true);
     }
 
-
+    private void scanNearbyMeetings(){
+        ScanMeetingsDialogFragment dFragment = ScanMeetingsDialogFragment.newInstance("Select the meeting");
+        dFragment.show(getActivity().getSupportFragmentManager(), "Dialog Fragment");
+    }
 
     @NonNull
     @Override
