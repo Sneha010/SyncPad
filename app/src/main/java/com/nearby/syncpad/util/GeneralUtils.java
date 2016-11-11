@@ -120,7 +120,7 @@ public class GeneralUtils {
 
         TextView toastMessage = (TextView) toastView.findViewById(android.R.id.message);
         toastMessage.setTextSize(17);
-        toastMessage.setPadding(35,10,35,10);
+        toastMessage.setPadding(40,10,40,10);
         toastMessage.setTextColor(ContextCompat.getColor(context , R.color.white));
         toastMessage.setGravity(Gravity.CENTER);
         toastView.setBackground(ContextCompat.getDrawable(context , R.drawable.toast_bg));

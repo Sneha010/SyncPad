@@ -85,25 +85,12 @@ public class ActiveMeetingActivity extends AppCompatActivity
     private MessageListener mMessageListener;
 
     /**
-     * Sets the time in seconds for a published message or a subscription to live. Set to three
+     * Sets the time in seconds for a published message or a subscription to live. Set to five
      * minutes.
      */
     private static final Strategy PUB_SUB_STRATEGY = new Strategy.Builder()
             .setTtlSeconds(Constants.TTL_IN_SECONDS)
             .setDistanceType(Strategy.DISTANCE_TYPE_EARSHOT).build();
-
-
-
-
-
-    /**
-     * Tracks if we are currently resolving an error related to Nearby permissions. Used to avoid
-     * duplicate Nearby permission dialogs if the user initiates both subscription and publication
-     * actions without having opted into Nearby.
-     */
-
-
-
 
 
     @Override
@@ -155,10 +142,11 @@ public class ActiveMeetingActivity extends AppCompatActivity
     public void setUpUI(){
 
 
-        if (ProfileStore.getImagePath(this) != null) {
+      /*  TODO Profile picture
+      if (ProfileStore.getImagePath(this) != null) {
             new UpdatePicTask().execute(ProfileStore.getImagePath(this), "");
         }
-
+*/
         setUpRecyclerView();
         setMessageListener();
         addParticipantListFragment();
@@ -189,7 +177,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
         participant.setEmailAddress(ProfileStore.getEmailAddress(this));
         participant.setAttendance("present");
 
-        if(uploadBitmap != null){
+      /*  TODO Profile picture
+      if(uploadBitmap != null){
             participant.setImageBytes(
                     GeneralUtils.getProfileImageBytes(this, uploadBitmap));
         }else{
@@ -197,7 +186,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
                     R.drawable.default_user);
             participant.setImageBytes(
                     GeneralUtils.getProfileImageBytes(this, uploadBitmap));
-        }
+        }*/
 
         if (participantListFragment.isAdded()) {
 
@@ -206,10 +195,13 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
         mProfileInformation = participant.newNearbyMessage();
 
-       buildGoogleApiClient();
+
     }
 
     private void buildGoogleApiClient() {
+
+        Log.d(TAG, "buildGoogleApiClient: Trying to connect to nearby");
+
         if (mGoogleApiClient != null) {
             return;
         }
@@ -227,16 +219,19 @@ public class ActiveMeetingActivity extends AppCompatActivity
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "onConnected called");
 
-        //executePendingTasks();
 
+        startMeeting();
+        //executePendingTasks();
     }
 
     @Override
     public void onConnectionSuspended(int cause) {
         Log.i(TAG, "GoogleApiClient connection suspended: "
                 + connectionSuspendedCauseToString(cause));
+        GeneralUtils.displayCustomToast(ActiveMeetingActivity.this ,
+                getString(R.string.nearby_connection_error));
+        stopMeeting();
     }
-
 
     private static String connectionSuspendedCauseToString(int cause) {
         switch (cause) {
@@ -254,26 +249,39 @@ public class ActiveMeetingActivity extends AppCompatActivity
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.i(TAG, "connection to GoogleApiClient failed");
 
+        GeneralUtils.displayCustomToast(ActiveMeetingActivity.this ,
+                getString(R.string.nearby_connection_error));
+
+        stopMeeting();
+
     }
 
     private void startMeeting(){
-        GeneralUtils.displayCustomToast(ActiveMeetingActivity.this , "Meeting Started");
-        startMeetingText.setText("Stop Meeting");
-        startMeetingText.setCompoundDrawablesWithIntrinsicBounds(
-                ContextCompat.getDrawable(ActiveMeetingActivity.this , R.drawable.stop_btn), null, null, null);
-        startMeetingText.setCompoundDrawablePadding(5);
-        isMeetingStarted = false;
-        startNearByAPI();
+        if(mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+
+            GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, "Meeting Started");
+            startMeetingText.setText("Stop Meeting");
+            startMeetingText.setCompoundDrawablesWithIntrinsicBounds(
+                    ContextCompat.getDrawable(ActiveMeetingActivity.this, R.drawable.stop_btn), null, null, null);
+            startMeetingText.setCompoundDrawablePadding(5);
+            isMeetingStarted = true;
+            startNearByAPI();
+        }
+        else{
+            buildGoogleApiClient();
+        }
     }
 
     private void stopMeeting(){
+
         GeneralUtils.displayCustomToast(ActiveMeetingActivity.this , "Meeting Stopped");
         startMeetingText.setText("Start Meeting");
         startMeetingText.setCompoundDrawablesWithIntrinsicBounds(
                 ContextCompat.getDrawable(ActiveMeetingActivity.this , R.drawable.start_btn), null, null, null);
         startMeetingText.setCompoundDrawablePadding(5);
-        isMeetingStarted = true;
+        isMeetingStarted = false;
         stopNearByAPI();
+
     }
 
 
@@ -364,7 +372,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
             participant.setMeetingNotes(edtMeetingNotes.getText().toString());
             participant.setToWhom("to_Me");
 
-            if(uploadBitmap != null){
+           /* TODO Profile picture
+           if(uploadBitmap != null){
                 participant.setImageBytes(
                         GeneralUtils.getProfileImageBytes(this, uploadBitmap));
             }else{
@@ -373,7 +382,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
                 participant.setImageBytes(
                         GeneralUtils.getProfileImageBytes(this, uploadBitmap));
             }
-
+*/
 
             myNotes = participant.newNearbyMessage();
 
@@ -405,11 +414,14 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
         Log.i(TAG, "stopNearByAPI called");
 
-        unsubscribe();
-        if(myNotes!=null)
-            unpublish_MyNotes();
-        if(mProfileInformation != null)
-            unpublish_MyProfile();
+        if(mGoogleApiClient !=null && mGoogleApiClient.isConnected()){
+            unsubscribe();
+            if(myNotes!=null)
+                unpublish_MyNotes();
+            if(mProfileInformation != null)
+                unpublish_MyProfile();
+        }
+
     }
 
 
@@ -504,6 +516,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
         String pendingPublicationTask = getPubSubTask(Constants.KEY_PUBLICATION_TASK);
         if (TextUtils.equals(pendingPublicationTask, Constants.TASK_PUBLISH)) {
             if(mProfileInformation!=null)
+                Log.d(TAG, "executePendingPublicationTask: My Profile publishing");
                 publish_MyProfile();
             if(myNotes!=null)
                 publish_MyNotes();
@@ -601,7 +614,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
         Log.i(TAG, "publish called");
         // Cannot proceed without a connected GoogleApiClient. Reconnect and execute the pending
         // task in onConnected().
-        if (!mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient == null || (mGoogleApiClient != null && !mGoogleApiClient.isConnected())) {
             if (!mGoogleApiClient.isConnecting()) {
                 mGoogleApiClient.connect();
             }
@@ -624,7 +637,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
                         @Override
                         public void onResult(Status status) {
                             if (status.isSuccess()) {
-                                Log.i(TAG, "published successfully");
+                                Log.i(TAG, "Profile published successfully");
                             } else {
                                 Log.i(TAG, "could not publish");
                                 handleUnsuccessfulNearbyResult(status);
@@ -749,14 +762,11 @@ public class ActiveMeetingActivity extends AppCompatActivity
             }
         } else {
             if (status.getStatusCode() == ConnectionResult.NETWORK_ERROR) {
-                Toast.makeText(this,
-                        "No connectivity, cannot proceed. Fix in 'Settings' and try again.",
-                        Toast.LENGTH_LONG).show();
+                GeneralUtils.displayCustomToast(ActiveMeetingActivity.this , getString(R.string.no_internet_connectivity));
                 resetToDefaultState();
             } else {
                 // To keep things simple, pop a toast for all other error messages.
-                Toast.makeText(this, "Unsuccessful: " +
-                        status.getStatusMessage(), Toast.LENGTH_LONG).show();
+                GeneralUtils.displayCustomToast(ActiveMeetingActivity.this , getString(R.string.unsuccessful)+ " "+status.getStatusMessage());
             }
 
         }

@@ -7,7 +7,7 @@ public class Constants {
     public static final int REQUEST_RESOLVE_ERROR = 1001;
 
     // The time-to-live when subscribing or publishing in this sample. Three minutes.
-    public static final int TTL_IN_SECONDS = 3 * 60;
+    public static final int TTL_IN_SECONDS = 5 * 60;
 
     // Keys to get and set the current subscription and publication tasks using SharedPreferences.
     public static final String KEY_SUBSCRIPTION_TASK = "subscription_task";
