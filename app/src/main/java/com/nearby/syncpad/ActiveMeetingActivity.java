@@ -69,6 +69,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
     private Message mProfileInformation , myNotes;
     private String meeting_name = "";
+    private boolean mIsHost;
     private ImageView btnSend , ivImgCross;
     private boolean mResolvingNearbyPermissionError = false;
     private String mProfileImageBytes;
@@ -99,7 +100,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
         setContentView(R.layout.broadcast_activity_layout);
 
         if(getIntent()!=null){
-            meeting_name = getIntent().getStringExtra("meeting_name");
+            meeting_name = getIntent().getStringExtra(Constants.MEETING_NAME);
+            mIsHost = getIntent().getBooleanExtra(Constants.IS_HOST , false);
         }
 
         init();
@@ -175,6 +177,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
         participant.setRole(ProfileStore.getUserRole(this));
         participant.setEmailAddress(ProfileStore.getEmailAddress(this));
         participant.setAttendance("present");
+        participant.setmIsHost(mIsHost);
+        participant.setmMeetingTitle(meeting_name);
 
       /*  TODO Profile picture
       if(uploadBitmap != null){
@@ -827,18 +831,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
-        /*if (mGoogleApiClient.isConnected() && ! isChangingConfigurations()) {
-            // Using Nearby is battery intensive. To preserve battery, stop subscribing or
-            // publishing when the fragment is inactive.
-            unsubscribe();
-            unpublish();
-            updateSharedPreference(Constants.KEY_SUBSCRIPTION_TASK, Constants.TASK_NONE);
-            updateSharedPreference(Constants.KEY_PUBLICATION_TASK, Constants.TASK_NONE);
 
-            mGoogleApiClient.disconnect();
-            getPreferences(Context.MODE_PRIVATE)
-                    .unregisterOnSharedPreferenceChangeListener(this);
-        }*/
         super.onStop();
     }
 

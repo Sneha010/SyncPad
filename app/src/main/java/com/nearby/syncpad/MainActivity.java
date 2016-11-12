@@ -20,11 +20,13 @@ import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.nearby.syncpad.callbacks.DismissScanDialogListener;
 import com.nearby.syncpad.fragments.ScanMeetingsDialogFragment;
 import com.nearby.syncpad.models.Meeting;
+import com.nearby.syncpad.util.Constants;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DismissScanDialogListener{
 
     private LinearLayout llNoMeetingsAdded;
     private FloatingActionMenu floatingActionMenu;
@@ -147,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     Intent i = new Intent(MainActivity.this , ActiveMeetingActivity.class);
-                    i.putExtra("meeting_name" ,edtName.getText().toString());
+                    i.putExtra(Constants.MEETING_NAME, edtName.getText().toString());
+                    i.putExtra(Constants.IS_HOST , true);
                     startActivity(i);
                     dialog.dismiss();
                 }
@@ -186,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(false);
     }
 
+    ScanMeetingsDialogFragment dFragment;
     private void scanNearbyMeetings(){
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -195,8 +199,15 @@ public class MainActivity extends AppCompatActivity {
         }
         ft.addToBackStack(null);
 
-        ScanMeetingsDialogFragment dFragment = ScanMeetingsDialogFragment.newInstance("Select the meeting");
+        dFragment = ScanMeetingsDialogFragment.newInstance("Select the meeting");
         dFragment.show(ft , "dialog");
+
     }
 
+    @Override
+    public void dismissDialog() {
+        if(dFragment!=null){
+            dFragment.dismiss();
+        }
+    }
 }

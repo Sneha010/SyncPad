@@ -23,4 +23,5 @@
     <string name="no_internet_connectivity">No internet connectivity</string>
     <string name="unsuccessful">Unsuccessful:</string>
     <string name="no_active_meetings">No Active meeting found</string>
+    <string name="unable_to_subscribe">Unable to subscribe</string>
 </resources>

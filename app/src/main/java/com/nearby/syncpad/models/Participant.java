@@ -23,9 +23,19 @@ public class Participant {
     private String meetingNotes;
     private String toWhom;
     private String attendance;
+    private boolean mIsHost;
+    private String mMeetingTitle;
 
 
     private static final Gson gson = new Gson();
+
+    public String getmMeetingTitle() {
+        return mMeetingTitle;
+    }
+
+    public void setmMeetingTitle(String mMeetingTitle) {
+        this.mMeetingTitle = mMeetingTitle;
+    }
 
     public String getAttendance() {
         return attendance;
@@ -117,5 +127,14 @@ public class Participant {
 
     public void setImageBytes(String imageBytes) {
         this.imageBytes = imageBytes;
+    }
+
+
+    public boolean ismIsHost() {
+        return mIsHost;
+    }
+
+    public void setmIsHost(boolean mIsHost) {
+        this.mIsHost = mIsHost;
     }
 }

@@ -19,4 +19,8 @@ public class Constants {
     public static final String TASK_PUBLISH = "task_publish";
     public static final String TASK_UNPUBLISH = "task_unpublish";
     public static final String TASK_NONE = "task_none";
+
+    public static final String MEETING_NAME = "meeting_name";
+    public static final String IS_HOST = "is_host";
+
 }
