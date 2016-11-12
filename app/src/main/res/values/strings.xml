@@ -14,9 +14,13 @@
     <string name="me_please_click_image">Please click a photo.</string>
     <string name="me_please_select_image">Please select a photo.</string>
 
+    <string name="select_meeting">Select a meeting</string>
+
+    <!--Error Messages-->
     <string name="no_meeting_line1">No meetings have been added.</string>
     <string name="no_meeting_line2">Add new meeting</string>
     <string name="nearby_connection_error">Could not connect to nearby devices,\nPlease try again later!</string>
     <string name="no_internet_connectivity">No internet connectivity</string>
     <string name="unsuccessful">Unsuccessful:</string>
+    <string name="no_active_meetings">No Active meeting found</string>
 </resources>

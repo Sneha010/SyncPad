@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.nearby.syncpad.fragments.ScanMeetingsDialogFragment;
 import com.nearby.syncpad.models.Meeting;
 
 
@@ -180,21 +183,20 @@ public class MainActivity extends AppCompatActivity {
 
                                 / 7,
                         WindowManager.LayoutParams.WRAP_CONTENT);
-        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCanceledOnTouchOutside(false);
     }
 
     private void scanNearbyMeetings(){
 
-//        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-//        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
-//        if (prev != null) {
-//            ft.remove(prev);
-//        }
-//        ft.addToBackStack(null);
-//
-//        ScanMeetingsDialogFragment dFragment = ScanMeetingsDialogFragment.newInstance("Select the meeting");
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
 
-
+        ScanMeetingsDialogFragment dFragment = ScanMeetingsDialogFragment.newInstance("Select the meeting");
+        dFragment.show(ft , "dialog");
     }
 
 }

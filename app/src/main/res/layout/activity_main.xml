@@ -108,7 +108,7 @@
             android:id="@+id/menu_item1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/app_icon"
+            android:src="@drawable/start_btn"
             fab:fab_size="mini"
             fab:fab_label="@string/fab_button1" />
 
@@ -116,7 +116,7 @@
             android:id="@+id/menu_item2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/app_icon"
+            android:src="@drawable/add_icon"
             fab:fab_size="mini"
             fab:fab_label="@string/fab_button2" />
 

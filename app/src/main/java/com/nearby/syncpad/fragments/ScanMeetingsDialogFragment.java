@@ -1,11 +1,14 @@
 package com.nearby.syncpad.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.nearby.syncpad.R;
 
@@ -14,11 +17,14 @@ import com.nearby.syncpad.R;
  * on 11/11/2016.
  */
 
-public class ScanMeetingsDialogFragment extends Fragment {
+public class ScanMeetingsDialogFragment extends AppCompatDialogFragment {
 
     public static final String DIALOG_TITLE = "dialog_title";
 
-    static ScanMeetingsDialogFragment newInstance(String title) {
+    private RelativeLayout mRlProgress;
+    private TextView mNoActiveMeetingText;
+
+    static public ScanMeetingsDialogFragment newInstance(String title) {
         ScanMeetingsDialogFragment f = new ScanMeetingsDialogFragment();
         Bundle args = new Bundle();
         args.putString(DIALOG_TITLE, title);
@@ -38,7 +44,26 @@ public class ScanMeetingsDialogFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.scan_meeting_dialog_layout, container,
                 false);
-        //setStyle(STYLE_NORMAL , android.R.style.Theme_Material_Dialog);
+
+        initialise(rootView);
+        performTask();
         return rootView;
+    }
+
+    private void initialise(View _view) {
+
+        mRlProgress = (RelativeLayout) _view.findViewById(R.id.rl_progress);
+        mNoActiveMeetingText = (TextView) _view.findViewById(R.id.tvNoActiveMeeting);
+    }
+
+    private void performTask() {
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mRlProgress.setVisibility(View.GONE);
+                mNoActiveMeetingText.setVisibility(View.VISIBLE);
+            }
+        },1000);
     }
 }
