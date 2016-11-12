@@ -42,9 +42,9 @@ public class AvailableMeetingListAdapter extends RecyclerView.Adapter<AvailableM
     @Override
     public void onBindViewHolder(final ViewHolder holder,final int position) {
 
-        if(meetingList.get(position).ismIsHost()) {
+        if(meetingList.get(position).isIsHost()) {
 
-            holder.tvMeetingTitle.setText(meetingList.get(position).getmMeetingTitle());
+            holder.tvMeetingTitle.setText(meetingList.get(position).getMeeting().getMeetingName());
 
             if(!meetingList.get(position).getName().isEmpty()){
                 holder.tvMeetingInitiatedBy.setVisibility(View.VISIBLE);
@@ -58,7 +58,7 @@ public class AvailableMeetingListAdapter extends RecyclerView.Adapter<AvailableM
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(context, ActiveMeetingActivity.class);
-                    i.putExtra(Constants.MEETING_NAME, meetingList.get(position).getmMeetingTitle());
+                    i.putExtra(Constants.MEETING, meetingList.get(position).getMeeting());
                     i.putExtra(Constants.IS_HOST , false);
                     context.startActivity(i);
                     if(context instanceof DismissScanDialogListener){

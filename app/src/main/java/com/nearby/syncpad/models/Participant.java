@@ -24,18 +24,19 @@ public class Participant {
     private String toWhom;
     private String attendance;
     private boolean mIsHost;
-    private String mMeetingTitle;
 
+    private Meeting mMeeting;
+
+    public Meeting getMeeting() {
+        return mMeeting;
+    }
+
+    public void setMeeting(Meeting mMeeting) {
+        this.mMeeting = mMeeting;
+    }
 
     private static final Gson gson = new Gson();
 
-    public String getmMeetingTitle() {
-        return mMeetingTitle;
-    }
-
-    public void setmMeetingTitle(String mMeetingTitle) {
-        this.mMeetingTitle = mMeetingTitle;
-    }
 
     public String getAttendance() {
         return attendance;
@@ -130,11 +131,11 @@ public class Participant {
     }
 
 
-    public boolean ismIsHost() {
+    public boolean isIsHost() {
         return mIsHost;
     }
 
-    public void setmIsHost(boolean mIsHost) {
+    public void setIsHost(boolean mIsHost) {
         this.mIsHost = mIsHost;
     }
 }

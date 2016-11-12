@@ -3,6 +3,7 @@ package com.nearby.syncpad;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,8 +44,11 @@ import com.google.android.gms.nearby.messages.PublishOptions;
 import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
+import com.google.gson.Gson;
 import com.nearby.syncpad.adapter.ParticipantListItemAdapter;
 import com.nearby.syncpad.fragments.ParticipantsFragment;
+import com.nearby.syncpad.models.Meeting;
+import com.nearby.syncpad.models.MeetingNote;
 import com.nearby.syncpad.models.Participant;
 import com.nearby.syncpad.storedata.ProfileStore;
 import com.nearby.syncpad.util.Constants;
@@ -68,8 +73,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
     private boolean isMeetingStarted;
     private GoogleApiClient mGoogleApiClient;
     private Message mProfileInformation , myNotes;
-    private String meeting_name = "";
     private boolean mIsHost;
+    private Meeting mCurrentMeeting;
     private ImageView btnSend , ivImgCross;
     private boolean mResolvingNearbyPermissionError = false;
     private String mProfileImageBytes;
@@ -78,6 +83,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
     RelativeLayout rl_ParticipantsAttendanceSlidingView;
     Animation animationIn;
     private ParticipantsFragment participantListFragment;
+    private ArrayList<MeetingNote> noteList = new ArrayList<>();
+    private ArrayList<String> participantNameList = new ArrayList<>();
 
     /**
      * A {@link MessageListener} for processing messages from nearby devices.
@@ -100,7 +107,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
         setContentView(R.layout.broadcast_activity_layout);
 
         if(getIntent()!=null){
-            meeting_name = getIntent().getStringExtra(Constants.MEETING_NAME);
+            mCurrentMeeting = getIntent().getExtras().getParcelable(Constants.MEETING);
             mIsHost = getIntent().getBooleanExtra(Constants.IS_HOST , false);
         }
 
@@ -113,7 +120,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(meeting_name);
+        getSupportActionBar().setTitle(mCurrentMeeting.getMeetingName());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -177,8 +184,10 @@ public class ActiveMeetingActivity extends AppCompatActivity
         participant.setRole(ProfileStore.getUserRole(this));
         participant.setEmailAddress(ProfileStore.getEmailAddress(this));
         participant.setAttendance("present");
-        participant.setmIsHost(mIsHost);
-        participant.setmMeetingTitle(meeting_name);
+        participant.setIsHost(mIsHost);
+        participant.setMeeting(mCurrentMeeting);
+
+        participantNameList.add(participant.getName());
 
       /*  TODO Profile picture
       if(uploadBitmap != null){
@@ -277,16 +286,41 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
     private void stopMeeting(){
 
-        GeneralUtils.displayCustomToast(ActiveMeetingActivity.this , "Meeting Stopped");
-        startMeetingText.setText("Start Meeting");
-        startMeetingText.setCompoundDrawablesWithIntrinsicBounds(
-                ContextCompat.getDrawable(ActiveMeetingActivity.this , R.drawable.start_btn), null, null, null);
-        startMeetingText.setCompoundDrawablePadding(5);
-        isMeetingStarted = false;
-        stopNearByAPI();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.confirm_end_meeting)).setPositiveButton(getString(R.string.yes), dialogClickListener)
+                .setNegativeButton(getString(R.string.no), dialogClickListener).show();
 
     }
 
+    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    GeneralUtils.displayCustomToast(ActiveMeetingActivity.this , "Meeting Stopped");
+                    startMeetingText.setText("Start Meeting");
+                    startMeetingText.setCompoundDrawablesWithIntrinsicBounds(
+                            ContextCompat.getDrawable(ActiveMeetingActivity.this , R.drawable.start_btn), null, null, null);
+                    startMeetingText.setCompoundDrawablePadding(5);
+                    isMeetingStarted = false;
+                    generateMeetingMOM();
+                    stopNearByAPI();
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    dialog.dismiss();
+                    break;
+            }
+        }
+    };
+
+    private void generateMeetingMOM(){
+        mCurrentMeeting.setNotesList(noteList);
+        mCurrentMeeting.setParticipantNameList(participantNameList);
+
+        Gson gson = new Gson();
+        String meetingJSONString = gson.toJson(mCurrentMeeting);
+    }
 
     public void setMessageListener(){
         mMessageListener = new MessageListener() {
@@ -307,8 +341,10 @@ public class ActiveMeetingActivity extends AppCompatActivity
                         if (participantListFragment.isAdded() && (participant.getAttendance()!=null && participant.getAttendance().equals("present"))) {
                             Log.i(TAG, "participant addded");
                             participantListFragment.addParticipant(participant);
+                            participantNameList.add(participant.getName());
                         }
                         else{
+                            noteList.add(new MeetingNote(participant.getMeetingNotes(), participant.getName()));
                             adapter.updateList(participant);
                         }
 
@@ -373,6 +409,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
             Participant participant = new Participant();
             participant.setName(ProfileStore.getUserName(this));
             participant.setMeetingNotes(edtMeetingNotes.getText().toString());
+            noteList.add(new MeetingNote(edtMeetingNotes.getText().toString(),ProfileStore.getUserName(this)));
             participant.setToWhom("to_Me");
 
            /* TODO Profile picture
@@ -395,6 +432,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
             publish_MyNotes();
         }
     }
+
 
     private void startNearByAPI() {
         //Add code to start publishing

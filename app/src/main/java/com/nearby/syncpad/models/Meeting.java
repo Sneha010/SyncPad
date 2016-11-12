@@ -1,18 +1,60 @@
 package com.nearby.syncpad.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 
-public class Meeting {
+public class Meeting implements Parcelable {
 
     private String meetingName;
     private String meetingDate;
     private String meetingTime;
     private String meetingVenue;
     private String meetingAgenda;
-    private String meetingSummary;
+    private ArrayList<String> participantNameList = new ArrayList<>();
+    private ArrayList<MeetingNote> notesList = new ArrayList<MeetingNote>();
 
-    private ArrayList<Participant> noOfParticipants;
+    public Meeting(Parcel in) {
+        meetingName = in.readString();
+        meetingDate = in.readString();
+        meetingTime = in.readString();
+        meetingVenue = in.readString();
+        meetingAgenda = in.readString();
+    }
+
+    public static final Creator<Meeting> CREATOR = new Creator<Meeting>() {
+        @Override
+        public Meeting createFromParcel(Parcel in) {
+            return new Meeting(in);
+        }
+
+        @Override
+        public Meeting[] newArray(int size) {
+            return new Meeting[size];
+        }
+    };
+
+    public Meeting() {
+
+    }
+
+    public ArrayList<MeetingNote> getNotesList() {
+        return notesList;
+    }
+
+    public void setNotesList(ArrayList<MeetingNote> notesList) {
+        this.notesList = notesList;
+    }
+
+    public ArrayList<String> getParticipantNameList() {
+        return participantNameList;
+    }
+
+    public void setParticipantNameList(ArrayList<String> participantNameList) {
+        this.participantNameList = participantNameList;
+    }
 
     public String getMeetingName() {
         return meetingName;
@@ -54,19 +96,20 @@ public class Meeting {
         this.meetingAgenda = meetingAgenda;
     }
 
-    public String getMeetingSummary() {
-        return meetingSummary;
+
+
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setMeetingSummary(String meetingSummary) {
-        this.meetingSummary = meetingSummary;
-    }
-
-    public ArrayList<Participant> getNoOfParticipants() {
-        return noOfParticipants;
-    }
-
-    public void setNoOfParticipants(ArrayList<Participant> noOfParticipants) {
-        this.noOfParticipants = noOfParticipants;
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(meetingName);
+        parcel.writeString(meetingDate);
+        parcel.writeString(meetingTime);
+        parcel.writeString(meetingVenue);
+        parcel.writeString(meetingAgenda);
     }
 }

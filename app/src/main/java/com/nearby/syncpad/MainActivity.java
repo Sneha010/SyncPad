@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
                     }
 
                     Intent i = new Intent(MainActivity.this , ActiveMeetingActivity.class);
-                    i.putExtra(Constants.MEETING_NAME, edtName.getText().toString());
+                    i.putExtra(Constants.MEETING, meetingBean);
                     i.putExtra(Constants.IS_HOST , true);
                     startActivity(i);
                     dialog.dismiss();

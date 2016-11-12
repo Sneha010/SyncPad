@@ -189,7 +189,7 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
 
                         //get message from this, use it later to get profile data and other stuff
                         Participant participant = Participant.fromNearbyMessage(message);
-                        GeneralUtils.displayCustomToast(getActivity() , participant.getmMeetingTitle());
+                        GeneralUtils.displayCustomToast(getActivity() , participant.getMeeting().getMeetingName());
 
                         mAdapter.updateList(participant);
 
