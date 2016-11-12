@@ -2,7 +2,7 @@ package com.nearby.syncpad.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +14,7 @@ import com.nearby.syncpad.R;
  * on 11/11/2016.
  */
 
-public class ScanMeetingsDialogFragment extends DialogFragment {
+public class ScanMeetingsDialogFragment extends Fragment {
 
     public static final String DIALOG_TITLE = "dialog_title";
 
@@ -38,7 +38,7 @@ public class ScanMeetingsDialogFragment extends DialogFragment {
 
         View rootView = inflater.inflate(R.layout.scan_meeting_dialog_layout, container,
                 false);
-        getDialog().setTitle(getArguments().getString(DIALOG_TITLE));
+        //setStyle(STYLE_NORMAL , android.R.style.Theme_Material_Dialog);
         return rootView;
     }
 }

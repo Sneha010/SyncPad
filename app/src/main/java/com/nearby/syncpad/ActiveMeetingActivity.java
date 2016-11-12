@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -848,7 +847,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy called");
-        if (mGoogleApiClient.isConnected() && ! isChangingConfigurations()) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && ! isChangingConfigurations()) {
             // Using Nearby is battery intensive. To preserve battery, stop subscribing or
             // publishing when the fragment is inactive.
             unsubscribe();

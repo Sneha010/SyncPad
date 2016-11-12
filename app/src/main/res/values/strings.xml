@@ -2,8 +2,8 @@
     <string name="app_name">SyncPad</string>
 
     <!--Landing buttons-->
-    <string name="meeting_center_button1">Start a \nnew Meeting</string>
-    <string name="meeting_center_button2">Join a \nMeeting</string>
+    <string name="fab_button1">Start a new Meeting</string>
+    <string name="fab_button2">Join a Meeting</string>
 
     <!--For uploading profile picture of an user-->
     <string name="gallery">Galley</string>
@@ -14,6 +14,8 @@
     <string name="me_please_click_image">Please click a photo.</string>
     <string name="me_please_select_image">Please select a photo.</string>
 
+    <string name="no_meeting_line1">No meetings have been added.</string>
+    <string name="no_meeting_line2">Add new meeting</string>
     <string name="nearby_connection_error">Could not connect to nearby devices,\nPlease try again later!</string>
     <string name="no_internet_connectivity">No internet connectivity</string>
     <string name="unsuccessful">Unsuccessful:</string>
