@@ -16,6 +16,7 @@
 
     <string name="select_meeting">Select a meeting</string>
     <string name="confirm_end_meeting">You are about to end the meeting, do you want to continue? </string>
+    <string name="confirm_not_to_save">Are you sure you want to close the window without saving the current meeting?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
 

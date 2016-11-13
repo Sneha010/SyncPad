@@ -320,6 +320,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
         Intent i = new Intent(ActiveMeetingActivity.this , MeetingsSaveActivity.class);
         i.putExtra(Constants.MEETING , mCurrentMeeting);
         startActivity(i);
+        finish();
     }
 
     public void setMessageListener(){
