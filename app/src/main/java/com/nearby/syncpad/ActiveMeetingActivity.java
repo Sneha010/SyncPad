@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -44,11 +45,9 @@ import com.google.android.gms.nearby.messages.PublishOptions;
 import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
-import com.google.gson.Gson;
 import com.nearby.syncpad.adapter.ParticipantListItemAdapter;
 import com.nearby.syncpad.fragments.ParticipantsFragment;
 import com.nearby.syncpad.models.Meeting;
-import com.nearby.syncpad.models.MeetingNote;
 import com.nearby.syncpad.models.Participant;
 import com.nearby.syncpad.storedata.ProfileStore;
 import com.nearby.syncpad.util.Constants;
@@ -83,7 +82,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
     RelativeLayout rl_ParticipantsAttendanceSlidingView;
     Animation animationIn;
     private ParticipantsFragment participantListFragment;
-    private ArrayList<MeetingNote> noteList = new ArrayList<>();
+    private ArrayList<String> noteList = new ArrayList<>();
     private ArrayList<String> participantNameList = new ArrayList<>();
 
     /**
@@ -303,8 +302,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
                             ContextCompat.getDrawable(ActiveMeetingActivity.this , R.drawable.start_btn), null, null, null);
                     startMeetingText.setCompoundDrawablePadding(5);
                     isMeetingStarted = false;
-                    generateMeetingMOM();
                     stopNearByAPI();
+                    generateMeetingMOM();
                     break;
 
                 case DialogInterface.BUTTON_NEGATIVE:
@@ -318,8 +317,9 @@ public class ActiveMeetingActivity extends AppCompatActivity
         mCurrentMeeting.setNotesList(noteList);
         mCurrentMeeting.setParticipantNameList(participantNameList);
 
-        Gson gson = new Gson();
-        String meetingJSONString = gson.toJson(mCurrentMeeting);
+        Intent i = new Intent(ActiveMeetingActivity.this , MeetingsSaveActivity.class);
+        i.putExtra(Constants.MEETING , mCurrentMeeting);
+        startActivity(i);
     }
 
     public void setMessageListener(){
@@ -344,7 +344,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
                             participantNameList.add(participant.getName());
                         }
                         else{
-                            noteList.add(new MeetingNote(participant.getMeetingNotes(), participant.getName()));
+                            noteList.add(participant.getMeetingNotes());
                             adapter.updateList(participant);
                         }
 
@@ -409,7 +409,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
             Participant participant = new Participant();
             participant.setName(ProfileStore.getUserName(this));
             participant.setMeetingNotes(edtMeetingNotes.getText().toString());
-            noteList.add(new MeetingNote(edtMeetingNotes.getText().toString(),ProfileStore.getUserName(this)));
+            noteList.add(edtMeetingNotes.getText().toString());
             participant.setToWhom("to_Me");
 
            /* TODO Profile picture

@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nearby.syncpad" >
+    package="com.nearby.syncpad">
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
-        <activity android:name=".MainActivity" >
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ActiveMeetingActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <activity android:name=".MyProfileActivity"
-            android:screenOrientation="portrait">
-        </activity>
+        <activity
+            android:name=".ActiveMeetingActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".MyProfileActivity"
+            android:screenOrientation="portrait"></activity>
 
         <meta-data
             android:name="com.google.android.nearby.messages.API_KEY"
             android:value="AIzaSyB5NQiwWuSek5DMaDMr6uPh-QuTFA2jiok" />
 
+        <activity android:name=".MeetingsSaveActivity"></activity>
     </application>
 
 </manifest>

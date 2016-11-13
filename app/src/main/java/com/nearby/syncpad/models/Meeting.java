@@ -14,7 +14,7 @@ public class Meeting implements Parcelable {
     private String meetingVenue;
     private String meetingAgenda;
     private ArrayList<String> participantNameList = new ArrayList<>();
-    private ArrayList<MeetingNote> notesList = new ArrayList<MeetingNote>();
+    private ArrayList<String> notesList = new ArrayList<>();
 
     public Meeting(Parcel in) {
         meetingName = in.readString();
@@ -22,6 +22,8 @@ public class Meeting implements Parcelable {
         meetingTime = in.readString();
         meetingVenue = in.readString();
         meetingAgenda = in.readString();
+        participantNameList = in.readArrayList(String.class.getClassLoader());
+        notesList = in.readArrayList(String.class.getClassLoader());
     }
 
     public static final Creator<Meeting> CREATOR = new Creator<Meeting>() {
@@ -40,11 +42,11 @@ public class Meeting implements Parcelable {
 
     }
 
-    public ArrayList<MeetingNote> getNotesList() {
+    public ArrayList<String> getNotesList() {
         return notesList;
     }
 
-    public void setNotesList(ArrayList<MeetingNote> notesList) {
+    public void setNotesList(ArrayList<String> notesList) {
         this.notesList = notesList;
     }
 
@@ -111,5 +113,7 @@ public class Meeting implements Parcelable {
         parcel.writeString(meetingTime);
         parcel.writeString(meetingVenue);
         parcel.writeString(meetingAgenda);
+        parcel.writeList(participantNameList);
+        parcel.writeList(notesList);
     }
 }
