@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "940829127976",
+    "firebase_url": "https://syncpad-149206.firebaseio.com",
+    "project_id": "syncpad-149206",
+    "storage_bucket": "syncpad-149206.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940829127976:android:54f48aa571f97b95",
+        "android_client_info": {
+          "package_name": "com.nearby.syncpad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "940829127976-lm7rboa1olgg7k3uomqoutk7k2cs4bm8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrGV9TIUge8cxUVFhoQwejHHR9jszTpoM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

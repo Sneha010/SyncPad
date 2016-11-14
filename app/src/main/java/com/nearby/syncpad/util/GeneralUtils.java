@@ -19,8 +19,13 @@ import android.widget.Toast;
 
 import com.nearby.syncpad.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -155,4 +160,28 @@ public class GeneralUtils {
         return result;
 
     }
+
+    public static JSONArray convertToArray(JSONObject jsonObject){
+        JSONArray convertedArray = new JSONArray();
+        try {
+
+        Iterator it = jsonObject.keys();
+
+        while (it.hasNext()) {
+
+            String key = (String) it.next();
+            convertedArray.put(jsonObject.get(key));
+
+        }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return convertedArray;
+    }
+
+
+
+
+
 }

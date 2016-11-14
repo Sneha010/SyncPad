@@ -25,7 +25,6 @@ import com.nearby.syncpad.fragments.ScanMeetingsDialogFragment;
 import com.nearby.syncpad.models.Meeting;
 import com.nearby.syncpad.util.Constants;
 
-
 public class MainActivity extends AppCompatActivity implements DismissScanDialogListener{
 
     private LinearLayout llNoMeetingsAdded;

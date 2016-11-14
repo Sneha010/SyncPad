@@ -60,8 +60,6 @@ public class MeetingsSaveActivity extends AppCompatActivity {
 
         if (id == R.id.save) {
 
-            mAddMeetingListener.addMeeting(mMeeting);
-
         }else{
            buildAlertDialog();
         }
