@@ -3,7 +3,11 @@ package com.nearby.syncpad.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.Exclude;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Meeting implements Parcelable {
@@ -115,5 +119,19 @@ public class Meeting implements Parcelable {
         parcel.writeString(meetingAgenda);
         parcel.writeList(participantNameList);
         parcel.writeList(notesList);
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("meetingName", meetingName);
+        result.put("meetingDate", meetingDate);
+        result.put("meetingTime", meetingTime);
+        result.put("meetingVenue", meetingVenue);
+        result.put("meetingAgenda", meetingAgenda);
+        result.put("meetingNotes", notesList);
+        result.put("meetingParticipants", participantNameList);
+
+        return result;
     }
 }
