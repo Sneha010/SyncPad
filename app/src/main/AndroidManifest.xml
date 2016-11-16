@@ -34,6 +34,9 @@
             android:value="AIzaSyB5NQiwWuSek5DMaDMr6uPh-QuTFA2jiok" />
 
         <activity android:name=".MeetingsSaveActivity" />
+        <service
+            android:name=".data.UpdaterService"
+            android:exported="false" />
     </application>
 
 </manifest>

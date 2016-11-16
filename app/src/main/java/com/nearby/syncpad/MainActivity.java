@@ -1,12 +1,20 @@
 package com.nearby.syncpad;
 
 import android.app.Dialog;
+import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.Loader;
+import android.database.Cursor;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,13 +29,17 @@ import android.widget.Toast;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.nearby.syncpad.callbacks.DismissScanDialogListener;
+import com.nearby.syncpad.data.UpdaterService;
 import com.nearby.syncpad.fragments.ScanMeetingsDialogFragment;
 import com.nearby.syncpad.models.Meeting;
 import com.nearby.syncpad.util.Constants;
 
-public class MainActivity extends AppCompatActivity implements DismissScanDialogListener{
+public class MainActivity extends AppCompatActivity implements DismissScanDialogListener ,
+        LoaderManager.LoaderCallbacks<Cursor>{
 
     private LinearLayout llNoMeetingsAdded;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private RecyclerView mMeetingRycyclerView;
     private FloatingActionMenu floatingActionMenu;
     private FloatingActionButton fab_StartMeeting;
     private FloatingActionButton fab_JoinMeeting;
@@ -36,9 +48,21 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        getLoaderManager().initLoader(0, null, this);
         init();
+
+        if (savedInstanceState == null) {
+            refresh();
+        }
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
     }
+
 
     public void init(){
 
@@ -47,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.app_name));
         llNoMeetingsAdded = (LinearLayout) findViewById(R.id.ll_no_meetings);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mMeetingRycyclerView = (RecyclerView) findViewById(R.id.meetingsListView) ;
         floatingActionMenu = (FloatingActionMenu) findViewById(R.id.floatingActionMenu);
         fab_StartMeeting = (FloatingActionButton) findViewById(R.id.menu_item1) ;
         fab_JoinMeeting = (FloatingActionButton) findViewById(R.id.menu_item2) ;
@@ -73,6 +99,41 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
                 floatingActionMenu.close(true);
             }
         });
+    }
+
+
+    private void refresh() {
+        startService(new Intent(this, UpdaterService.class));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerReceiver(mRefreshingReceiver,
+                new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(mRefreshingReceiver);
+    }
+
+
+    private boolean mIsRefreshing = false;
+
+    private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
+                mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
+                updateRefreshingUI();
+            }
+        }
+    };
+
+    private void updateRefreshingUI() {
+        mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
     }
 
     @Override
@@ -208,5 +269,21 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
         if(dFragment!=null){
             dFragment.dismiss();
         }
+    }
+
+
+    @Override
+    public android.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }
