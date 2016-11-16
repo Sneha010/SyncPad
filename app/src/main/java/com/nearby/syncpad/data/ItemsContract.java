@@ -5,7 +5,7 @@ import android.net.Uri;
 public class ItemsContract {
 
 	public static final String CONTENT_AUTHORITY = "com.nearby.syncpad.contentprovider";
-	public static final Uri BASE_URI = Uri.parse("content://com.nearby.syncpad");
+	public static final Uri BASE_URI = Uri.parse("content://"+CONTENT_AUTHORITY);
 
 	interface ItemsColumns {
 		/** Type: PRIMARY KEY */
@@ -27,8 +27,8 @@ public class ItemsContract {
 	}
 
 	public static class Items implements ItemsColumns {
-		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.com.nearby.syncpad.meetings";
-		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.com.nearby.syncpad.meetings";
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.com.nearby.syncpad.contentprovider.meetings";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.com.nearby.syncpad.contentprovider.meetings";
 
         public static final String DEFAULT_SORT = MEETING_DATE + " DESC";
 
