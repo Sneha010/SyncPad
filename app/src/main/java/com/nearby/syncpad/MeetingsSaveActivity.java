@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.nearby.syncpad.callbacks.AddMeetingListener;
 import com.nearby.syncpad.models.Meeting;
 import com.nearby.syncpad.util.Constants;
+import com.nearby.syncpad.util.GeneralUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -116,7 +117,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
     private void saveAndSyncMeeting(){
 
 
-        mDatabase.child("user-meetings").child(getUid()).addListenerForSingleValueEvent(
+        mDatabase.child("user-meetings").child(GeneralUtils.getUid()).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -127,7 +128,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
                         // [START_EXCLUDE]
                         if (meeting == null) {
                             // User is null, error out
-                            Log.e(TAG, "User " + getUid() + " is unexpectedly null");
+                            Log.e(TAG, "User " + GeneralUtils.getUid() + " is unexpectedly null");
                             Toast.makeText(MeetingsSaveActivity.this,
                                     "Error: could not fetch user.",
                                     Toast.LENGTH_SHORT).show();
@@ -149,8 +150,9 @@ public class MeetingsSaveActivity extends AppCompatActivity {
     }
 
     private void syncWithFirebaseDb() {
-        final String userId = getUid();
+        final String userId = GeneralUtils.getUid();
         String key = mDatabase.child("user-meetings/"+userId).push().getKey();
+        mMeeting.setMeetingId(key);
         Map<String, Object> postValues = mMeeting.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/user-meetings/" + userId + "/" + key, postValues);
@@ -184,7 +186,5 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         buildAlertDialog();
     }
 
-    public String getUid() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
-    }
+
 }

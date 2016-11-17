@@ -12,6 +12,7 @@ import java.util.Map;
 
 public class Meeting implements Parcelable {
 
+    private String meetingId;
     private String meetingName;
     private String meetingDate;
     private String meetingTime;
@@ -19,6 +20,14 @@ public class Meeting implements Parcelable {
     private String meetingAgenda;
     private ArrayList<String> participantNameList = new ArrayList<>();
     private ArrayList<String> notesList = new ArrayList<>();
+
+    public String getMeetingId() {
+        return meetingId;
+    }
+
+    public void setMeetingId(String meetingId) {
+        this.meetingId = meetingId;
+    }
 
     public Meeting(Parcel in) {
         meetingName = in.readString();
@@ -124,6 +133,7 @@ public class Meeting implements Parcelable {
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
+        result.put("meetingId", meetingId);
         result.put("meetingName", meetingName);
         result.put("meetingDate", meetingDate);
         result.put("meetingTime", meetingTime);

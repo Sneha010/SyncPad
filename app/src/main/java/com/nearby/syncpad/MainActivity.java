@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
         if (savedInstanceState == null) {
             refresh();
         }
-
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

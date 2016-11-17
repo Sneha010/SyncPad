@@ -2,8 +2,11 @@ package com.nearby.syncpad.remote;
 
 import android.util.Log;
 
+import com.nearby.syncpad.util.GeneralUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.IOException;
@@ -19,10 +22,10 @@ public class RemoteEndpointUtil {
     private RemoteEndpointUtil() {
     }
 
-    public static JSONArray fetchJsonArray() {
+    public static JSONArray fetchJsonArray(String user_id) {
         String itemsJson = null;
         try {
-            itemsJson = fetchPlainText(Config.BASE_URL);
+            itemsJson = fetchPlainText(Config.BASE_URL , user_id);
         } catch (IOException e) {
             Log.e(TAG, "Error fetching items JSON", e);
             return null;
@@ -30,24 +33,22 @@ public class RemoteEndpointUtil {
 
         // Parse JSON
         try {
-            JSONTokener tokener = new JSONTokener(itemsJson);
-            Object val = tokener.nextValue();
-            if (!(val instanceof JSONArray)) {
-                throw new JSONException("Expected JSONArray");
-            }
-            return (JSONArray) val;
+            JSONObject jsonObject = new JSONObject(itemsJson);
+            return GeneralUtils.convertToArray(jsonObject);
+
         } catch (JSONException e) {
-            Log.e(TAG, "Error parsing items JSON", e);
+            e.printStackTrace();
+            Log.d(TAG, "fetchJsonArray: Error fetching json object");
         }
 
         return null;
     }
 
-    static String fetchPlainText(URL url) throws IOException {
+    static String fetchPlainText(URL url , String user_id) throws IOException {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url(url)
+                .url(url + user_id + ".json")
                 .build();
 
         Response response = client.newCall(request).execute();

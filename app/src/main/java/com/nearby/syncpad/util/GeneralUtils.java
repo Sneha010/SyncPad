@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.nearby.syncpad.R;
 
 import org.json.JSONArray;
@@ -193,6 +194,8 @@ public class GeneralUtils {
             return false;
     }
 
-
+    public static String getUid() {
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
 
 }
