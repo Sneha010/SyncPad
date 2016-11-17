@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -17,10 +18,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -31,6 +34,7 @@ import android.widget.Toast;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.nearby.syncpad.callbacks.DismissScanDialogListener;
+import com.nearby.syncpad.data.ItemsContract;
 import com.nearby.syncpad.data.MeetingNotesLoader;
 import com.nearby.syncpad.data.UpdaterService;
 import com.nearby.syncpad.fragments.ScanMeetingsDialogFragment;
@@ -282,19 +286,71 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         Log.d("@@@", "onLoadFinished: ");
-      /*  Adapter adapter = new Adapter(cursor);
+        Adapter adapter = new Adapter(cursor);
         adapter.setHasStableIds(true);
         mMeetingRycyclerView.setAdapter(adapter);
        // int columnCount = getResources().getInteger(R.integer.list_column_count);
         StaggeredGridLayoutManager sglm =
                 new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         mMeetingRycyclerView.setLayoutManager(sglm);
-        mSwipeRefreshLayout.setRefreshing(mIsRefreshing);*/
+        mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         if (mMeetingRycyclerView != null)
             mMeetingRycyclerView.setAdapter(null);
+    }
+
+    private class Adapter extends RecyclerView.Adapter<ViewHolder> {
+        private Cursor mCursor;
+
+        public Adapter(Cursor cursor) {
+            mCursor = cursor;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            mCursor.moveToPosition(position);
+            return mCursor.getLong(MeetingNotesLoader.Query.MEETING_ID);
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = getLayoutInflater().inflate(R.layout.meetings_list_item, parent, false);
+            final ViewHolder vh = new ViewHolder(view);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+                }
+            });
+            return vh;
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            mCursor.moveToPosition(position);
+            holder.tvMeetingTitle.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_NAME));
+            holder.tvMeetingNotes.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_NOTES));
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return mCursor.getCount();
+        }
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView tvMeetingTitle;
+        public TextView tvMeetingNotes;
+
+        public ViewHolder(View view) {
+            super(view);
+            tvMeetingTitle = (TextView) view.findViewById(R.id.tvMeetingTitle);
+            tvMeetingNotes = (TextView) view.findViewById(R.id.tvNotes);
+        }
     }
 }
