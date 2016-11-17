@@ -67,8 +67,8 @@ public class UpdaterService extends IntentService{
                 values.put(ItemsContract.Items.MEETING_TIME, object.getString("meetingTime" ));
                 values.put(ItemsContract.Items.MEETING_VENUE, object.getString("meetingVenue" ));
                 values.put(ItemsContract.Items.MEETING_AGENDA, object.getString("meetingAgenda" ));
-                values.put(ItemsContract.Items.MEETING_NOTES, object.getString("notesList" ));
-                values.put(ItemsContract.Items.MEETING_PARTICIPANTS, object.getString("participantNameList" ));
+                values.put(ItemsContract.Items.MEETING_NOTES, object.getString("meetingNotes" ));
+                values.put(ItemsContract.Items.MEETING_PARTICIPANTS, object.getString("meetingParticipants" ));
                 cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
             }
 

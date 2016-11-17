@@ -314,13 +314,26 @@ public class ActiveMeetingActivity extends AppCompatActivity
     };
 
     private void generateMeetingMOM(){
-        mCurrentMeeting.setNotesList(noteList);
-        mCurrentMeeting.setParticipantNameList(participantNameList);
+        mCurrentMeeting.setNotesList(convertToStringFromArrayList(noteList));
+        mCurrentMeeting.setParticipantNameList(convertToStringFromArrayList(participantNameList));
 
         Intent i = new Intent(ActiveMeetingActivity.this , MeetingsSaveActivity.class);
         i.putExtra(Constants.MEETING , mCurrentMeeting);
         startActivity(i);
         finish();
+    }
+
+    //Forming the list of comma separated string
+    private String convertToStringFromArrayList(ArrayList<String> list){
+        String converted_string = "";
+
+        if(list != null && list.size() > 0){
+            for (int i = 0; i < list.size(); i++) {
+                converted_string = converted_string + list.get(i)+"||";
+            }
+
+        }
+        return converted_string;
     }
 
     public void setMessageListener(){

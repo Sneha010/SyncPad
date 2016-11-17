@@ -69,27 +69,9 @@ public class MeetingsSaveActivity extends AppCompatActivity {
 
         //TODO display meeting using bean
 
-        if(mMeeting.getNotesList() != null && mMeeting.getNotesList().size() > 0){
+            tvNotes.setText(mMeeting.getNotesList());
 
-            String notes = "";
-
-            for (int i = 0; i < mMeeting.getNotesList().size(); i++) {
-                notes = notes + mMeeting.getNotesList().get(i) + "\n";
-            }
-
-            tvNotes.setText(notes);
-        }
-
-        if(mMeeting.getParticipantNameList() != null && mMeeting.getParticipantNameList().size() > 0){
-
-            String participants = "";
-
-            for (int i = 0; i < mMeeting.getParticipantNameList().size(); i++) {
-                participants = participants + mMeeting.getParticipantNameList().get(i) + "\n";
-            }
-
-            tvParticipants.setText(participants);
-        }
+            tvParticipants.setText(mMeeting.getParticipantNameList());
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -116,14 +98,15 @@ public class MeetingsSaveActivity extends AppCompatActivity {
 
     private void saveAndSyncMeeting(){
 
-
+        syncWithFirebaseDb();
+        finish();
+/*
         mDatabase.child("user-meetings").child(GeneralUtils.getUid()).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // Get user value
                         Meeting meeting = dataSnapshot.getValue(Meeting.class);
-                        Log.d(TAG, "onDataChange: "+meeting.toString());
 
                         // [START_EXCLUDE]
                         if (meeting == null) {
@@ -146,7 +129,9 @@ public class MeetingsSaveActivity extends AppCompatActivity {
                     public void onCancelled(DatabaseError databaseError) {
                         Log.w(TAG, "getUser:onCancelled", databaseError.toException());
                     }
-                });
+                });*/
+
+
     }
 
     private void syncWithFirebaseDb() {

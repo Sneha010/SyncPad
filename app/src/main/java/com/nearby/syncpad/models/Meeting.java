@@ -14,12 +14,12 @@ public class Meeting implements Parcelable {
 
     private String meetingId;
     private String meetingName;
-    private String meetingDate;
-    private String meetingTime;
-    private String meetingVenue;
-    private String meetingAgenda;
-    private ArrayList<String> participantNameList = new ArrayList<>();
-    private ArrayList<String> notesList = new ArrayList<>();
+    private String meetingDate = "";
+    private String meetingTime = "";
+    private String meetingVenue = "";
+    private String meetingAgenda = "";
+    private String participantNameList = "";
+    private String notesList = "";
 
     public String getMeetingId() {
         return meetingId;
@@ -35,8 +35,8 @@ public class Meeting implements Parcelable {
         meetingTime = in.readString();
         meetingVenue = in.readString();
         meetingAgenda = in.readString();
-        participantNameList = in.readArrayList(String.class.getClassLoader());
-        notesList = in.readArrayList(String.class.getClassLoader());
+        participantNameList = in.readString();
+        notesList = in.readString();
     }
 
     public static final Creator<Meeting> CREATOR = new Creator<Meeting>() {
@@ -55,20 +55,20 @@ public class Meeting implements Parcelable {
 
     }
 
-    public ArrayList<String> getNotesList() {
-        return notesList;
-    }
-
-    public void setNotesList(ArrayList<String> notesList) {
-        this.notesList = notesList;
-    }
-
-    public ArrayList<String> getParticipantNameList() {
+    public String getParticipantNameList() {
         return participantNameList;
     }
 
-    public void setParticipantNameList(ArrayList<String> participantNameList) {
+    public void setParticipantNameList(String participantNameList) {
         this.participantNameList = participantNameList;
+    }
+
+    public String getNotesList() {
+        return notesList;
+    }
+
+    public void setNotesList(String notesList) {
+        this.notesList = notesList;
     }
 
     public String getMeetingName() {
@@ -126,8 +126,8 @@ public class Meeting implements Parcelable {
         parcel.writeString(meetingTime);
         parcel.writeString(meetingVenue);
         parcel.writeString(meetingAgenda);
-        parcel.writeList(participantNameList);
-        parcel.writeList(notesList);
+        parcel.writeString(participantNameList);
+        parcel.writeString(notesList);
     }
 
     @Exclude

@@ -15,7 +15,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +31,7 @@ import android.widget.Toast;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.nearby.syncpad.callbacks.DismissScanDialogListener;
+import com.nearby.syncpad.data.MeetingNotesLoader;
 import com.nearby.syncpad.data.UpdaterService;
 import com.nearby.syncpad.fragments.ScanMeetingsDialogFragment;
 import com.nearby.syncpad.models.Meeting;
@@ -273,16 +276,25 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
 
     @Override
     public android.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
+        return MeetingNotesLoader.newAllNotesInstance(this);
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        Log.d("@@@", "onLoadFinished: ");
+      /*  Adapter adapter = new Adapter(cursor);
+        adapter.setHasStableIds(true);
+        mMeetingRycyclerView.setAdapter(adapter);
+       // int columnCount = getResources().getInteger(R.integer.list_column_count);
+        StaggeredGridLayoutManager sglm =
+                new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        mMeetingRycyclerView.setLayoutManager(sglm);
+        mSwipeRefreshLayout.setRefreshing(mIsRefreshing);*/
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        if (mMeetingRycyclerView != null)
+            mMeetingRycyclerView.setAdapter(null);
     }
 }
