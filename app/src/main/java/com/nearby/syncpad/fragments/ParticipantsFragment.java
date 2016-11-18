@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * Use the {@link ParticipantsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ParticipantsFragment extends BaseFragment {
+public class ParticipantsFragment  extends Fragment{
 
     private OnFragmentInteractionListener mListener;
 
@@ -169,12 +169,6 @@ public class ParticipantsFragment extends BaseFragment {
 
         void onFragmentInteraction(Uri uri);
 
-    }
-
-    @NonNull
-    @Override
-    public String getTitle() {
-        return null;
     }
 
 }
