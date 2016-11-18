@@ -152,9 +152,6 @@ public class MeetingCenterFragment extends BaseFragment implements View.OnClickL
     }
 
     private void scanNearbyMeetings(){
-
-
-
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag("dialog");
         if (prev != null) {
@@ -162,7 +159,7 @@ public class MeetingCenterFragment extends BaseFragment implements View.OnClickL
         }
         ft.addToBackStack(null);
 
-        ScanMeetingsDialogFragment dFragment = ScanMeetingsDialogFragment.newInstance("Select the meeting");
+        ScanMeetingsDialogFragment dFragment = ScanMeetingsDialogFragment.newInstance();
 
 
     }

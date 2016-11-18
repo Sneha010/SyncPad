@@ -64,11 +64,8 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
             .setDistanceType(Strategy.DISTANCE_TYPE_EARSHOT).build();
 
 
-    static public ScanMeetingsDialogFragment newInstance(String title) {
+    static public ScanMeetingsDialogFragment newInstance() {
         ScanMeetingsDialogFragment f = new ScanMeetingsDialogFragment();
-        Bundle args = new Bundle();
-        args.putString(DIALOG_TITLE, title);
-        f.setArguments(args);
         return f;
     }
 

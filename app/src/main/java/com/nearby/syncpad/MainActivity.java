@@ -1,7 +1,9 @@
 package com.nearby.syncpad;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.LoaderManager;
+import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,9 +28,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -37,9 +41,15 @@ import com.nearby.syncpad.callbacks.DismissScanDialogListener;
 import com.nearby.syncpad.data.ItemsContract;
 import com.nearby.syncpad.data.MeetingNotesLoader;
 import com.nearby.syncpad.data.UpdaterService;
+import com.nearby.syncpad.fragments.AddMeetingDialogFragment;
 import com.nearby.syncpad.fragments.ScanMeetingsDialogFragment;
 import com.nearby.syncpad.models.Meeting;
 import com.nearby.syncpad.util.Constants;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements DismissScanDialogListener ,
         LoaderManager.LoaderCallbacks<Cursor>{
@@ -93,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
         fab_StartMeeting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startMeetingDialog();
+                startMeeting_Dialog();
                 floatingActionMenu.close(true);
             }
         });
@@ -169,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
 
     private Dialog dialog;
     EditText edtName ,edtDate ,edtTime ,edtVenue ,edtAgenda;
-    TextView tvCancel , tvAdd , tv_selectdateButton;
+    TextView tvCancel , tvAdd , tv_selectDateButton , tv_selectTimeButton;
     private void startMeetingDialog() {
 
         dialog = new Dialog(this);
@@ -187,8 +197,8 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
         edtAgenda = (EditText)view.findViewById(R.id.edtMeetingAgenda);
         tvCancel = (TextView)view.findViewById(R.id.tvCancel);
         tvAdd = (TextView)view.findViewById(R.id.tvAdd);
-        tv_selectdateButton = (TextView)view.findViewById(R.id.select_date_button);
-
+        tv_selectDateButton = (TextView)view.findViewById(R.id.select_date_button);
+        tv_selectTimeButton = (TextView) view.findViewById(R.id.select_time_button) ;
 
         tvAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,10 +242,49 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
             }
         });
 
-        tv_selectdateButton.setOnClickListener(new View.OnClickListener() {
+        tv_selectDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                // Use the current date as the default date in the picker
+                final Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        edtDate.setText(dayOfMonth+"/"+month+"/"+year);
+                    }
+                },year, month , day);
+                datePickerDialog.show();
+
+            }
+        });
+
+        tv_selectTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final Calendar c = Calendar.getInstance();
+                int hour = c.get(Calendar.HOUR_OF_DAY);
+                int minute = c.get(Calendar.MINUTE);
+
+                TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                        SimpleDateFormat format = new SimpleDateFormat("HH:MM");
+                        try {
+                            Date date = format.parse(""+hourOfDay+":"+minute);
+                            edtTime.setText(new SimpleDateFormat("hh:mm aa").format(date.getTime()));
+                        }catch(ParseException ex){
+                            ex.printStackTrace();
+                        }
+                    }
+                },hour, minute, false);
+                timePickerDialog.show();
             }
         });
 
@@ -256,18 +305,31 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
         dialog.setCanceledOnTouchOutside(false);
     }
 
-    ScanMeetingsDialogFragment dFragment;
-    private void scanNearbyMeetings(){
-
+    AddMeetingDialogFragment addMeetingDialogFragment;
+    private void startMeeting_Dialog() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("meeting_dialog");
         if (prev != null) {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
 
-        dFragment = ScanMeetingsDialogFragment.newInstance("Select the meeting");
-        dFragment.show(ft , "dialog");
+        addMeetingDialogFragment = AddMeetingDialogFragment.newInstance();
+        addMeetingDialogFragment.show(ft , "meeting_dialog");
+    }
+
+    ScanMeetingsDialogFragment dFragment;
+    private void scanNearbyMeetings(){
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("scan_dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        dFragment = ScanMeetingsDialogFragment.newInstance();
+        dFragment.show(ft , "scan_dialog");
 
     }
 

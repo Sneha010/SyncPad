@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:padding="10dp">
+    >
+
+    <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="550dp"
+        android:gravity="center_horizontal"
+        android:layout_margin="10dp">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -93,6 +99,8 @@
         android:text="Select Date"/>
         </LinearLayout>
 
+
+
     <TextView
         android:id="@+id/add_title_time"
         android:layout_width="wrap_content"
@@ -103,10 +111,17 @@
         android:layout_below="@id/ll_date"
         android:text="Time:" />
 
-
+        <LinearLayout
+            android:id="@+id/ll_time"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/add_title_time"
+            android:layout_marginTop="5dp"
+            android:weightSum="1">
     <EditText
         android:id="@+id/edtMeetingTime"
-        android:layout_width="fill_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:hint="Add meeting time"
@@ -115,7 +130,20 @@
         android:layout_below="@id/add_title_time"
         android:textColor="@android:color/black"
         android:background="@color/colorAccent"
+        android:layout_weight="1"
         android:textColorHint="@color/primaryTextColor" />
+
+            <TextView
+                android:id="@+id/select_time_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/colorPrimary"
+                android:textColor="@android:color/white"
+                android:text="Select Time"/>
+        </LinearLayout>
 
     <TextView
         android:id="@+id/add_meeting_venue"
@@ -124,7 +152,7 @@
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         android:layout_marginTop="5dp"
-        android:layout_below="@id/edtMeetingTime"
+        android:layout_below="@id/ll_time"
         android:text="Venue:" />
 
 
@@ -168,7 +196,7 @@
         android:background="@color/colorAccent"/>
 
     <LinearLayout
-        android:id="@+id/ll_"
+        android:id="@+id/ll_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -204,5 +232,5 @@
         </LinearLayout>
 </RelativeLayout>
     </ScrollView>
-
 </RelativeLayout>
+</LinearLayout>
