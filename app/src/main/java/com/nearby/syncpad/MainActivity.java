@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
     @Override
     protected void onStart() {
         super.onStart();
+        refresh();
         registerReceiver(mRefreshingReceiver,
                 new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
     }

@@ -28,6 +28,7 @@
     <string name="unsuccessful">Unsuccessful:</string>
     <string name="no_active_meetings">No Active meeting found</string>
     <string name="unable_to_subscribe">Unable to subscribe</string>
+    <string name="meeting_not_started">Please make sure you have started the meeting</string>
 
     <!--Hints-->
     <string name="login_password">Password</string>

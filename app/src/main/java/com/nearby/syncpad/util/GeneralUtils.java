@@ -1,5 +1,6 @@
 package com.nearby.syncpad.util;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.nearby.syncpad.R;
+import com.nearby.syncpad.data.ItemsContract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -192,6 +194,23 @@ public class GeneralUtils {
             return info.isConnected();
         else
             return false;
+    }
+
+    public static ContentValues getContentValues(JSONObject jsonObject) throws JSONException {
+
+        ContentValues values = new ContentValues();
+
+        values.put(ItemsContract.Items.MEETING_ID, jsonObject.getString("meetingId" ));
+        values.put(ItemsContract.Items.MEETING_NAME, jsonObject.getString("meetingName" ));
+        values.put(ItemsContract.Items.MEETING_DATE, jsonObject.getString("meetingDate" ));
+        values.put(ItemsContract.Items.MEETING_TIME, jsonObject.getString("meetingTime" ));
+        values.put(ItemsContract.Items.MEETING_VENUE, jsonObject.getString("meetingVenue" ));
+        values.put(ItemsContract.Items.MEETING_AGENDA, jsonObject.getString("meetingAgenda" ));
+        values.put(ItemsContract.Items.MEETING_NOTES, jsonObject.getString("meetingNotes" ));
+        values.put(ItemsContract.Items.MEETING_PARTICIPANTS, jsonObject.getString("meetingParticipants" ));
+
+        return values;
+
     }
 
     public static String getUid() {

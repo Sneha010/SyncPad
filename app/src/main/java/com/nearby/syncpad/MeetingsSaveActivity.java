@@ -1,6 +1,9 @@
 package com.nearby.syncpad;
 
+import android.content.ContentProviderOperation;
+import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,11 +20,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.nearby.syncpad.callbacks.AddMeetingListener;
+import com.nearby.syncpad.data.ItemsContract;
 import com.nearby.syncpad.models.Meeting;
 import com.nearby.syncpad.util.Constants;
 import com.nearby.syncpad.util.GeneralUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -142,8 +152,27 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/user-meetings/" + userId + "/" + key, postValues);
         mDatabase.updateChildren(childUpdates);
+
+        addMeetingToDb(mMeeting);
     }
 
+    private void addMeetingToDb(Meeting meeting){
+        try {
+
+        ArrayList<ContentProviderOperation> cpo = new ArrayList<ContentProviderOperation>();
+        Uri dirUri = ItemsContract.Items.buildDirUri();
+
+        ContentValues values = null;
+            values = GeneralUtils.getContentValues(new JSONObject(new Gson().toJson(meeting)));
+
+        cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
     private void buildAlertDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.confirm_not_to_save)).setPositiveButton(getString(R.string.yes), dialogClickListener)

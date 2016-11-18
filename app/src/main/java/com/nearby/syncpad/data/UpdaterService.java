@@ -59,16 +59,8 @@ public class UpdaterService extends IntentService{
             }
 
             for (int i = 0; i < array.length(); i++) {
-                ContentValues values = new ContentValues();
                 JSONObject object = array.getJSONObject(i);
-                values.put(ItemsContract.Items.MEETING_ID, object.getString("meetingId" ));
-                values.put(ItemsContract.Items.MEETING_NAME, object.getString("meetingName" ));
-                values.put(ItemsContract.Items.MEETING_DATE, object.getString("meetingDate" ));
-                values.put(ItemsContract.Items.MEETING_TIME, object.getString("meetingTime" ));
-                values.put(ItemsContract.Items.MEETING_VENUE, object.getString("meetingVenue" ));
-                values.put(ItemsContract.Items.MEETING_AGENDA, object.getString("meetingAgenda" ));
-                values.put(ItemsContract.Items.MEETING_NOTES, object.getString("meetingNotes" ));
-                values.put(ItemsContract.Items.MEETING_PARTICIPANTS, object.getString("meetingParticipants" ));
+                ContentValues values = GeneralUtils.getContentValues(object);
                 cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
             }
 
