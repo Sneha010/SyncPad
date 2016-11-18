@@ -1,5 +1,6 @@
 package com.nearby.syncpad.util;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,6 +8,8 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -17,10 +20,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.nearby.syncpad.R;
+import com.nearby.syncpad.data.ItemsContract;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -120,7 +130,7 @@ public class GeneralUtils {
 
         TextView toastMessage = (TextView) toastView.findViewById(android.R.id.message);
         toastMessage.setTextSize(17);
-        toastMessage.setPadding(35,10,35,10);
+        toastMessage.setPadding(40,10,40,10);
         toastMessage.setTextColor(ContextCompat.getColor(context , R.color.white));
         toastMessage.setGravity(Gravity.CENTER);
         toastView.setBackground(ContextCompat.getDrawable(context , R.drawable.toast_bg));
@@ -155,4 +165,56 @@ public class GeneralUtils {
         return result;
 
     }
+
+    public static JSONArray convertToArray(JSONObject jsonObject){
+        JSONArray convertedArray = new JSONArray();
+        try {
+
+        Iterator it = jsonObject.keys();
+
+        while (it.hasNext()) {
+
+            String key = (String) it.next();
+            convertedArray.put(jsonObject.get(key));
+
+        }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return convertedArray;
+    }
+
+
+    public static boolean isOnline(Context context) {
+        ConnectivityManager connManager = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = connManager.getActiveNetworkInfo();
+        if (info != null)
+            return info.isConnected();
+        else
+            return false;
+    }
+
+    public static ContentValues getContentValues(JSONObject jsonObject) throws JSONException {
+
+        ContentValues values = new ContentValues();
+
+        values.put(ItemsContract.Items.MEETING_ID, jsonObject.getString("meetingId" ));
+        values.put(ItemsContract.Items.MEETING_NAME, jsonObject.getString("meetingName" ));
+        values.put(ItemsContract.Items.MEETING_DATE, jsonObject.getString("meetingDate" ));
+        values.put(ItemsContract.Items.MEETING_TIME, jsonObject.getString("meetingTime" ));
+        values.put(ItemsContract.Items.MEETING_VENUE, jsonObject.getString("meetingVenue" ));
+        values.put(ItemsContract.Items.MEETING_AGENDA, jsonObject.getString("meetingAgenda" ));
+        values.put(ItemsContract.Items.MEETING_NOTES, jsonObject.getString("meetingNotes" ));
+        values.put(ItemsContract.Items.MEETING_PARTICIPANTS, jsonObject.getString("meetingParticipants" ));
+
+        return values;
+
+    }
+
+    public static String getUid() {
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
+
 }

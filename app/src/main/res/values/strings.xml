@@ -2,8 +2,8 @@
     <string name="app_name">SyncPad</string>
 
     <!--Landing buttons-->
-    <string name="meeting_center_button1">Start a \nnew Meeting</string>
-    <string name="meeting_center_button2">Join a \nMeeting</string>
+    <string name="fab_button1">Start a new Meeting</string>
+    <string name="fab_button2">Join a Meeting</string>
 
     <!--For uploading profile picture of an user-->
     <string name="gallery">Galley</string>
@@ -13,4 +13,33 @@
     <string name="no_storage">No storage found.</string>
     <string name="me_please_click_image">Please click a photo.</string>
     <string name="me_please_select_image">Please select a photo.</string>
+
+    <string name="select_meeting">Select a meeting</string>
+    <string name="confirm_end_meeting">You are about to end the meeting, do you want to continue? </string>
+    <string name="confirm_not_to_save">Are you sure you want to close the window without saving the current meeting?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <!--Error Messages-->
+    <string name="no_meeting_line1">No meetings have been added.</string>
+    <string name="no_meeting_line2">Add new meeting</string>
+    <string name="nearby_connection_error">Could not connect to nearby devices,\nPlease try again later!</string>
+    <string name="no_internet_connectivity">No internet connectivity</string>
+    <string name="unsuccessful">Unsuccessful:</string>
+    <string name="no_active_meetings">No Active meeting found</string>
+    <string name="unable_to_subscribe">Unable to subscribe</string>
+    <string name="meeting_not_started">Please make sure you have started the meeting</string>
+
+    <!--Hints-->
+    <string name="login_password">Password</string>
+    <string name="login_email">Email Id</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_in">Sign In</string>
+
+    <!--Forgot Password-->
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
+    <string name="lbl_forgot_password">Forgot password?</string>
+    <string name="btn_reset_password">Reset Password</string>
+    <string name="btn_back"><![CDATA[<< Back]]></string>
 </resources>

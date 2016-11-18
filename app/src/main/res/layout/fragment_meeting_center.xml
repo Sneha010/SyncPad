@@ -11,7 +11,7 @@
         style="@style/LandingButtonStyle"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="@string/meeting_center_button1"
+        android:text="@string/fab_button1"
         />
 
     <android.support.v7.widget.AppCompatButton
@@ -20,7 +20,7 @@
         android:layout_below="@id/btnStartMeeting"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="@string/meeting_center_button2"
+        android:text="@string/fab_button2"
         android:layout_marginTop="20dp"
         />
 

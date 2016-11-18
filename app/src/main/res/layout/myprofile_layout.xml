@@ -79,12 +79,24 @@
                 android:hint="My email id" />
         </android.support.design.widget.TextInputLayout>
 
-        <Button
+        <com.rey.material.widget.Button
             android:layout_marginTop="20dp"
             android:id="@+id/buttonSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:textColor="@color/white"
             android:text="Save"
+            />
+
+        <com.rey.material.widget.Button
+            android:layout_marginTop="20dp"
+            android:id="@+id/buttonLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:textColor="@color/white"
+            android:text="Logout"
             />
 
     </LinearLayout>

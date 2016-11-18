@@ -1,18 +1,75 @@
 package com.nearby.syncpad.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.firebase.database.Exclude;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
-public class Meeting {
+public class Meeting implements Parcelable {
 
+    private String meetingId;
     private String meetingName;
-    private String meetingDate;
-    private String meetingTime;
-    private String meetingVenue;
-    private String meetingAgenda;
-    private String meetingSummary;
+    private String meetingDate = "";
+    private String meetingTime = "";
+    private String meetingVenue = "";
+    private String meetingAgenda = "";
+    private String participantNameList = "";
+    private String notesList = "";
 
-    private ArrayList<Participant> noOfParticipants;
+    public String getMeetingId() {
+        return meetingId;
+    }
+
+    public void setMeetingId(String meetingId) {
+        this.meetingId = meetingId;
+    }
+
+    public Meeting(Parcel in) {
+        meetingName = in.readString();
+        meetingDate = in.readString();
+        meetingTime = in.readString();
+        meetingVenue = in.readString();
+        meetingAgenda = in.readString();
+        participantNameList = in.readString();
+        notesList = in.readString();
+    }
+
+    public static final Creator<Meeting> CREATOR = new Creator<Meeting>() {
+        @Override
+        public Meeting createFromParcel(Parcel in) {
+            return new Meeting(in);
+        }
+
+        @Override
+        public Meeting[] newArray(int size) {
+            return new Meeting[size];
+        }
+    };
+
+    public Meeting() {
+
+    }
+
+    public String getParticipantNameList() {
+        return participantNameList;
+    }
+
+    public void setParticipantNameList(String participantNameList) {
+        this.participantNameList = participantNameList;
+    }
+
+    public String getNotesList() {
+        return notesList;
+    }
+
+    public void setNotesList(String notesList) {
+        this.notesList = notesList;
+    }
 
     public String getMeetingName() {
         return meetingName;
@@ -54,19 +111,37 @@ public class Meeting {
         this.meetingAgenda = meetingAgenda;
     }
 
-    public String getMeetingSummary() {
-        return meetingSummary;
+
+
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setMeetingSummary(String meetingSummary) {
-        this.meetingSummary = meetingSummary;
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(meetingName);
+        parcel.writeString(meetingDate);
+        parcel.writeString(meetingTime);
+        parcel.writeString(meetingVenue);
+        parcel.writeString(meetingAgenda);
+        parcel.writeString(participantNameList);
+        parcel.writeString(notesList);
     }
 
-    public ArrayList<Participant> getNoOfParticipants() {
-        return noOfParticipants;
-    }
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("meetingId", meetingId);
+        result.put("meetingName", meetingName);
+        result.put("meetingDate", meetingDate);
+        result.put("meetingTime", meetingTime);
+        result.put("meetingVenue", meetingVenue);
+        result.put("meetingAgenda", meetingAgenda);
+        result.put("meetingNotes", notesList);
+        result.put("meetingParticipants", participantNameList);
 
-    public void setNoOfParticipants(ArrayList<Participant> noOfParticipants) {
-        this.noOfParticipants = noOfParticipants;
+        return result;
     }
 }

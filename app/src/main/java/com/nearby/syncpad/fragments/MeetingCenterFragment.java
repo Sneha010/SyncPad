@@ -1,20 +1,18 @@
 package com.nearby.syncpad.fragments;
 
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.view.Display;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,8 +20,6 @@ import android.widget.Toast;
 import com.nearby.syncpad.ActiveMeetingActivity;
 import com.nearby.syncpad.R;
 import com.nearby.syncpad.models.Meeting;
-
-import static android.content.Context.WINDOW_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +57,7 @@ public class MeetingCenterFragment extends BaseFragment implements View.OnClickL
                 break;
 
             case R.id.btnJoinMeeting:
-
+                scanNearbyMeetings();
                 break;
         }
     }
@@ -155,7 +151,18 @@ public class MeetingCenterFragment extends BaseFragment implements View.OnClickL
         dialog.setCanceledOnTouchOutside(true);
     }
 
+    private void scanNearbyMeetings(){
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
 
+        ScanMeetingsDialogFragment dFragment = ScanMeetingsDialogFragment.newInstance();
+
+
+    }
 
     @NonNull
     @Override

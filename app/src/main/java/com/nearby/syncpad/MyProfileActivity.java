@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,19 +22,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.nearby.syncpad.storedata.ProfileStore;
 import com.nearby.syncpad.util.GeneralUtils;
+import com.rey.material.widget.Button;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 
 
 public class MyProfileActivity extends AppCompatActivity {
@@ -45,16 +44,21 @@ public class MyProfileActivity extends AppCompatActivity {
     TextInputLayout myNameTIL;
     TextInputLayout myRoleTIL;
     TextInputLayout myEmailTIL;
+    Button btnSave , btnLogout;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myprofile_layout);
 
+        setUpFirebaseLogout();
         init();
         initializeFieldsWithSavedData();
-
     }
+
 
     private void init() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -70,6 +74,48 @@ public class MyProfileActivity extends AppCompatActivity {
         myNameTIL = (TextInputLayout) findViewById(R.id.myNameTIL);
         myRoleTIL = (TextInputLayout) findViewById(R.id.myRoleTIL);
         myEmailTIL = (TextInputLayout) findViewById(R.id.myEmailTIL);
+        btnSave = (Button) findViewById(R.id.buttonSave);
+        btnLogout = (Button) findViewById(R.id.buttonLogout);
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveProfileData();
+                finish();
+            }
+        });
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+            }
+        });
+
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCameraAndSavePhoto(v);
+            }
+        });
+    }
+
+    private void setUpFirebaseLogout() {
+        //get firebase auth instance
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    // user auth state is changed - user is null
+                    // launch login activity
+                    startActivity(new Intent(MyProfileActivity.this, LoginActivity.class));
+                    finish();
+                }
+            }
+        };
     }
 
     //To show the earlier saved data filled in the form fields
@@ -85,7 +131,6 @@ public class MyProfileActivity extends AppCompatActivity {
 
 
     //Click on save button on profile
-    @OnClick(R.id.buttonSave)
     public void saveProfileData() {
 
         if (TextUtils.isEmpty(myName.getText().toString())) {
@@ -119,7 +164,6 @@ public class MyProfileActivity extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.profileImage)
     public void openCameraAndSavePhoto(View v) {
 
         uploadPhoto(v);
@@ -366,5 +410,17 @@ public class MyProfileActivity extends AppCompatActivity {
         return true;
 
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
 }

@@ -42,7 +42,8 @@ public class ParticipantListItemAdapter extends RecyclerView.Adapter<Participant
             holder.rl_fromMyselfNotes.setVisibility(View.VISIBLE);
             holder.rl_fromOthersNotes.setVisibility(View.GONE);
             holder.mPersonName_mine.setText(mParticipants.get(position).getName());
-            holder.mProfileImage_mine.setImageDrawable(GeneralUtils.getImageFromByteArray(mParticipants.get(position).getImageBytes()));
+            if(mParticipants.get(position).getImageBytes() != null)
+                holder.mProfileImage_mine.setImageDrawable(GeneralUtils.getImageFromByteArray(mParticipants.get(position).getImageBytes()));
 
             if(mParticipants.get(position).getMeetingNotes()!=null){
                 holder.meetingNotes_mine.setVisibility(View.VISIBLE);
@@ -62,7 +63,8 @@ public class ParticipantListItemAdapter extends RecyclerView.Adapter<Participant
             holder.rl_fromMyselfNotes.setVisibility(View.GONE);
             holder.mPersonName.setText(mParticipants.get(position).getName());
             holder.meetingNotes.setText(mParticipants.get(position).getMeetingNotes());
-            holder.mProfileImage.setImageDrawable(GeneralUtils.getImageFromByteArray(mParticipants.get(position).getImageBytes()));
+            if(mParticipants.get(position).getImageBytes() != null)
+                holder.mProfileImage.setImageDrawable(GeneralUtils.getImageFromByteArray(mParticipants.get(position).getImageBytes()));
 
             if(mParticipants.get(position).getMeetingNotes()!=null){
                 holder.meetingNotes.setVisibility(View.VISIBLE);
