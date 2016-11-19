@@ -34,6 +34,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.inject.Inject;
+
 
 public class MyProfileActivity extends AppCompatActivity {
 
@@ -45,7 +47,10 @@ public class MyProfileActivity extends AppCompatActivity {
     TextInputLayout myRoleTIL;
     TextInputLayout myEmailTIL;
     Button btnSave , btnLogout;
-    private FirebaseAuth mAuth;
+
+    @Inject
+    FirebaseAuth mAuth;
+
     private FirebaseAuth.AuthStateListener mAuthListener;
 
 
@@ -53,6 +58,8 @@ public class MyProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myprofile_layout);
+
+        ((SyncPadApplication)getApplication()).getMyApplicationComponent().inject(this);
 
         setUpFirebaseLogout();
         init();
@@ -102,7 +109,7 @@ public class MyProfileActivity extends AppCompatActivity {
 
     private void setUpFirebaseLogout() {
         //get firebase auth instance
-        mAuth = FirebaseAuth.getInstance();
+        //mAuth = FirebaseAuth.getInstance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -356,7 +363,7 @@ public class MyProfileActivity extends AppCompatActivity {
     public Bitmap grabImage(String path) throws FileNotFoundException,
             IOException {
         Bitmap bitmap = null;
-        bitmap = new GeneralUtils().decodeSampledBitmapFromPath(path, 250, 400);
+        bitmap = GeneralUtils.decodeSampledBitmapFromPath(path, 250, 400);
         return bitmap;
     }
 

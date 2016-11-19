@@ -8,20 +8,12 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.nearby.syncpad.callbacks.AddMeetingListener;
 import com.nearby.syncpad.data.ItemsContract;
 import com.nearby.syncpad.models.Meeting;
@@ -35,12 +27,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 public class MeetingsSaveActivity extends AppCompatActivity {
 
     private static final String TAG = "MeetingsSaveActivity";
     private Meeting mMeeting;
     private AddMeetingListener mAddMeetingListener;
-    private DatabaseReference mDatabase;
+
+    @Inject
+    DatabaseReference mDatabase;
+
     private TextView tvNotes , tvParticipants;
 
     @Override
@@ -48,7 +45,9 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meetings_save);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        ((SyncPadApplication)getApplication()).getMyApplicationComponent().inject(this);
+
+        //mDatabase = FirebaseDatabase.getInstance().getReference();
         //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         if(getIntent()!=null){

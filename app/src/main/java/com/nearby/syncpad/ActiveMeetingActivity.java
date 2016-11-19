@@ -961,7 +961,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
     public Bitmap grabImage(String path) throws FileNotFoundException,
             IOException {
         Bitmap bitmap = null;
-        bitmap = new GeneralUtils().decodeSampledBitmapFromPath(path, 800, 600);
+        bitmap = GeneralUtils.decodeSampledBitmapFromPath(path, 800, 600);
         return bitmap;
     }
 
