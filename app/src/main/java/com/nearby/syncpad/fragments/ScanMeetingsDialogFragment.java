@@ -136,7 +136,6 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
                 .addApi(Nearby.MESSAGES_API)
                 .addConnectionCallbacks(this)
                 .enableAutoManage(getActivity(), this)
-                .addOnConnectionFailedListener(this)
                 .build();
         mGoogleApiClient.connect();
     }
@@ -294,6 +293,7 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
 
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             unsubscribe();
+            mGoogleApiClient.stopAutoManage(getActivity());
             mGoogleApiClient.disconnect();
         }
     }
