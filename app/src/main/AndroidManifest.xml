@@ -35,6 +35,10 @@
             android:name=".MyProfileActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".MeetingDetailsActivity"
+            android:screenOrientation="portrait" />
+
         <meta-data
             android:name="com.google.android.nearby.messages.API_KEY"
             android:value="AIzaSyB5NQiwWuSek5DMaDMr6uPh-QuTFA2jiok" />

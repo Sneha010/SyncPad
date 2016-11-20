@@ -54,7 +54,6 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-
 public class ActiveMeetingActivity extends AppCompatActivity
         implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener
@@ -226,7 +225,6 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
 
         startMeeting();
-        //executePendingTasks();
     }
 
     @Override
@@ -498,8 +496,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
     private void publishMyData() {
         if(mProfileInformation!=null)
-            Log.d(TAG, "executePendingPublicationTask: My Profile publishing");
-        publish_MyProfile();
+             publish_MyProfile();
         if(myNotes!=null)
             publish_MyNotes();
     }
@@ -619,8 +616,6 @@ public class ActiveMeetingActivity extends AppCompatActivity
             }
         } else {
 
-            GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, getString(R.string.meeting_not_started));
-
             Nearby.Messages.publish(mGoogleApiClient, myNotes, mPublishOptions)
                     .setResultCallback(new ResultCallback<Status>() {
 
@@ -658,8 +653,6 @@ public class ActiveMeetingActivity extends AppCompatActivity
                         public void onResult(Status status) {
                             if (status.isSuccess()) {
                                 Log.i(TAG, "unpublish successful");
-//                                updateSharedPreference(Constants.KEY_PUBLICATION_TASK,
-//                                        Constants.TASK_NONE);
                             } else {
                                 Log.i(TAG, "could not unpublish");
                                 handleUnsuccessfulNearbyResult(status);
@@ -685,8 +678,6 @@ public class ActiveMeetingActivity extends AppCompatActivity
                         public void onResult(Status status) {
                             if (status.isSuccess()) {
                                 Log.i(TAG, "unpublish successful");
-//                                updateSharedPreference(Constants.KEY_PUBLICATION_TASK,
-//                                        Constants.TASK_NONE);
                             } else {
                                 Log.i(TAG, "could not unpublish");
                                 handleUnsuccessfulNearbyResult(status);

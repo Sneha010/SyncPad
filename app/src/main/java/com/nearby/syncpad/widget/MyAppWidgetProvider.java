@@ -22,13 +22,14 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
         for (int appWidgetId :  appWidgetIds) {
 
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
             // Create an Intent to launch MainActivity
             Intent intent = new Intent(context, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            views.setOnClickPendingIntent(R.id.widget, pendingIntent);
+            remoteViews.setOnClickPendingIntent(R.id.rlHeader, pendingIntent);
 
+            appWidgetManager.updateAppWidget(appWidgetId , remoteViews);
         }
     }
 }
