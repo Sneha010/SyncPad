@@ -207,7 +207,4 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public String getUid() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
-    }
 }

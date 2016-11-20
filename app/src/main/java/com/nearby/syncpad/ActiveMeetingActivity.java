@@ -40,10 +40,7 @@ import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.nearby.messages.NearbyMessagesStatusCodes;
-import com.google.android.gms.nearby.messages.PublishCallback;
 import com.google.android.gms.nearby.messages.PublishOptions;
-import com.google.android.gms.nearby.messages.Strategy;
-import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 import com.nearby.syncpad.adapter.ParticipantListItemAdapter;
 import com.nearby.syncpad.fragments.ParticipantsFragment;
@@ -57,6 +54,8 @@ import com.nearby.syncpad.util.GeneralUtils;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 
 public class ActiveMeetingActivity extends AppCompatActivity
@@ -85,18 +84,17 @@ public class ActiveMeetingActivity extends AppCompatActivity
     private ArrayList<String> noteList = new ArrayList<>();
     private ArrayList<String> participantNameList = new ArrayList<>();
 
+    @Inject
+    PublishOptions mPublishOptions;
+
+    @Inject
+    SubscribeOptions mSubscribeOptions;
+
     /**
      * A {@link MessageListener} for processing messages from nearby devices.
      */
     private MessageListener mMessageListener;
 
-    /**
-     * Sets the time in seconds for a published message or a subscription to live. Set to five
-     * minutes.
-     */
-    private static final Strategy PUB_SUB_STRATEGY = new Strategy.Builder()
-            .setTtlSeconds(Constants.TTL_IN_SECONDS)
-            .setDistanceType(Strategy.DISTANCE_TYPE_EARSHOT).build();
 
 
     @Override
@@ -104,6 +102,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.broadcast_activity_layout);
+
+        ((SyncPadApplication)getApplication()).getMyApplicationComponent().inject(this);
 
         if(getIntent()!=null){
             mCurrentMeeting = getIntent().getExtras().getParcelable(Constants.MEETING);
@@ -222,6 +222,9 @@ public class ActiveMeetingActivity extends AppCompatActivity
                 .enableAutoManage(this, this)
                 .addOnConnectionFailedListener(this)
                 .build();
+        mGoogleApiClient.connect();
+
+
         mGoogleApiClient.connect();
     }
 
@@ -598,21 +601,10 @@ public class ActiveMeetingActivity extends AppCompatActivity
             }
         } else {
             clearDeviceList();
-            SubscribeOptions options = new SubscribeOptions.Builder()
-                    .setStrategy(PUB_SUB_STRATEGY)
-                    .setCallback(new SubscribeCallback() {
-                        @Override
-                        public void onExpired() {
-                            super.onExpired();
-                            Log.i(TAG, "no longer subscribing");
-                            updateSharedPreference(Constants.KEY_SUBSCRIPTION_TASK,
-                                    Constants.TASK_NONE);
-                        }
-                    }).build();
 
             Log.d("", "@@@@" + mMessageListener);
 
-            Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener, options)
+            Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener, mSubscribeOptions)
                     .setResultCallback(new ResultCallback<Status>() {
 
                         @Override
@@ -674,19 +666,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
                 mGoogleApiClient.connect();
             }
         } else {
-            PublishOptions options = new PublishOptions.Builder()
-                    .setStrategy(PUB_SUB_STRATEGY)
-                    .setCallback(new PublishCallback() {
-                        @Override
-                        public void onExpired() {
-                            super.onExpired();
-                            Log.i(TAG, "no longer publishing");
-                            updateSharedPreference(Constants.KEY_PUBLICATION_TASK,
-                                    Constants.TASK_NONE);
-                        }
-                    }).build();
 
-            Nearby.Messages.publish(mGoogleApiClient, mProfileInformation, options)
+            Nearby.Messages.publish(mGoogleApiClient, mProfileInformation, mPublishOptions)
                     .setResultCallback(new ResultCallback<Status>() {
 
                         @Override
@@ -712,19 +693,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
         } else {
 
             GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, getString(R.string.meeting_not_started));
-            PublishOptions options = new PublishOptions.Builder()
-                    .setStrategy(PUB_SUB_STRATEGY)
-                    .setCallback(new PublishCallback() {
-                        @Override
-                        public void onExpired() {
-                            super.onExpired();
-                            Log.i(TAG, "no longer publishing");
-                            updateSharedPreference(Constants.KEY_PUBLICATION_TASK,
-                                    Constants.TASK_NONE);
-                        }
-                    }).build();
 
-            Nearby.Messages.publish(mGoogleApiClient, myNotes, options)
+            Nearby.Messages.publish(mGoogleApiClient, myNotes, mPublishOptions)
                     .setResultCallback(new ResultCallback<Status>() {
 
                         @Override
