@@ -223,7 +223,6 @@ public class ActiveMeetingActivity extends AppCompatActivity
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "onConnected called");
 
-
         startMeeting();
     }
 

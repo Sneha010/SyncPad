@@ -18,4 +18,6 @@ public class Constants {
     public static final String MEETING_PARTICIPANTS = "MEETING_PARTICIPANTS";
     public static final String MEETING_NOTES = "MEETING_NOTES";
 
+    public static final String MEETING_CURSOR_POSITION = "MEETING_CURSOR_POSITION";
+
 }

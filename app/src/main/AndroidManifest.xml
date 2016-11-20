@@ -37,7 +37,19 @@
 
         <activity
             android:name=".MeetingDetailsActivity"
-            android:screenOrientation="portrait" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.com.nearby.syncpad.contentprovider.meetings" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+            </activity>
 
         <meta-data
             android:name="com.google.android.nearby.messages.API_KEY"

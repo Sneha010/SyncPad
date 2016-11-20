@@ -38,13 +38,13 @@ public class ItemsContract {
 		}
 
 		/** Matches: /meetings/[_id]/ */
-		public static Uri buildItemUri(long _id) {
-			return BASE_URI.buildUpon().appendPath("meetings").appendPath(Long.toString(_id)).build();
+		public static Uri buildItemUri(String _id) {
+			return BASE_URI.buildUpon().appendPath("meetings").appendPath(_id).build();
 		}
 
         /** Read meetings ID item detail URI. */
-        public static long getItemId(Uri itemUri) {
-            return Long.parseLong(itemUri.getPathSegments().get(1));
+        public static String getItemId(Uri itemUri) {
+            return itemUri.getPathSegments().get(1);
         }
 	}
 

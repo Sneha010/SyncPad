@@ -13,7 +13,7 @@ public class MeetingNotesLoader extends CursorLoader {
         return new MeetingNotesLoader(context, ItemsContract.Items.buildDirUri());
     }
 
-    public static MeetingNotesLoader newInstanceForItemId(Context context, long itemId) {
+    public static MeetingNotesLoader newInstanceForItemId(Context context, String itemId) {
         return new MeetingNotesLoader(context, ItemsContract.Items.buildItemUri(itemId));
     }
 
