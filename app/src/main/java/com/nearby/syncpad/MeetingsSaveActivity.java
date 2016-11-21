@@ -2,7 +2,9 @@ package com.nearby.syncpad;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -32,6 +34,8 @@ import javax.inject.Inject;
 public class MeetingsSaveActivity extends AppCompatActivity {
 
     private static final String TAG = "MeetingsSaveActivity";
+    public static final String ACTION_DATA_UPDATED =
+            "com.nearby.syncpad.ACTION_DATA_UPDATED";
     private Meeting mMeeting;
     private AddMeetingListener mAddMeetingListener;
 
@@ -153,6 +157,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         mDatabase.updateChildren(childUpdates);
 
         addMeetingToDb(mMeeting);
+        updateWidgets();
     }
 
     private void addMeetingToDb(Meeting meeting){
@@ -169,8 +174,13 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
 
-
+    private void updateWidgets() {
+        // Setting the package ensures that only components in our app will receive the broadcast
+        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)
+                .setPackage(getApplicationContext().getPackageName());
+        sendBroadcast(dataUpdatedIntent);
     }
     private void buildAlertDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

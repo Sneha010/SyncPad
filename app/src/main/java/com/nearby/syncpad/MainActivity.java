@@ -267,27 +267,6 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
             mCursor.moveToPosition(position);
             holder.mTvMeetingTitle.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_NAME));
             holder.mTvNotes.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_NOTES));
-/*
-            final Meeting detailBean = new Meeting();
-            detailBean.setMeetingName(mCursor.getString(MeetingNotesLoader.Query.MEETING_NAME));
-            detailBean.setMeetingDate(mCursor.getString(MeetingNotesLoader.Query.MEETING_DATE));
-            detailBean.setMeetingTime(mCursor.getString(MeetingNotesLoader.Query.MEETING_TIME));
-            detailBean.setMeetingVenue(mCursor.getString(MeetingNotesLoader.Query.MEETING_VENUE));
-            detailBean.setMeetingAgenda(mCursor.getString(MeetingNotesLoader.Query.MEETING_AGENDA));
-            detailBean.setNotesList(mCursor.getString(MeetingNotesLoader.Query.MEETING_NOTES));
-            detailBean.setParticipantNameList(mCursor.getString(MeetingNotesLoader.Query.MEETING_PARTICIPANTS));
-
-            holder.mRlContentView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-
-                    Intent i = new Intent(MainActivity.this , MeetingDetailsActivity.class);
-                    i.putExtra(Constants.MEETING , detailBean);
-                    startActivity(i);
-                }
-            });*/
-
         }
 
         @Override
