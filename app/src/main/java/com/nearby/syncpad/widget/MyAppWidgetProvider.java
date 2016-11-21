@@ -25,6 +25,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
 
         for (int appWidgetId :  appWidgetIds) {
 
@@ -36,17 +37,19 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             remoteViews.setOnClickPendingIntent(R.id.rlHeader, pendingIntent);
 
             setRemoteAdapter(context, remoteViews);
-
+/*
             Intent clickIntentTemplate = new Intent(context, MeetingDetailsActivity.class);
             PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
                     .addNextIntentWithParentStack(clickIntentTemplate)
                     .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            remoteViews.setPendingIntentTemplate(R.id.widget_list, clickPendingIntentTemplate);
+            remoteViews.setPendingIntentTemplate(R.id.widget_list, clickPendingIntentTemplate);*/
             remoteViews.setEmptyView(R.id.widget_list, R.id.ll_no_meetings);
 
 
             appWidgetManager.updateAppWidget(appWidgetId , remoteViews);
         }
+
+
     }
 
     @Override

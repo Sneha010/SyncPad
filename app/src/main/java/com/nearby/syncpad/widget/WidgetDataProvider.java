@@ -28,7 +28,6 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
 
     private Context mContext;
     private Cursor mCursor;
-    private List mMeetingList = new ArrayList();
 
     public WidgetDataProvider(Context context) {
         mContext = context;
@@ -69,11 +68,11 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
             intent.putExtra("item_id" , mCursor.getString(MeetingNotesLoader.Query.MEETING_ID));
             PendingIntent pendingIntent = PendingIntent.getActivity(mContext , 0 ,intent, 0);
             remoteViews.setOnClickPendingIntent(R.id.rlContentView , pendingIntent);
-
             return remoteViews;
-
-        }else
+        }else{
             return null;
+        }
+
     }
 
     @Override
