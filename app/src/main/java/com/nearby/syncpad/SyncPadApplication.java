@@ -20,7 +20,7 @@ public class SyncPadApplication extends Application{
     public void onCreate() {
         super.onCreate();
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/gothamblack.ttf")
+                .setDefaultFontPath("fonts/gothambook.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );

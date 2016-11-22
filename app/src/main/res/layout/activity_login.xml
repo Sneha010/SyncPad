@@ -7,11 +7,40 @@
     android:background="@color/colorPrimary"
     tools:context="com.nearby.syncpad.LoginActivity">
 
+
+    <LinearLayout
+        android:id="@+id/rlHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="90dp">
+
+        <ImageView
+            android:id="@+id/ivImageIcon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/app_icon"/>
+
+        <TextView
+            android:id="@+id/tvAppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="40sp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="20dp">
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="30dp">
 
         <LinearLayout
             android:id="@+id/layout_email_password"
@@ -44,13 +73,15 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_email_password"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/button_sign_in"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:textColor="@color/colorAccent"
                 android:text="@string/sign_in" />
 
 
@@ -58,6 +89,9 @@
                 android:id="@+id/button_sign_up"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:textColor="@color/colorAccent"
+                android:layout_marginLeft="10dp"
                 android:text="@string/sign_up" />
 
         </LinearLayout>
@@ -66,9 +100,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/layout_buttons"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/white"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="20dp"
             android:text="@string/forgot_password" />
 
     </RelativeLayout>
