@@ -1,104 +1,55 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     >
 
-
-    <include layout="@layout/toolbar"/>
-
-
-    <LinearLayout
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:background="@color/colorPrimary"
-        android:layout_height="200dp"
-        android:gravity="center"
-        >
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profileImage"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_margin="10dp"
-            android:src="@drawable/default_user"
-            />
-    </LinearLayout>
+        android:layout_height="@dimen/app_bar_height"
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        >
-
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/myNameTIL"
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-            <EditText
-                android:id="@+id/myName"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:id="@+id/ivPhoto"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textSize="15sp"
-                android:hint="My Name" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:fitsSystemWindows="true"
+                app:layout_collapseMode="parallax"
+                />
 
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/myRoleTIL"
-            android:layout_width="match_parent"
-            android:layout_marginTop="6dp"
-            android:layout_height="wrap_content" >
-            <EditText
-                android:id="@+id/myRole"
+            <View
+                android:id="@+id/iv_support_bg"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:inputType="text"
-                android:textSize="15sp"
-                android:hint="My role in TCS" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_height="120dp"
+                android:background="@drawable/photo_background_protection"
+                android:layout_gravity="bottom"/>
 
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/myEmailTIL"
-            android:layout_width="match_parent"
-            android:layout_marginTop="6dp"
-            android:layout_height="wrap_content" >
-            <EditText
-                android:id="@+id/myEmailId"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:inputType="textEmailAddress"
-                android:textSize="15sp"
-                android:hint="My email id" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <com.rey.material.widget.Button
-            android:layout_marginTop="20dp"
-            android:id="@+id/buttonSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
-            android:textColor="@color/white"
-            android:text="Save"
-            />
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
 
-        <com.rey.material.widget.Button
-            android:layout_marginTop="20dp"
-            android:id="@+id/buttonLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
-            android:textColor="@color/white"
-            android:text="Logout"
-            />
+    <include layout="@layout/content_scrolling" />
 
-    </LinearLayout>
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

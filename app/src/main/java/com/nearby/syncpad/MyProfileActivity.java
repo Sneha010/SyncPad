@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +22,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,19 +41,41 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class MyProfileActivity extends AppCompatActivity {
 
-    ImageView profileImage;
-    EditText myRole;
+
+    @BindView(R.id.ivPhoto)
+    ImageView ivPhoto;
+    @BindView(R.id.iv_support_bg)
+    View ivSupportBg;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.collapsingToolbar)
+    CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.app_bar)
+    AppBarLayout appBar;
+    @BindView(R.id.myName)
     EditText myName;
-    EditText myEmailId;
+    @BindView(R.id.myNameTIL)
     TextInputLayout myNameTIL;
+    @BindView(R.id.myRole)
+    EditText myRole;
+    @BindView(R.id.myRoleTIL)
     TextInputLayout myRoleTIL;
+    @BindView(R.id.myEmailId)
+    EditText myEmailId;
+    @BindView(R.id.myEmailTIL)
     TextInputLayout myEmailTIL;
-    Button btnSave , btnLogout;
+    @BindView(R.id.buttonSave)
+    Button buttonSave;
+    @BindView(R.id.tvLogout)
+    TextView tvLogout;
+
 
     @Inject
     FirebaseAuth mAuth;
@@ -61,13 +87,15 @@ public class MyProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myprofile_layout);
+        ButterKnife.bind(this);
 
-        ((SyncPadApplication)getApplication()).getMyApplicationComponent().inject(this);
+        ((SyncPadApplication) getApplication()).getMyApplicationComponent().inject(this);
 
         setUpFirebaseLogout();
         init();
         initializeFieldsWithSavedData();
     }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -75,23 +103,21 @@ public class MyProfileActivity extends AppCompatActivity {
 
 
     private void init() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("My Profile");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        profileImage = (ImageView) findViewById(R.id.profileImage);
-        myRole = (EditText) findViewById(R.id.myRole);
-        myName = (EditText) findViewById(R.id.myName);
-        myEmailId = (EditText) findViewById(R.id.myEmailId);
-        myNameTIL = (TextInputLayout) findViewById(R.id.myNameTIL);
-        myRoleTIL = (TextInputLayout) findViewById(R.id.myRoleTIL);
-        myEmailTIL = (TextInputLayout) findViewById(R.id.myEmailTIL);
-        btnSave = (Button) findViewById(R.id.buttonSave);
-        btnLogout = (Button) findViewById(R.id.buttonLogout);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-        btnSave.setOnClickListener(new View.OnClickListener() {
+
+        buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveProfileData();
@@ -99,14 +125,14 @@ public class MyProfileActivity extends AppCompatActivity {
             }
         });
 
-        btnLogout.setOnClickListener(new View.OnClickListener() {
+        tvLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAuth.signOut();
             }
         });
 
-        profileImage.setOnClickListener(new View.OnClickListener() {
+        ivPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openCameraAndSavePhoto(v);
@@ -166,8 +192,6 @@ public class MyProfileActivity extends AppCompatActivity {
         }
 
 
-
-
         //Saving the profile of user to publish it to other nearby devices
         ProfileStore.saveUserName(this, myName.getText().toString());
         ProfileStore.saveEmailKey(this, myEmailId.getText().toString());
@@ -183,6 +207,7 @@ public class MyProfileActivity extends AppCompatActivity {
         uploadPhoto(v);
 
     }
+
     public void uploadPhoto(View v) {
 
         if (GeneralUtils.checkSDCard()) {
@@ -223,7 +248,7 @@ public class MyProfileActivity extends AppCompatActivity {
                 if (Build.VERSION.SDK_INT < 20) {
                     Intent intent = new Intent(
                             Intent.ACTION_PICK,
-                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
                     intent.setType("image/*");
 
@@ -253,8 +278,8 @@ public class MyProfileActivity extends AppCompatActivity {
                     startActivityForResult(cameraintent, CAMERA_RESULT);
                 } else {
 
-                    Toast.makeText(this ,
-                            this.getResources().getString(R.string.no_storage) , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,
+                            this.getResources().getString(R.string.no_storage), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -308,17 +333,18 @@ public class MyProfileActivity extends AppCompatActivity {
                     }
                     if (!(isFinishing())) {
 
-                        Toast.makeText(this , alertMsg , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, alertMsg, Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         } catch (OutOfMemoryError e) {
-            profileImage.setImageBitmap(null);
+            ivPhoto.setImageBitmap(null);
             finish();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     private class UpdatePicTask extends AsyncTask<String, Void, Void> {
         private boolean err = false;
         private String errMessage = "";
@@ -353,13 +379,13 @@ public class MyProfileActivity extends AppCompatActivity {
 
                 if (err) {
 
-                    Toast.makeText(MyProfileActivity.this , errMessage , Toast.LENGTH_SHORT).show();
-                    ProfileStore.saveImagePath(MyProfileActivity.this , null);
+                    Toast.makeText(MyProfileActivity.this, errMessage, Toast.LENGTH_SHORT).show();
+                    ProfileStore.saveImagePath(MyProfileActivity.this, null);
 
                 } else {
 
-                    profileImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    profileImage.setImageBitmap(uploadBitmap);
+                    ivPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    ivPhoto.setImageBitmap(uploadBitmap);
                     ProfileStore.saveImagePath(MyProfileActivity.this, imgPath);
 
                 }
@@ -417,13 +443,38 @@ public class MyProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.camera, menu);
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        finish();
+        int id = item.getItemId();
+
+        if (id == R.id.camera) {
+
+            ImageButton cameraButton = (ImageButton) item.getActionView();
+
+            cameraButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    openCameraAndSavePhoto(v);
+                }
+            });
+
+
+        }
 
         return true;
 
     }
+
     @Override
     public void onStart() {
         super.onStart();
