@@ -1,6 +1,7 @@
 package com.nearby.syncpad;
 
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.nearby.syncpad.util.GeneralUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.nearby.syncpad.R.id.tvNotes;
 
@@ -62,6 +64,10 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
         initialise();
         displayMeetingDetails();
     }
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
 
     public void initialise() {
@@ -71,7 +77,7 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                supportFinishAfterTransition();
             }
         });
 

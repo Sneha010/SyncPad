@@ -31,6 +31,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class MeetingsSaveActivity extends AppCompatActivity {
 
     private static final String TAG = "MeetingsSaveActivity";
@@ -62,6 +64,10 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         displayMeetingDetails();
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
 
     public void init(){

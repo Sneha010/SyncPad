@@ -2,6 +2,7 @@ package com.nearby.syncpad;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -53,6 +54,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ActiveMeetingActivity extends AppCompatActivity
         implements GoogleApiClient.ConnectionCallbacks,
@@ -110,6 +113,10 @@ public class ActiveMeetingActivity extends AppCompatActivity
         setUpUI();
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     private void init() {
 

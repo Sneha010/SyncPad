@@ -11,10 +11,11 @@
     android:foreground="?selectableItemBackground">
 
     <RelativeLayout
-        android:id="@+id/rlContentView"
+        android:id="@+id/rlMainContentView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:transitionName="meetingHeader"
+        >
 
 
         <TextView

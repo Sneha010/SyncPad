@@ -1,5 +1,6 @@
 package com.nearby.syncpad;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -36,6 +37,8 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 
 public class MyProfileActivity extends AppCompatActivity {
 
@@ -64,6 +67,10 @@ public class MyProfileActivity extends AppCompatActivity {
         setUpFirebaseLogout();
         init();
         initializeFieldsWithSavedData();
+    }
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
 

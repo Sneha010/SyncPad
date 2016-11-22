@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -34,6 +35,7 @@ import com.nearby.syncpad.fragments.ScanMeetingsDialogFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.nearby.syncpad.R.id.tvMeetingTitle;
 
@@ -65,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
         });
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     public void init() {
 
@@ -253,7 +259,9 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
 
                     Intent i = new Intent(MainActivity.this , MeetingDetailsActivity.class);
                     i.putExtra("item_id" , mCursor.getString(MeetingNotesLoader.Query.MEETING_ID));
-                    startActivity(i);
+                    ActivityOptionsCompat options = ActivityOptionsCompat.
+                            makeSceneTransitionAnimation(MainActivity.this, vh.rlMainContentView , "meetingHeader");
+                    startActivity(i , options.toBundle());
 
                    /* startActivity(new Intent(Intent.ACTION_VIEW,
                             ItemsContract.Items.buildItemUri(mCursor.getString(MeetingNotesLoader.Query.MEETING_ID))));*/
@@ -280,8 +288,8 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
         TextView mTvMeetingTitle;
         @BindView(R.id.tvNotes)
         TextView mTvNotes;
-        @BindView(R.id.rlContentView)
-        RelativeLayout mRlContentView;
+        @BindView(R.id.rlMainContentView)
+        RelativeLayout rlMainContentView;
 
         public ViewHolder(View view) {
             super(view);

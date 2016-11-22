@@ -1,6 +1,7 @@
 package com.nearby.syncpad;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +23,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.nearby.syncpad.models.User;
 
 import javax.inject.Inject;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -48,6 +51,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         ((SyncPadApplication)getApplication()).getMyApplicationComponent().inject(this);
 
         init();
+    }
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     private void init() {

@@ -67,7 +67,7 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
             Intent intent = new Intent(mContext , MeetingDetailsActivity.class);
             intent.putExtra("item_id" , mCursor.getString(MeetingNotesLoader.Query.MEETING_ID));
             PendingIntent pendingIntent = PendingIntent.getActivity(mContext , 0 ,intent, 0);
-            remoteViews.setOnClickPendingIntent(R.id.rlContentView , pendingIntent);
+            remoteViews.setOnClickPendingIntent(R.id.rlMainContentView , pendingIntent);
             return remoteViews;
         }else{
             return null;
