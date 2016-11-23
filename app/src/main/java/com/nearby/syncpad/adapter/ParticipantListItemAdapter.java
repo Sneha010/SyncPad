@@ -1,5 +1,6 @@
 package com.nearby.syncpad.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,18 +10,27 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.nearby.syncpad.ActiveMeetingActivity;
 import com.nearby.syncpad.R;
+import com.nearby.syncpad.SyncPadApplication;
 import com.nearby.syncpad.models.Participant;
 import com.nearby.syncpad.util.GeneralUtils;
+import com.nearby.syncpad.util.ImageUtility;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 
 public class ParticipantListItemAdapter extends RecyclerView.Adapter<ParticipantListItemAdapter.ViewHolder>{
 
     private ArrayList<Participant> mParticipants;
 
-    public ParticipantListItemAdapter(Context context , ArrayList<Participant> participants) {
+    @Inject
+    ImageUtility mImageUtility;
+
+
+    public ParticipantListItemAdapter(Activity context , ArrayList<Participant> participants) {
         this.mParticipants = participants;
     }
 
@@ -29,6 +39,8 @@ public class ParticipantListItemAdapter extends RecyclerView.Adapter<Participant
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.participant_item_view, parent, false);
+
+        ((SyncPadApplication)parent.getContext().getApplicationContext()).getMyApplicationComponent().inject(this);
 
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -63,8 +75,10 @@ public class ParticipantListItemAdapter extends RecyclerView.Adapter<Participant
             holder.rl_fromMyselfNotes.setVisibility(View.GONE);
             holder.mPersonName.setText(mParticipants.get(position).getName());
             holder.meetingNotes.setText(mParticipants.get(position).getMeetingNotes());
-            if(mParticipants.get(position).getImageBytes() != null)
-                holder.mProfileImage.setImageDrawable(GeneralUtils.getImageFromByteArray(mParticipants.get(position).getImageBytes()));
+            if(mParticipants.get(position).getImageBytes() != null){
+                holder.mProfileImage.setImageBitmap(mImageUtility.getBitmapFromImageBytes(mParticipants.get(position).getImageBytes()));
+            }
+               // holder.mProfileImage.setImageDrawable(GeneralUtils.getImageFromByteArray(mParticipants.get(position).getImageBytes()));
 
             if(mParticipants.get(position).getMeetingNotes()!=null){
                 holder.meetingNotes.setVisibility(View.VISIBLE);

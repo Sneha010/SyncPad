@@ -4,6 +4,7 @@ import com.nearby.syncpad.ActiveMeetingActivity;
 import com.nearby.syncpad.LoginActivity;
 import com.nearby.syncpad.MeetingsSaveActivity;
 import com.nearby.syncpad.MyProfileActivity;
+import com.nearby.syncpad.adapter.ParticipantListItemAdapter;
 import com.nearby.syncpad.fragments.ScanMeetingsDialogFragment;
 import com.nearby.syncpad.modules.FirebaseModule;
 import com.nearby.syncpad.modules.GoogleApiModule;
@@ -30,4 +31,6 @@ public interface MyApplicationComponent {
     void inject(ActiveMeetingActivity activeMeetingActivity);
 
     void inject(ScanMeetingsDialogFragment scanMeetingsDialogFragment);
+
+    void inject(ParticipantListItemAdapter participantListItemAdapter);
 }

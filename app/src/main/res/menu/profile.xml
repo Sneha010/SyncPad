@@ -2,9 +2,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     >
-    <item android:id="@+id/participants"
-        android:title="Participants"
+    <item android:id="@+id/profile"
+        android:title="Profile"
         android:orderInCategory="100"
         app:showAsAction="always"
-        android:icon="@drawable/participants_icon"/>
+        android:icon="@drawable/profile_icon"/>
 </menu>

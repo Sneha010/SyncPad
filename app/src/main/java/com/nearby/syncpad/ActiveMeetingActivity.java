@@ -48,6 +48,7 @@ import com.nearby.syncpad.storedata.ProfileStore;
 import com.nearby.syncpad.util.Constants;
 import com.nearby.syncpad.util.DataItemDecoration;
 import com.nearby.syncpad.util.GeneralUtils;
+import com.nearby.syncpad.util.ImageUtility;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -82,6 +83,9 @@ public class ActiveMeetingActivity extends AppCompatActivity
     private ParticipantsFragment participantListFragment;
     private ArrayList<String> noteList = new ArrayList<>();
     private ArrayList<String> participantNameList = new ArrayList<>();
+
+    @Inject
+    ImageUtility mImageUtility;
 
     @Inject
     PublishOptions mPublishOptions;
@@ -189,6 +193,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
         participant.setAttendance("present");
         participant.setIsHost(mIsHost);
         participant.setMeeting(mCurrentMeeting);
+        participant.setImageBytes(mProfileStore.getMyProfile().getImageBytes());
 
         participantNameList.add(participant.getName());
 

@@ -100,8 +100,8 @@
         fab:menu_labels_textColor="@color/white"
         fab:menu_labels_textSize="14sp"
         fab:menu_labels_cornerRadius="3dp"
-        fab:menu_labels_colorNormal="@color/colorAccent"
-        fab:menu_labels_colorPressed="@color/rippleAccentColor"
+        fab:menu_labels_colorNormal="@color/colorPrimary"
+        fab:menu_labels_colorPressed="@color/colorPrimary"
         fab:menu_labels_colorRipple="#66FFFFFF"
         fab:menu_labels_singleLine="false"
         fab:menu_labels_ellipsize="none"
@@ -115,17 +115,19 @@
             android:id="@+id/menu_item1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/start_btn"
+            android:src="@drawable/add_meeting"
             fab:fab_size="mini"
-            fab:fab_label="@string/fab_button1" />
+            fab:fab_label="@string/fab_button1"
+            fab:fab_colorNormal="@color/colorAccent"/>
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_item2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/add_icon"
+            android:src="@drawable/join_meeting"
             fab:fab_size="mini"
-            fab:fab_label="@string/fab_button2" />
+            fab:fab_label="@string/fab_button2"
+            fab:fab_colorNormal="@color/colorAccent"/>
 
     </com.github.clans.fab.FloatingActionMenu>
 </RelativeLayout>
