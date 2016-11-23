@@ -42,4 +42,10 @@
     <string name="lbl_forgot_password">Forgot password?</string>
     <string name="btn_reset_password">Reset Password</string>
     <string name="btn_back"><![CDATA[<< Back]]></string>
+
+    <!--My Profile-->
+    <string name="profile_name_hint">My Name</string>
+    <string name="profile_org_hint">My Organisation</string>
+    <string name="profile_role_hint">My Role</string>
+    <string name="profile_email_hint">My Email Id</string>
 </resources>

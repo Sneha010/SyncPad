@@ -9,6 +9,7 @@ public class ProfileStore {
 
 
     public static final String USER_NAME_KEY = "user_name";
+    public static final String USER_ORG_KEY = "user_org";
     public static final String USER_ROLE_KEY = "user_role";
     public static final String USER_EMAIL_KEY = "user_email";
     public static final String USER_IMAGE_BYTE = "user_image";
@@ -23,6 +24,10 @@ public class ProfileStore {
 
     public static void saveUserName(Context context, String name) {
         getMyPreferences(context).edit().putString(USER_NAME_KEY, name).commit();
+    }
+
+    public static void saveUserOrganisation(Context context, String org) {
+        getMyPreferences(context).edit().putString(USER_ORG_KEY, org).commit();
     }
 
     public static void saveUserRole(Context context, String role) {
@@ -41,6 +46,11 @@ public class ProfileStore {
     public static String getUserName(Context context) {
 
         return getMyPreferences(context).getString(USER_NAME_KEY, "");
+
+    }
+    public static String getUserOrgnisation(Context context) {
+
+        return getMyPreferences(context).getString(USER_ORG_KEY, "");
 
     }
 

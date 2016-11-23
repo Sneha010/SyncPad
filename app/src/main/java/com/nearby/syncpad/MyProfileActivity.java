@@ -1,6 +1,9 @@
 package com.nearby.syncpad;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -63,6 +66,10 @@ public class MyProfileActivity extends AppCompatActivity {
     EditText myName;
     @BindView(R.id.myNameTIL)
     TextInputLayout myNameTIL;
+    @BindView(R.id.myOrg)
+    EditText myOrg;
+    @BindView(R.id.myOrgTIL)
+    TextInputLayout myOrgTIL;
     @BindView(R.id.myRole)
     EditText myRole;
     @BindView(R.id.myRoleTIL)
@@ -121,7 +128,6 @@ public class MyProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 saveProfileData();
-                finish();
             }
         });
 
@@ -129,13 +135,6 @@ public class MyProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mAuth.signOut();
-            }
-        });
-
-        ivPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openCameraAndSavePhoto(v);
             }
         });
     }
@@ -161,6 +160,7 @@ public class MyProfileActivity extends AppCompatActivity {
     //To show the earlier saved data filled in the form fields
     private void initializeFieldsWithSavedData() {
         myName.setText(ProfileStore.getUserName(this));
+        myOrg.setText(ProfileStore.getUserOrgnisation(this));
         myRole.setText(ProfileStore.getUserRole(this));
         myEmailId.setText(ProfileStore.getEmailAddress(this));
 
@@ -178,7 +178,11 @@ public class MyProfileActivity extends AppCompatActivity {
             myNameTIL.setError("Cannot be empty");
             return;
         }
-
+        if (TextUtils.isEmpty(myOrg.getText().toString())) {
+            myOrgTIL.setErrorEnabled(true);
+            myOrgTIL.setError("Cannot be empty");
+            return;
+        }
         if (TextUtils.isEmpty(myRole.getText().toString())) {
             myRoleTIL.setErrorEnabled(true);
             myRoleTIL.setError("Cannot be empty");
@@ -196,42 +200,10 @@ public class MyProfileActivity extends AppCompatActivity {
         ProfileStore.saveUserName(this, myName.getText().toString());
         ProfileStore.saveEmailKey(this, myEmailId.getText().toString());
         ProfileStore.saveUserRole(this, myRole.getText().toString());
+        ProfileStore.saveUserOrganisation(this, myOrg.getText().toString());
 
-        //Go back after saving the data
-        getFragmentManager().popBackStack();
+        finish();
 
-    }
-
-    public void openCameraAndSavePhoto(View v) {
-
-        uploadPhoto(v);
-
-    }
-
-    public void uploadPhoto(View v) {
-
-        if (GeneralUtils.checkSDCard()) {
-            registerForContextMenu(v);
-            this.openContextMenu(v);
-        } else {
-            if (!this.isFinishing()) {
-
-                Toast.makeText(this, "SD card not available.", Toast.LENGTH_LONG).show();
-
-            }
-        }
-    }
-
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        if (v.getId() == R.id.profileImage) {
-            menu.setHeaderTitle(getString(R.string.select_action));
-            String[] menuItems = {getString(R.string.gallery),
-                    getString(R.string.take_photo)};
-            for (int i = 0; i < menuItems.length; i++) {
-                menu.add(Menu.NONE, i, i, menuItems[i]);
-            }
-        }
     }
 
     final static int CAMERA_RESULT = 0;
@@ -239,53 +211,6 @@ public class MyProfileActivity extends AppCompatActivity {
     private static final int GALLERY_KITKAT_INTENT_CALLED = 2;
     private File photo;
     private Bitmap uploadBitmap;
-
-    public boolean onContextItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case 0: {
-
-                if (Build.VERSION.SDK_INT < 20) {
-                    Intent intent = new Intent(
-                            Intent.ACTION_PICK,
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-                    intent.setType("image/*");
-
-                    startActivityForResult(Intent.createChooser(intent,
-                            getString(R.string.select_pic)), GALLERY_INTENT_CALLED);
-                } else {
-                    //For kitkat and above versions..
-                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    intent.setType("image/*");
-                    //intent.setType("image/jpeg");
-                    startActivityForResult(intent, GALLERY_KITKAT_INTENT_CALLED);
-                }
-                break;
-            }
-
-            case 1: {
-                SimpleDateFormat dateFormat = new SimpleDateFormat(
-                        "yyyyMMdd-HHmmss");
-                if (GeneralUtils.checkSDCard()) {
-                    photo = new File(Environment.getExternalStorageDirectory(),
-                            dateFormat.format(new Date()) + ".jpg");
-                    Intent cameraintent = new Intent(
-                            "android.media.action.IMAGE_CAPTURE");
-                    cameraintent.putExtra(MediaStore.EXTRA_OUTPUT,
-                            Uri.fromFile(photo));
-                    startActivityForResult(cameraintent, CAMERA_RESULT);
-                } else {
-
-                    Toast.makeText(this,
-                            this.getResources().getString(R.string.no_storage), Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        }
-        return true;
-    }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -457,22 +382,67 @@ public class MyProfileActivity extends AppCompatActivity {
 
         if (id == R.id.camera) {
 
-            ImageButton cameraButton = (ImageButton) item.getActionView();
-
-            cameraButton.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    // TODO Auto-generated method stub
-                    openCameraAndSavePhoto(v);
+            final CharSequence[] items = {getString(R.string.gallery), getString(R.string.take_photo)};
+            Dialog selectionDialog;
+            AlertDialog.Builder builder = new AlertDialog.Builder(MyProfileActivity.this);
+            builder.setTitle("Via");
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int via) {
+                    performAction(via);
                 }
             });
+            selectionDialog = builder.create();
+            selectionDialog.show();
 
+    }
 
+    return true;
+
+}
+
+    private void performAction(int via) {
+        switch (via) {
+            case 0: {
+
+                if (Build.VERSION.SDK_INT < 20) {
+                    Intent intent = new Intent(
+                            Intent.ACTION_PICK,
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                    intent.setType("image/*");
+
+                    startActivityForResult(Intent.createChooser(intent,
+                            getString(R.string.select_pic)), GALLERY_INTENT_CALLED);
+                } else {
+                    //For kitkat and above versions..
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("image/*");
+                    //intent.setType("image/jpeg");
+                    startActivityForResult(intent, GALLERY_KITKAT_INTENT_CALLED);
+                }
+                break;
+            }
+
+            case 1: {
+                SimpleDateFormat dateFormat = new SimpleDateFormat(
+                        "yyyyMMdd-HHmmss");
+                if (GeneralUtils.checkSDCard()) {
+                    photo = new File(Environment.getExternalStorageDirectory(),
+                            dateFormat.format(new Date()) + ".jpg");
+                    Intent cameraintent = new Intent(
+                            "android.media.action.IMAGE_CAPTURE");
+                    cameraintent.putExtra(MediaStore.EXTRA_OUTPUT,
+                            Uri.fromFile(photo));
+                    startActivityForResult(cameraintent, CAMERA_RESULT);
+                } else {
+
+                    Toast.makeText(this,
+                            this.getResources().getString(R.string.no_storage), Toast.LENGTH_SHORT).show();
+                }
+
+            }
         }
-
-        return true;
-
     }
 
     @Override

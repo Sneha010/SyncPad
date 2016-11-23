@@ -21,10 +21,25 @@
                 android:id="@+id/myName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="My Name"
+                android:hint="@string/profile_name_hint"
                 android:inputType="text"
                 android:textSize="15sp" />
         </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/myOrgTIL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/myOrg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/profile_org_hint"
+                android:inputType="text"
+                android:textSize="15sp" />
+        </android.support.design.widget.TextInputLayout>
+
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/myRoleTIL"
@@ -36,7 +51,7 @@
                 android:id="@+id/myRole"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="My role in TCS"
+                android:hint="@string/profile_role_hint"
                 android:inputType="text"
                 android:singleLine="true"
                 android:textSize="15sp" />
@@ -53,9 +68,8 @@
                 android:id="@+id/myEmailId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="My email id"
+                android:hint="@string/profile_email_hint"
                 android:inputType="textEmailAddress"
-                android:singleLine="true"
                 android:textSize="15sp" />
         </android.support.design.widget.TextInputLayout>
 
