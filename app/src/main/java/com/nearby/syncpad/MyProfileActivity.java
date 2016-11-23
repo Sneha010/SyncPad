@@ -32,8 +32,12 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.instant.runtimepermission.MPermission;
+import com.instant.runtimepermission.PermissionRequest;
+import com.nearby.syncpad.models.Participant;
 import com.nearby.syncpad.storedata.ProfileStore;
 import com.nearby.syncpad.util.GeneralUtils;
+import com.nearby.syncpad.util.ImageUtility;
 import com.rey.material.widget.Button;
 
 import java.io.File;
@@ -41,6 +45,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -83,9 +88,16 @@ public class MyProfileActivity extends AppCompatActivity {
     @BindView(R.id.tvLogout)
     TextView tvLogout;
 
+    private Bitmap mProfileBitmap;
 
     @Inject
     FirebaseAuth mAuth;
+
+    @Inject
+    ProfileStore mProfileStore;
+
+    @Inject
+    ImageUtility mImageUtility;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -159,13 +171,18 @@ public class MyProfileActivity extends AppCompatActivity {
 
     //To show the earlier saved data filled in the form fields
     private void initializeFieldsWithSavedData() {
-        myName.setText(ProfileStore.getUserName(this));
-        myOrg.setText(ProfileStore.getUserOrgnisation(this));
-        myRole.setText(ProfileStore.getUserRole(this));
-        myEmailId.setText(ProfileStore.getEmailAddress(this));
+        Participant participant = mProfileStore.getMyProfile();
 
-        if (ProfileStore.getImagePath(this) != null) {
-            new UpdatePicTask().execute(ProfileStore.getImagePath(this), "");
+        if (participant != null) {
+            myName.setText(participant.getName());
+            myRole.setText(participant.getRole());
+            myOrg.setText(participant.getOrganisation());
+            myEmailId.setText(participant.getEmailAddress());
+
+            mProfileBitmap = mImageUtility.getBitmapFromImageBytes(participant.getImageBytes());
+
+            ivPhoto.setImageBitmap(mProfileBitmap);
+
         }
     }
 
@@ -195,12 +212,23 @@ public class MyProfileActivity extends AppCompatActivity {
             return;
         }
 
+        String profileImageBytes = "";
+        if (mProfileBitmap != null) {
 
-        //Saving the profile of user to publish it to other nearby devices
-        ProfileStore.saveUserName(this, myName.getText().toString());
-        ProfileStore.saveEmailKey(this, myEmailId.getText().toString());
-        ProfileStore.saveUserRole(this, myRole.getText().toString());
-        ProfileStore.saveUserOrganisation(this, myOrg.getText().toString());
+            profileImageBytes = mImageUtility.getProfileImageBytes(mProfileBitmap);
+
+            mProfileBitmap.recycle();
+
+        }
+
+        Participant participant = new Participant();
+        participant.setName(myName.getText().toString());
+        participant.setRole(myRole.getText().toString());
+        participant.setEmailAddress(myEmailId.getText().toString());
+        participant.setImageBytes(profileImageBytes);
+        participant.setOrganisation(myOrg.getText().toString());
+
+        mProfileStore.saveProfile(participant);
 
         finish();
 
@@ -210,58 +238,54 @@ public class MyProfileActivity extends AppCompatActivity {
     private static final int GALLERY_INTENT_CALLED = 1;
     private static final int GALLERY_KITKAT_INTENT_CALLED = 2;
     private File photo;
-    private Bitmap uploadBitmap;
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         try {
 
+            Uri selectedImage = null;
             String alertMsg = null;
-            if (requestCode == CAMERA_RESULT && resultCode == RESULT_OK) {
-                new UpdatePicTask().execute(photo.getAbsolutePath(),
-                        getString(R.string.me_please_click_image));
-            } else {
-                if (data != null) {
 
-                    Uri selectedImage = null;
+            switch (requestCode) {
 
-                    if (requestCode == GALLERY_INTENT_CALLED) {
+                case CAMERA_RESULT:
+
+                    new UpdatePicTask().execute(photo.getAbsolutePath(),
+                            getString(R.string.me_please_click_image));
+
+
+                    break;
+                case GALLERY_INTENT_CALLED:
+
+                    if (data != null) {
                         selectedImage = data.getData();
                         new UpdatePicTask().execute(
-                                getRealPathFromURI(selectedImage),
+                                mImageUtility.getRealPathFromURI(selectedImage),
                                 getString(R.string.me_please_select_image));
-                        new UpdatePicTask().execute(
-                                getRealPathFromURI(selectedImage),
-                                getString(R.string.me_please_select_image));
-
-                    } else if (requestCode == GALLERY_KITKAT_INTENT_CALLED) {
-                        selectedImage = data.getData();
-                      /* final int takeFlags = data.getFlags()
-                                & (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        // Check for the freshest data.
-                        getContentResolver().takePersistableUriPermission(selectedImage, takeFlags);*/
-
-
-                        new UpdatePicTask().execute(
-                                getRealPathFromURIForKitkat(selectedImage),
-                                getString(R.string.me_please_select_image));
-
-                    }
-
-
-                } else {
-                    if (requestCode == GALLERY_INTENT_CALLED || requestCode == GALLERY_KITKAT_INTENT_CALLED) {
+                    } else {
                         alertMsg = getString(R.string.me_please_select_image);
-                    } else if (requestCode == CAMERA_RESULT) {
-                        alertMsg = getString(R.string.me_please_click_image);
                     }
-                    if (!(isFinishing())) {
 
-                        Toast.makeText(this, alertMsg, Toast.LENGTH_SHORT).show();
+                    break;
+                case GALLERY_KITKAT_INTENT_CALLED:
+                    if (data != null) {
+
+                        selectedImage = data.getData();
+
+                        new UpdatePicTask().execute(
+                                mImageUtility.getRealPathFromURIForKitkat(selectedImage),
+                                getString(R.string.me_please_select_image));
+                    } else {
+                        alertMsg = getString(R.string.me_please_select_image);
                     }
-                }
+
+                    break;
             }
+            if (!(isFinishing())) {
+
+                Toast.makeText(this, alertMsg, Toast.LENGTH_SHORT).show();
+            }
+
         } catch (OutOfMemoryError e) {
             ivPhoto.setImageBitmap(null);
             finish();
@@ -284,12 +308,12 @@ public class MyProfileActivity extends AppCompatActivity {
                 errMessage = params[1];
 
                 if (imgPath != null) {
-                    uploadBitmap = grabImage(imgPath);
-                    uploadBitmap = uploadBitmap.copy(Bitmap.Config.ARGB_8888, true);
+                    mProfileBitmap = mImageUtility.grabImage(imgPath);
+                    mProfileBitmap = mProfileBitmap.copy(Bitmap.Config.ARGB_8888, true);
                 }
 
 
-                if (uploadBitmap == null) {
+                if (mProfileBitmap == null) {
                     err = true;
                 }
             } catch (Exception e) {
@@ -305,67 +329,17 @@ public class MyProfileActivity extends AppCompatActivity {
                 if (err) {
 
                     Toast.makeText(MyProfileActivity.this, errMessage, Toast.LENGTH_SHORT).show();
-                    ProfileStore.saveImagePath(MyProfileActivity.this, null);
 
                 } else {
 
                     ivPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    ivPhoto.setImageBitmap(uploadBitmap);
-                    ProfileStore.saveImagePath(MyProfileActivity.this, imgPath);
+                    ivPhoto.setImageBitmap(mProfileBitmap);
 
                 }
             }
         }
     }
 
-    public Bitmap grabImage(String path) throws FileNotFoundException,
-            IOException {
-        Bitmap bitmap = null;
-        bitmap = GeneralUtils.decodeSampledBitmapFromPath(path, 250, 400);
-        return bitmap;
-    }
-
-    public String getRealPathFromURI(Uri contentUri) {
-        int column_index = 0;
-        Cursor cursor = null;
-        if (contentUri != null) {
-            String[] proj = {MediaStore.Images.Media.DATA};
-            cursor = managedQuery(contentUri, proj, null, null, null);
-            if (cursor == null)
-                return null;
-            column_index = cursor
-                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-        }
-        return cursor.getString(column_index);
-    }
-
-    public String getRealPathFromURIForKitkat(Uri contentUri) {
-        String id = contentUri.getLastPathSegment().split(":")[1];
-        final String[] imageColumns = {MediaStore.Images.Media.DATA};
-        final String imageOrderBy = null;
-
-        Uri uri = getUri();
-        String selectedImagePath = "path";
-
-        Cursor imageCursor = managedQuery(uri, imageColumns,
-                MediaStore.Images.Media._ID + "=" + id, null, imageOrderBy);
-
-        if (imageCursor.moveToFirst()) {
-            selectedImagePath = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Images.Media.DATA));
-        }
-
-        return selectedImagePath;
-    }
-
-    // By using this method get the Uri of Internal/External Storage for Media
-    private Uri getUri() {
-        String state = Environment.getExternalStorageState();
-        if (!state.equalsIgnoreCase(Environment.MEDIA_MOUNTED))
-            return MediaStore.Images.Media.INTERNAL_CONTENT_URI;
-
-        return MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -394,54 +368,79 @@ public class MyProfileActivity extends AppCompatActivity {
             selectionDialog = builder.create();
             selectionDialog.show();
 
+        }
+
+        return true;
+
     }
-
-    return true;
-
-}
 
     private void performAction(int via) {
         switch (via) {
             case 0: {
 
-                if (Build.VERSION.SDK_INT < 20) {
-                    Intent intent = new Intent(
-                            Intent.ACTION_PICK,
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                PermissionRequest.inside(this)
+                        .withRequestId("Gallery")
+                        .forPermissions(new MPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                                "Application wants to read your image for profile picture"))
+                        .request(new PermissionRequest.GrantPermissionListener() {
+                            @Override
+                            public void grantedPermission(List<String> permissions) {
 
-                    intent.setType("image/*");
+                                startGallery();
+                            }
 
-                    startActivityForResult(Intent.createChooser(intent,
-                            getString(R.string.select_pic)), GALLERY_INTENT_CALLED);
-                } else {
-                    //For kitkat and above versions..
-                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    intent.setType("image/*");
-                    //intent.setType("image/jpeg");
-                    startActivityForResult(intent, GALLERY_KITKAT_INTENT_CALLED);
-                }
+                            @Override
+                            public void rejected(List<String> permissions) {
+
+                                // Do nothing or show error
+
+                            }
+                        });
+
+
                 break;
             }
 
-            case 1: {
-                SimpleDateFormat dateFormat = new SimpleDateFormat(
-                        "yyyyMMdd-HHmmss");
-                if (GeneralUtils.checkSDCard()) {
-                    photo = new File(Environment.getExternalStorageDirectory(),
-                            dateFormat.format(new Date()) + ".jpg");
-                    Intent cameraintent = new Intent(
-                            "android.media.action.IMAGE_CAPTURE");
-                    cameraintent.putExtra(MediaStore.EXTRA_OUTPUT,
-                            Uri.fromFile(photo));
-                    startActivityForResult(cameraintent, CAMERA_RESULT);
-                } else {
+            case 1:
+                startCamera();
+        }
+    }
 
-                    Toast.makeText(this,
-                            this.getResources().getString(R.string.no_storage), Toast.LENGTH_SHORT).show();
-                }
+    private void startGallery() {
+        if (Build.VERSION.SDK_INT < 20) {
+            Intent intent = new Intent(
+                    Intent.ACTION_PICK,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-            }
+            intent.setType("image/*");
+
+            startActivityForResult(Intent.createChooser(intent,
+                    getString(R.string.select_pic)), GALLERY_INTENT_CALLED);
+        } else {
+            //For kitkat and above versions..
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("image/*");
+            //intent.setType("image/jpeg");
+            startActivityForResult(intent, GALLERY_KITKAT_INTENT_CALLED);
+        }
+    }
+
+    private void startCamera() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyyMMdd-HHmmss");
+        if (GeneralUtils.checkSDCard()) {
+            photo = new File(Environment.getExternalStorageDirectory(),
+                    dateFormat.format(new Date()) + ".jpg");
+            Intent cameraintent = new Intent(
+                    "android.media.action.IMAGE_CAPTURE");
+            cameraintent.putExtra(MediaStore.EXTRA_OUTPUT,
+                    Uri.fromFile(photo));
+            startActivityForResult(cameraintent, CAMERA_RESULT);
+        } else {
+
+            Toast.makeText(this,
+                    this.getResources().getString(R.string.no_storage), Toast.LENGTH_SHORT).show();
         }
     }
 

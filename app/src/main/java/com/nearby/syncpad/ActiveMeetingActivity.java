@@ -174,14 +174,18 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
     }
 
+    @Inject
+    ProfileStore mProfileStore;
+
     @Override
     protected void onStart() {
         super.onStart();
         Log.i(TAG, "onStart called");
         Participant participant = new Participant();
-        participant.setName(ProfileStore.getUserName(this));
-        participant.setRole(ProfileStore.getUserRole(this));
-        participant.setEmailAddress(ProfileStore.getEmailAddress(this));
+        participant.setName(mProfileStore.getMyProfile().getName());
+        participant.setRole(mProfileStore.getMyProfile().getRole());
+        participant.setEmailAddress(mProfileStore.getMyProfile().getEmailAddress());
+        participant.setOrganisation(mProfileStore.getMyProfile().getOrganisation());
         participant.setAttendance("present");
         participant.setIsHost(mIsHost);
         participant.setMeeting(mCurrentMeeting);
@@ -419,7 +423,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
         if(edtMeetingNotes.getText()!=null && edtMeetingNotes.getText().toString().length()>0){
 
             Participant participant = new Participant();
-            participant.setName(ProfileStore.getUserName(this));
+            participant.setName(mProfileStore.getMyProfile().getName());
             participant.setMeetingNotes(edtMeetingNotes.getText().toString());
             noteList.add(edtMeetingNotes.getText().toString());
             participant.setToWhom("to_Me");
@@ -779,11 +783,11 @@ public class ActiveMeetingActivity extends AppCompatActivity
             if (err) {
 
                 Toast.makeText(ActiveMeetingActivity.this , errMessage , Toast.LENGTH_SHORT).show();
-                ProfileStore.saveImagePath(ActiveMeetingActivity.this, null);
+                //ProfileStore.saveImagePath(ActiveMeetingActivity.this, null);
 
             } else {
 
-                ProfileStore.saveImagePath(ActiveMeetingActivity.this , imgPath);
+                //ProfileStore.saveImagePath(ActiveMeetingActivity.this , imgPath);
 
             }
         }

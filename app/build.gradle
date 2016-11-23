@@ -32,6 +32,7 @@ dependencies {
     compile "com.google.firebase:firebase-auth:${GOOGLE_PLAY_SERVICES}"
     compile "com.google.firebase:firebase-database:${GOOGLE_PLAY_SERVICES}"
     compile 'com.squareup.okhttp3:okhttp:3.4.2'
+    compile 'com.instant.runtimepermission:InstantPermissionLib:1.0.0'
 
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
