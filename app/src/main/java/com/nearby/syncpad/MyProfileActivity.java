@@ -51,6 +51,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
@@ -59,32 +60,46 @@ public class MyProfileActivity extends AppCompatActivity {
 
     @BindView(R.id.ivPhoto)
     ImageView ivPhoto;
+
     @BindView(R.id.iv_support_bg)
     View ivSupportBg;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
     @BindView(R.id.collapsingToolbar)
     CollapsingToolbarLayout collapsingToolbar;
+
     @BindView(R.id.app_bar)
     AppBarLayout appBar;
+
     @BindView(R.id.myName)
     EditText myName;
+
     @BindView(R.id.myNameTIL)
     TextInputLayout myNameTIL;
+
     @BindView(R.id.myOrg)
     EditText myOrg;
+
     @BindView(R.id.myOrgTIL)
     TextInputLayout myOrgTIL;
+
     @BindView(R.id.myRole)
     EditText myRole;
+
     @BindView(R.id.myRoleTIL)
     TextInputLayout myRoleTIL;
+
     @BindView(R.id.myEmailId)
     EditText myEmailId;
+
     @BindView(R.id.myEmailTIL)
     TextInputLayout myEmailTIL;
+
     @BindView(R.id.buttonSave)
     Button buttonSave;
+
     @BindView(R.id.tvLogout)
     TextView tvLogout;
 
@@ -100,6 +115,8 @@ public class MyProfileActivity extends AppCompatActivity {
     ImageUtility mImageUtility;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
+
+    Unbinder binder;
 
 
     @Override
@@ -457,4 +474,11 @@ public class MyProfileActivity extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
+  /*  @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        binder.unbind();
+    }*/
 }

@@ -40,6 +40,7 @@ import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.nearby.messages.NearbyMessagesStatusCodes;
 import com.google.android.gms.nearby.messages.PublishOptions;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
+import com.nearby.syncpad.adapter.ChatListItemAdapter;
 import com.nearby.syncpad.adapter.ParticipantListItemAdapter;
 import com.nearby.syncpad.fragments.ParticipantsFragment;
 import com.nearby.syncpad.models.Meeting;
@@ -67,7 +68,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
     private ArrayList<Participant> chatParticipantsList;
     RecyclerView mRecyclerView;
-    private ParticipantListItemAdapter adapter;
+    private ChatListItemAdapter adapter;
     private boolean isMeetingStarted;
     private GoogleApiClient mGoogleApiClient;
     private Message mProfileInformation , myNotes;
@@ -99,6 +100,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
     private MessageListener mMessageListener;
 
 
+    @Inject
+    ProfileStore mProfileStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,8 +181,6 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
     }
 
-    @Inject
-    ProfileStore mProfileStore;
 
     @Override
     protected void onStart() {
@@ -409,7 +410,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         chatParticipantsList = new ArrayList<>();
-        adapter = new ParticipantListItemAdapter(ActiveMeetingActivity.this ,chatParticipantsList);
+        adapter = new ChatListItemAdapter(ActiveMeetingActivity.this ,chatParticipantsList);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -630,20 +631,26 @@ public class ActiveMeetingActivity extends AppCompatActivity
                 mGoogleApiClient.connect();
             }
         } else {
+            if(mGoogleApiClient == null){
 
-            Nearby.Messages.publish(mGoogleApiClient, myNotes, mPublishOptions)
-                    .setResultCallback(new ResultCallback<Status>() {
+                GeneralUtils.displayCustomToast(ActiveMeetingActivity.this , getString(R.string.meeting_not_started));
+            }
+            else{
+                Nearby.Messages.publish(mGoogleApiClient, myNotes, mPublishOptions)
+                        .setResultCallback(new ResultCallback<Status>() {
 
-                        @Override
-                        public void onResult(Status status) {
-                            if (status.isSuccess()) {
-                                Log.i(TAG, "published successfully");
-                            } else {
-                                Log.i(TAG, "could not publish");
-                                handleUnsuccessfulNearbyResult(status);
+                            @Override
+                            public void onResult(Status status) {
+                                if (status.isSuccess()) {
+                                    Log.i(TAG, "published successfully");
+                                } else {
+                                    Log.i(TAG, "could not publish");
+                                    handleUnsuccessfulNearbyResult(status);
+                                }
                             }
-                        }
-                    });
+                        });
+            }
+
         }
     }
 
