@@ -50,6 +50,11 @@ public class ProfileStore {
 
     }
 
+    public void clearProfileData(){
+
+        getSharedPreference().edit().putString("MY_PROFILE", null).commit();
+    }
+
     private SharedPreferences getSharedPreference() {
 
         return mContext.getSharedPreferences("ProfileData", Context.MODE_PRIVATE);

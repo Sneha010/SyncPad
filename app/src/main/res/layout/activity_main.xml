@@ -118,7 +118,8 @@
             android:src="@drawable/add_meeting"
             fab:fab_size="mini"
             fab:fab_label="@string/fab_button1"
-            fab:fab_colorNormal="@color/colorAccent"/>
+            fab:fab_colorNormal="@color/colorAccent"
+            />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_item2"

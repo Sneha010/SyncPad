@@ -123,7 +123,7 @@ public class MyProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myprofile_layout);
-        ButterKnife.bind(this);
+        binder =  ButterKnife.bind(this);
 
         ((SyncPadApplication) getApplication()).getMyApplicationComponent().inject(this);
 
@@ -179,6 +179,7 @@ public class MyProfileActivity extends AppCompatActivity {
                 if (user == null) {
                     // user auth state is changed - user is null
                     // launch login activity
+                    mProfileStore.clearProfileData();
                     startActivity(new Intent(MyProfileActivity.this, LoginActivity.class));
                     finish();
                 }
@@ -189,6 +190,9 @@ public class MyProfileActivity extends AppCompatActivity {
     //To show the earlier saved data filled in the form fields
     private void initializeFieldsWithSavedData() {
         Participant participant = mProfileStore.getMyProfile();
+
+        myEmailId.setText(mAuth.getCurrentUser().getEmail());
+        myName.setText(usernameFromEmail(mAuth.getCurrentUser().getEmail()));
 
         if (participant != null) {
             myName.setText(participant.getName());
@@ -203,6 +207,13 @@ public class MyProfileActivity extends AppCompatActivity {
         }
     }
 
+    private String usernameFromEmail(String email) {
+        if (email.contains("@")) {
+            return email.split("@")[0];
+        } else {
+            return email;
+        }
+    }
 
     //Click on save button on profile
     public void saveProfileData() {
@@ -475,10 +486,10 @@ public class MyProfileActivity extends AppCompatActivity {
         }
     }
 
-  /*  @Override
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 
         binder.unbind();
-    }*/
+    }
 }
