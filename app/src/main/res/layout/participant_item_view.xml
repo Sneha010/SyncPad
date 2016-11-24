@@ -10,9 +10,9 @@
     >
 
     <RelativeLayout
-        android:id="@+id/rl_fromOthersNotes"
+        android:id="@+id/rlParticipant"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="visible">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -29,6 +29,7 @@
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/profileImage"
         android:orientation="vertical"
+        android:layout_centerVertical="true"
         >
 
         <TextView
@@ -39,11 +40,12 @@
             android:textSize="17sp"
             android:textStyle="bold"
             android:layout_marginLeft="5dp"
+            fontPath="fonts/gothamblack.ttf"
             android:textColor="@color/colorPrimary"
             />
 
         <TextView
-            android:id="@+id/personRole"
+            android:id="@+id/personOrgAndRole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Role"
@@ -52,76 +54,8 @@
             android:textColor="@android:color/black"
             />
 
-        <TextView
-            android:id="@+id/meetingNotes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Notes"
-            android:padding="5dp"
-            android:textSize="16sp"
-            android:background="@color/colorAccent"
-            />
-
     </LinearLayout>
         </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/rl_fromMyselfNotes"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/profileImage_mine"
-            android:orientation="vertical"
-            android:gravity="right"
-            >
-
-            <TextView
-                android:id="@+id/personName_mine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                android:layout_marginRight="5dp"
-                android:textColor="@color/colorPrimary"
-                />
-            <TextView
-                android:id="@+id/personRole_mine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Role"
-                android:textSize="16sp"
-                android:layout_marginLeft="5dp"
-                android:textColor="@android:color/black"
-                />
-            <TextView
-                android:id="@+id/meetingNotes_mine"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Notes"
-                android:padding="5dp"
-                android:gravity="right"
-                android:background="@color/colorAccent"
-                />
-
-        </LinearLayout>
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profileImage_mine"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:src="@drawable/default_user"
-            android:layout_alignParentRight="true"
-            app:civ_border_color="#FF000000"
-            />
-
-    </RelativeLayout>
 
 
 </RelativeLayout>

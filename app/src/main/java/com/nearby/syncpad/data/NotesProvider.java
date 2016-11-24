@@ -37,7 +37,7 @@ public class NotesProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = ItemsContract.CONTENT_AUTHORITY;
         matcher.addURI(authority, "meetings", MEETING);
-        matcher.addURI(authority, "meetings/#", MEETING__ID);
+        matcher.addURI(authority, "meetings/*", MEETING__ID);
         return matcher;
     }
 
@@ -82,7 +82,7 @@ public class NotesProvider extends ContentProvider {
             case MEETING: {
                 final long _id = db.insertOrThrow(Tables.MEETINGS, null, values);
                 getContext().getContentResolver().notifyChange(uri, null);
-                return ItemsContract.Items.buildItemUri(_id);
+                return ItemsContract.Items.buildItemUri(String.valueOf(_id));
             }
             default: {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

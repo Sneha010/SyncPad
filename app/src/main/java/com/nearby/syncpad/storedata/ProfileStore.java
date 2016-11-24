@@ -1,74 +1,58 @@
 package com.nearby.syncpad.storedata;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+
+import com.google.gson.Gson;
+import com.nearby.syncpad.models.Participant;
+
+import javax.inject.Inject;
 
 
 public class ProfileStore {
 
 
-    public static final String USER_NAME_KEY = "user_name";
-    public static final String USER_ROLE_KEY = "user_role";
-    public static final String USER_EMAIL_KEY = "user_email";
-    public static final String USER_IMAGE_BYTE = "user_image";
-    public static final String USER_IMAGE_PATH = "user_image_path";
+    private Application mContext;
 
+    @Inject
+    public ProfileStore(Application context) {
 
-    private static SharedPreferences getMyPreferences(Context context) {
-        return context.getSharedPreferences("profile", Context.MODE_PRIVATE);
-
+        this.mContext =  context;
     }
 
 
-    public static void saveUserName(Context context, String name) {
-        getMyPreferences(context).edit().putString(USER_NAME_KEY, name).commit();
-    }
+    public void saveProfile(Participant participant) {
 
-    public static void saveUserRole(Context context, String role) {
-        getMyPreferences(context).edit().putString(USER_ROLE_KEY, role).commit();
+        Gson gson = new Gson();
 
-    }
+        String profile = gson.toJson(participant, Participant.class);
 
-    public static void  saveEmailKey(Context context, String email) {
-        getMyPreferences(context).edit().putString(USER_EMAIL_KEY, email).commit();
-    }
-
-    public static void  saveImagePath(Context context, String image_path) {
-        getMyPreferences(context).edit().putString(USER_IMAGE_PATH, image_path).commit();
-    }
-
-    public static String getUserName(Context context) {
-
-        return getMyPreferences(context).getString(USER_NAME_KEY, "");
-
-    }
-
-    public static String getEmailAddress(Context context) {
-
-        return getMyPreferences(context).getString(USER_EMAIL_KEY, "");
-
-    }
-
-
-    public static String getUserRole(Context context) {
-        return getMyPreferences(context).getString(USER_ROLE_KEY, "");
-    }
-
-    public static String getImagePath(Context context) {
-        return getMyPreferences(context).getString(USER_IMAGE_PATH, "");
-    }
-
-
-    public static boolean isProfilePending(Context context) {
-        return (TextUtils.isEmpty(getUserName(context)) ||
-                TextUtils.isEmpty(getEmailAddress(context)) ||
-                TextUtils.isEmpty(getUserRole(context)));
+        getSharedPreference().edit().putString("MY_PROFILE", profile).commit();
 
 
     }
 
 
+    public Participant getMyProfile() {
 
+        Gson gson = new Gson();
+
+        String profileString = getSharedPreference().getString("MY_PROFILE", "");
+
+        if (!TextUtils.isEmpty(profileString)) {
+
+            return gson.fromJson(profileString, Participant.class);
+        }
+
+        return null;
+
+    }
+
+    private SharedPreferences getSharedPreference() {
+
+        return mContext.getSharedPreferences("ProfileData", Context.MODE_PRIVATE);
+    }
 
 }

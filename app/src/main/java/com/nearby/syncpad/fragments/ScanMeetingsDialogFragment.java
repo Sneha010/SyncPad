@@ -21,17 +21,17 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
-import com.google.android.gms.nearby.messages.Strategy;
-import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 import com.nearby.syncpad.R;
+import com.nearby.syncpad.SyncPadApplication;
 import com.nearby.syncpad.adapter.AvailableMeetingListAdapter;
 import com.nearby.syncpad.models.Participant;
-import com.nearby.syncpad.util.Constants;
 import com.nearby.syncpad.util.DataItemDecoration;
 import com.nearby.syncpad.util.GeneralUtils;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 import static android.content.ContentValues.TAG;
 
@@ -55,13 +55,8 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
     private GoogleApiClient mGoogleApiClient;
     private MessageListener mMessageListener;
 
-    /**
-     * Sets the time in seconds for a published message or a subscription to live. Set to five
-     * minutes.
-     */
-    private static final Strategy PUB_SUB_STRATEGY = new Strategy.Builder()
-            .setTtlSeconds(Constants.TTL_IN_SECONDS)
-            .setDistanceType(Strategy.DISTANCE_TYPE_EARSHOT).build();
+    @Inject
+    SubscribeOptions mSubscribeOptions;
 
 
     static public ScanMeetingsDialogFragment newInstance() {
@@ -72,7 +67,7 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ((SyncPadApplication)getActivity().getApplication()).getMyApplicationComponent().inject(this);
     }
 
     @Nullable
@@ -141,7 +136,6 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
                 .addApi(Nearby.MESSAGES_API)
                 .addConnectionCallbacks(this)
                 .enableAutoManage(getActivity(), this)
-                .addOnConnectionFailedListener(this)
                 .build();
         mGoogleApiClient.connect();
     }
@@ -227,20 +221,10 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
                 mGoogleApiClient.connect();
             }
         } else {
-            SubscribeOptions options = new SubscribeOptions.Builder()
-                    .setStrategy(PUB_SUB_STRATEGY)
-                    .setCallback(new SubscribeCallback() {
-                        @Override
-                        public void onExpired() {
-                            super.onExpired();
-                            Log.i(TAG, "no longer subscribing");
-                            showError(getString(R.string.unable_to_subscribe));
-                        }
-                    }).build();
 
             Log.d("", "@@@@" + mMessageListener);
 
-            Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener, options)
+            Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener, mSubscribeOptions)
                     .setResultCallback(new ResultCallback<Status>() {
 
                         @Override
@@ -309,6 +293,7 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
 
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             unsubscribe();
+            mGoogleApiClient.stopAutoManage(getActivity());
             mGoogleApiClient.disconnect();
         }
     }

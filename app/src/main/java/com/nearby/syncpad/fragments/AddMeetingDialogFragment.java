@@ -3,6 +3,7 @@ package com.nearby.syncpad.fragments;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDialogFragment;
@@ -16,7 +17,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.nearby.syncpad.ActiveMeetingActivity;
-import com.nearby.syncpad.MainActivity;
 import com.nearby.syncpad.R;
 import com.nearby.syncpad.models.Meeting;
 import com.nearby.syncpad.util.Constants;
@@ -26,18 +26,49 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Created by Sneha Khadatare : 587823
  * on 11/18/2016.
  */
 
-public class AddMeetingDialogFragment extends AppCompatDialogFragment{
+public class AddMeetingDialogFragment extends AppCompatDialogFragment {
 
-    EditText edtName ,edtDate ,edtTime ,edtVenue ,edtAgenda;
-    TextView tvCancel , tvAdd , tv_selectDateButton , tv_selectTimeButton;
+    @BindView(R.id.edtMeetingName)
+    EditText edtMeetingName;
+
+    @BindView(R.id.edtMeetingDate)
+    EditText edtMeetingDate;
+
+    @BindView(R.id.select_date_button)
+    TextView selectDateButton;
+
+    @BindView(R.id.edtMeetingTime)
+    EditText edtMeetingTime;
+
+    @BindView(R.id.select_time_button)
+    TextView selectTimeButton;
+
+    @BindView(R.id.edtMeetingVenue)
+    EditText edtMeetingVenue;
+
+    @BindView(R.id.edtMeetingAgenda)
+    EditText edtMeetingAgenda;
+
+    @BindView(R.id.tvCancel)
+    TextView tvCancel;
+
+    @BindView(R.id.tvAdd)
+    TextView tvAdd;
+
+    Unbinder binder;
 
     static public AddMeetingDialogFragment newInstance() {
         AddMeetingDialogFragment f = new AddMeetingDialogFragment();
+        f.setStyle(STYLE_NO_TITLE, 0);
         return f;
     }
 
@@ -48,8 +79,8 @@ public class AddMeetingDialogFragment extends AppCompatDialogFragment{
         View rootView = inflater.inflate(R.layout.add_meeting_dialog_layout, container,
                 false);
 
+        binder = ButterKnife.bind(this, rootView);
         initialise(rootView);
-
 
         return rootView;
     }
@@ -57,44 +88,33 @@ public class AddMeetingDialogFragment extends AppCompatDialogFragment{
     private void initialise(View view) {
 
 
-        edtName = (EditText)view.findViewById(R.id.edtMeetingName);
-        edtDate = (EditText)view.findViewById(R.id.edtMeetingDate);
-        edtTime = (EditText)view.findViewById(R.id.edtMeetingTime);
-        edtVenue = (EditText)view.findViewById(R.id.edtMeetingVenue);
-        edtAgenda = (EditText)view.findViewById(R.id.edtMeetingAgenda);
-        tvCancel = (TextView)view.findViewById(R.id.tvCancel);
-        tvAdd = (TextView)view.findViewById(R.id.tvAdd);
-        tv_selectDateButton = (TextView)view.findViewById(R.id.select_date_button);
-        tv_selectTimeButton = (TextView) view.findViewById(R.id.select_time_button) ;
-
         tvAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if(edtName.getText()==null || (edtName.getText()!=null && edtName.getText().toString().length()== 0)){
-                    Toast.makeText(getActivity(), "Please enter meeting title" , Toast.LENGTH_SHORT).show();
-                }
-                else{
+                if (edtMeetingName.getText() == null || (edtMeetingName.getText() != null && edtMeetingName.getText().toString().length() == 0)) {
+                    Toast.makeText(getActivity(), "Please enter meeting title", Toast.LENGTH_SHORT).show();
+                } else {
                     Meeting meetingBean = new Meeting();
-                    if(edtName.getText()!=null && edtName.getText().toString().length()>0){
-                        meetingBean.setMeetingName(edtName.getText().toString());
+                    if (edtMeetingName.getText() != null && edtMeetingName.getText().toString().length() > 0) {
+                        meetingBean.setMeetingName(edtMeetingName.getText().toString());
                     }
-                    if(edtDate.getText()!=null && edtDate.getText().toString().length()>0){
-                        meetingBean.setMeetingDate(edtDate.getText().toString());
+                    if (edtMeetingDate.getText() != null && edtMeetingDate.getText().toString().length() > 0) {
+                        meetingBean.setMeetingDate(edtMeetingDate.getText().toString());
                     }
-                    if(edtTime.getText()!=null && edtTime.getText().toString().length()>0){
-                        meetingBean.setMeetingTime(edtTime.getText().toString());
+                    if (edtMeetingTime.getText() != null && edtMeetingTime.getText().toString().length() > 0) {
+                        meetingBean.setMeetingTime(edtMeetingTime.getText().toString());
                     }
-                    if(edtVenue.getText()!=null && edtVenue.getText().toString().length()>0){
-                        meetingBean.setMeetingVenue(edtVenue.getText().toString());
+                    if (edtMeetingVenue.getText() != null && edtMeetingVenue.getText().toString().length() > 0) {
+                        meetingBean.setMeetingVenue(edtMeetingVenue.getText().toString());
                     }
-                    if(edtAgenda.getText()!=null && edtAgenda.getText().toString().length()>0){
-                        meetingBean.setMeetingAgenda(edtAgenda.getText().toString());
+                    if (edtMeetingAgenda.getText() != null && edtMeetingAgenda.getText().toString().length() > 0) {
+                        meetingBean.setMeetingAgenda(edtMeetingAgenda.getText().toString());
                     }
 
-                    Intent i = new Intent(getActivity() , ActiveMeetingActivity.class);
+                    Intent i = new Intent(getActivity(), ActiveMeetingActivity.class);
                     i.putExtra(Constants.MEETING, meetingBean);
-                    i.putExtra(Constants.IS_HOST , true);
+                    i.putExtra(Constants.IS_HOST, true);
                     startActivity(i);
                     dismiss();
                 }
@@ -109,7 +129,7 @@ public class AddMeetingDialogFragment extends AppCompatDialogFragment{
             }
         });
 
-        tv_selectDateButton.setOnClickListener(new View.OnClickListener() {
+        selectDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -122,15 +142,15 @@ public class AddMeetingDialogFragment extends AppCompatDialogFragment{
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        edtDate.setText(dayOfMonth+"/"+month+"/"+year);
+                        edtMeetingDate.setText(dayOfMonth + "/" + month + "/" + year);
                     }
-                },year, month , day);
+                }, year, month, day);
                 datePickerDialog.show();
 
             }
         });
 
-        tv_selectTimeButton.setOnClickListener(new View.OnClickListener() {
+        selectTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -144,17 +164,23 @@ public class AddMeetingDialogFragment extends AppCompatDialogFragment{
 
                         SimpleDateFormat format = new SimpleDateFormat("HH:MM");
                         try {
-                            Date date = format.parse(""+hourOfDay+":"+minute);
-                            edtTime.setText(new SimpleDateFormat("hh:mm aa").format(date.getTime()));
-                        }catch(ParseException ex){
+                            Date date = format.parse("" + hourOfDay + ":" + minute);
+                            edtMeetingTime.setText(new SimpleDateFormat("hh:mm aa").format(date.getTime()));
+                        } catch (ParseException ex) {
                             ex.printStackTrace();
                         }
                     }
-                },hour, minute, false);
+                }, hour, minute, false);
                 timePickerDialog.show();
             }
         });
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        binder.unbind();
+    }
 }

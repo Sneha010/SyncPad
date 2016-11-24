@@ -15,9 +15,8 @@ public class Participant {
 
     private transient Drawable mProfilePicture;
 
-    private String mTCSLocation;
+    private String mOrganisation;
     private String mRole;
-
 
     private String imageBytes;
     private String meetingNotes;
@@ -77,12 +76,12 @@ public class Participant {
         mProfilePicture = profilePicture;
     }
 
-    public String getTCSLocation() {
-        return mTCSLocation;
+    public String getOrganisation() {
+        return mOrganisation;
     }
 
-    public void setTCSLocation(String TCSLocation) {
-        mTCSLocation = TCSLocation;
+    public void setOrganisation(String oganisation) {
+        this.mOrganisation = oganisation;
     }
 
     public String getRole() {

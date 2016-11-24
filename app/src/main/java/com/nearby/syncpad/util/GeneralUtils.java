@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class GeneralUtils {
+public abstract class GeneralUtils {
 
     public static String getProfileImageBytes(Context context, Bitmap photo) {
 
@@ -66,7 +66,7 @@ public class GeneralUtils {
 
     }
 
-    public Bitmap decodeSampledBitmapFromPath(String path, int reqWidth,
+    public static Bitmap decodeSampledBitmapFromPath(String path, int reqWidth,
                                               int reqHeight) {
         try {
             final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -106,7 +106,7 @@ public class GeneralUtils {
             return null;
         }
     }
-    public int calculateInSampleSize(BitmapFactory.Options options,
+    public static int calculateInSampleSize(BitmapFactory.Options options,
                                      int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;

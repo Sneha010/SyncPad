@@ -1,10 +1,11 @@
 package com.nearby.syncpad;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -19,15 +20,21 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.nearby.syncpad.models.User;
+
+import javax.inject.Inject;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String TAG = "LoginActivity";
 
-    private DatabaseReference mDatabase;
-    private FirebaseAuth mAuth;
+    @Inject
+    DatabaseReference mDatabase;
+
+    @Inject
+    FirebaseAuth mAuth;
 
     private ProgressDialog mProgressDialog;
     private EditText mPswdField;
@@ -41,12 +48,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        ((SyncPadApplication)getApplication()).getMyApplicationComponent().inject(this);
+
         init();
+    }
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     private void init() {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mAuth = FirebaseAuth.getInstance();
+        //mDatabase = FirebaseDatabase.getInstance().getReference();
+        //mAuth = FirebaseAuth.getInstance();
 
         // Views
         mEmailField = (EditText) findViewById(R.id.field_email);
@@ -201,7 +214,4 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public String getUid() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
-    }
 }

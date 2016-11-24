@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
     android:orientation="vertical"
     >
 
     <RelativeLayout
         android:layout_width="320dp"
-        android:layout_height="550dp"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:padding="10dp">
     <ScrollView
@@ -34,7 +34,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:layout_below="@id/title"
-        android:background="@android:color/black" />
+        android:background="@color/dividerColor" />
 
     <TextView
         android:id="@+id/add_name_text"
@@ -52,12 +52,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:hint="Add meeting title"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:layout_below="@id/add_name_text"
-        android:textColor="@android:color/black"
-        android:background="@color/colorAccent"
-        android:padding="3dp"
-        android:textColorHint="@color/primaryTextColor" />
+        android:textColor="@color/primaryTextColor"
+        android:background="@color/light_pink"
+        android:padding="5dp"
+        android:textColorHint="@color/secondaryTextColor" />
 
     <TextView
         android:id="@+id/add_date_text"
@@ -82,11 +82,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Add meeting date"
-        android:textSize="18sp"
-        android:textColor="@android:color/black"
-        android:background="@color/colorAccent"
-        android:padding="3dp"
-        android:textColorHint="@color/primaryTextColor"
+        android:textSize="16sp"
+        android:textColor="@color/primaryTextColor"
+        android:background="@color/light_pink"
+        android:padding="5dp"
+        android:textColorHint="@color/secondaryTextColor"
         android:layout_weight="1"/>
     <TextView
         android:id="@+id/select_date_button"
@@ -124,15 +124,14 @@
         android:id="@+id/edtMeetingTime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:hint="Add meeting time"
-        android:textSize="18sp"
-        android:padding="3dp"
+        android:textSize="16sp"
+        android:padding="5dp"
         android:layout_below="@id/add_title_time"
-        android:textColor="@android:color/black"
-        android:background="@color/colorAccent"
+        android:textColor="@color/primaryTextColor"
+        android:background="@color/light_pink"
         android:layout_weight="1"
-        android:textColorHint="@color/primaryTextColor" />
+        android:textColorHint="@color/secondaryTextColor" />
 
             <TextView
                 android:id="@+id/select_time_button"
@@ -163,12 +162,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:hint="Add meeting venue"
-        android:textSize="18sp"
-        android:padding="3dp"
-        android:background="@color/colorAccent"
+        android:textSize="16sp"
+        android:padding="5dp"
+        android:background="@color/light_pink"
         android:layout_below="@id/add_meeting_venue"
-        android:textColor="@android:color/black"
-        android:textColorHint="@color/primaryTextColor" />
+        android:textColor="@color/primaryTextColor"
+        android:textColorHint="@color/secondaryTextColor" />
 
     <TextView
         android:id="@+id/add_agenda_text"
@@ -187,14 +186,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:hint="Add meeting agenda"
-        android:textSize="18sp"
-        android:lines="5"
+        android:textSize="16sp"
+        android:lines="6"
         android:gravity="top|left"
-        android:padding="3dp"
+        android:padding="5dp"
         android:layout_below="@id/add_agenda_text"
-        android:textColor="@android:color/black"
-        android:textColorHint="@color/primaryTextColor"
-        android:background="@color/colorAccent"/>
+        android:textColor="@color/primaryTextColor"
+        android:textColorHint="@color/secondaryTextColor"
+        android:background="@color/light_pink"/>
 
     <LinearLayout
         android:id="@+id/ll_buttons"
@@ -212,7 +211,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Cancel"
-            android:textColor="@android:color/white"
+            android:textColor="@color/textPrimaryColor"
             android:background="@drawable/dialog_button_bg"
             android:layout_marginRight="3dp"
             android:textSize="20sp"
@@ -227,7 +226,7 @@
             android:text="Add"
             android:padding="5dp"
             android:layout_marginLeft="3dp"
-            android:textColor="@android:color/white"
+            android:textColor="@color/textPrimaryColor"
             android:background="@drawable/dialog_button_bg"
             android:textSize="20sp" />
         </LinearLayout>
