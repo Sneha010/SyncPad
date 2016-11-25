@@ -71,7 +71,7 @@ public abstract class GeneralUtils {
         try {
             final BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(path, options);
+            //BitmapFactory.decodeFile(path, options);
             options.inSampleSize = calculateInSampleSize(options, reqWidth,
                     reqHeight);
             options.inJustDecodeBounds = false;

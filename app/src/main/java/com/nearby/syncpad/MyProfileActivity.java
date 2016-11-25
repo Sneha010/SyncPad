@@ -189,29 +189,25 @@ public class MyProfileActivity extends AppCompatActivity {
 
     //To show the earlier saved data filled in the form fields
     private void initializeFieldsWithSavedData() {
+
         Participant participant = mProfileStore.getMyProfile();
 
-        myEmailId.setText(mAuth.getCurrentUser().getEmail());
-        myName.setText(usernameFromEmail(mAuth.getCurrentUser().getEmail()));
-
         if (participant != null) {
+
             myName.setText(participant.getName());
-            myRole.setText(participant.getRole());
-            myOrg.setText(participant.getOrganisation());
             myEmailId.setText(participant.getEmailAddress());
 
-            mProfileBitmap = mImageUtility.getBitmapFromImageBytes(participant.getImageBytes());
+            if(!GeneralUtils.isEmpty(participant.getRole()))
+                myRole.setText(participant.getRole());
+            if(!GeneralUtils.isEmpty(participant.getOrganisation()))
+                myOrg.setText(participant.getOrganisation());
 
-            ivPhoto.setImageBitmap(mProfileBitmap);
+            if(!GeneralUtils.isEmpty(participant.getImageBytes())){
+                mProfileBitmap = mImageUtility.getBitmapFromImageBytes(participant.getImageBytes());
+                ivPhoto.setImageBitmap(mProfileBitmap);
+            }
 
-        }
-    }
 
-    private String usernameFromEmail(String email) {
-        if (email.contains("@")) {
-            return email.split("@")[0];
-        } else {
-            return email;
         }
     }
 

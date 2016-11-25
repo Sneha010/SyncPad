@@ -185,6 +185,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         Log.i(TAG, "onStart called");
+
         Participant participant = new Participant();
         participant.setName(mProfileStore.getMyProfile().getName());
         participant.setRole(mProfileStore.getMyProfile().getRole());

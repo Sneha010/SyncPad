@@ -17,9 +17,11 @@ import com.nearby.syncpad.util.Constants;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
-public class AvailableMeetingListAdapter extends RecyclerView.Adapter<AvailableMeetingListAdapter.ViewHolder>{
+public class AvailableMeetingListAdapter extends RecyclerView.Adapter<AvailableMeetingListAdapter.ViewHolder> {
 
     private Context context;
     private ArrayList<Participant> meetingList;
@@ -40,17 +42,17 @@ public class AvailableMeetingListAdapter extends RecyclerView.Adapter<AvailableM
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder,final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        if(meetingList.get(position).isIsHost()) {
+        if (meetingList.get(position).isIsHost()) {
 
             holder.tvMeetingTitle.setText(meetingList.get(position).getMeeting().getMeetingName());
 
-            if(!meetingList.get(position).getName().isEmpty()){
-                holder.tvMeetingInitiatedBy.setVisibility(View.VISIBLE);
-                holder.tvMeetingInitiatedBy.setText(meetingList.get(position).getName());
-            }else{
-                holder.tvMeetingInitiatedBy.setVisibility(View.GONE);
+            if (!meetingList.get(position).getName().isEmpty()) {
+                holder.tvInitiatedBy.setVisibility(View.VISIBLE);
+                holder.tvInitiatedBy.setText("Initiated by " + meetingList.get(position).getName());
+            } else {
+                holder.tvInitiatedBy.setVisibility(View.GONE);
             }
 
             //holder.tvMeetingDateAndTime.setText(meetingList.get(position).get);
@@ -59,9 +61,9 @@ public class AvailableMeetingListAdapter extends RecyclerView.Adapter<AvailableM
                 public void onClick(View view) {
                     Intent i = new Intent(context, ActiveMeetingActivity.class);
                     i.putExtra(Constants.MEETING, meetingList.get(position).getMeeting());
-                    i.putExtra(Constants.IS_HOST , false);
+                    i.putExtra(Constants.IS_HOST, false);
                     context.startActivity(i);
-                    if(context instanceof DismissScanDialogListener){
+                    if (context instanceof DismissScanDialogListener) {
                         ((DismissScanDialogListener) context).dismissDialog();
                     }
                 }
@@ -87,17 +89,18 @@ public class AvailableMeetingListAdapter extends RecyclerView.Adapter<AvailableM
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout rlDataContent;
+
+        @BindView(R.id.tvMeetingTitle)
         TextView tvMeetingTitle;
-        TextView tvMeetingInitiatedBy;
-        TextView tvMeetingDateAndTime;
+        @BindView(R.id.tvInitiatedBy)
+        TextView tvInitiatedBy;
+        @BindView(R.id.rlDataContent)
+        RelativeLayout rlDataContent;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            rlDataContent = (RelativeLayout) itemView.findViewById(R.id.rlDataContent);
-            tvMeetingTitle = (TextView) itemView.findViewById(R.id.tvMeetingTitle);
-            tvMeetingInitiatedBy = (TextView) itemView.findViewById(R.id.tvInitiatedBy);
-            tvMeetingDateAndTime = (TextView) itemView.findViewById(R.id.tvDateAndTime);
+
+            ButterKnife.bind(this, itemView);
         }
     }
 }

@@ -1,60 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
 
-<RelativeLayout
-    android:layout_width="300dp"
-    android:layout_height="400dp">
-    <TextView
-        android:id="@+id/tvSelectMeeting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/select_meeting"
-        android:layout_margin="10dp"/>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/tvSelectMeeting"
-        android:layout_marginTop="10dp">
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+        android:padding="12dp">
 
-        <RelativeLayout
-            android:id="@+id/rlScanContainer"
+        <TextView
+            android:id="@+id/tvSelectMeeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textColor="@color/primaryTextColor"
+            android:text="@string/select_meeting" />
+
+        <View
+            android:id="@+id/sep_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/tvSelectMeeting"
+            android:background="@color/dividerColor" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/availableMeetingRVList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center">
+            android:layout_below="@id/tvSelectMeeting"
+            android:layout_marginTop="10dp"
+           />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/availableMeetingRVList"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                />
+        <TextView
+            android:id="@+id/tvNoActiveMeeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/no_active_meetings"
+            android:visibility="gone" />
 
+        <RelativeLayout
+            android:id="@+id/rl_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone">
 
-            <TextView
-                android:id="@+id/tvNoActiveMeeting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/no_active_meetings"
-                android:layout_centerInParent="true"
-                android:visibility="gone"
-                />
-            <RelativeLayout
-                android:id="@+id/rl_progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="gone">
-
-                <include layout="@layout/loading_layout" />
-            </RelativeLayout>
+            <include layout="@layout/loading_layout" />
 
         </RelativeLayout>
-        </ScrollView>
 
-</RelativeLayout>
+    </RelativeLayout>
 
 
 </LinearLayout>
