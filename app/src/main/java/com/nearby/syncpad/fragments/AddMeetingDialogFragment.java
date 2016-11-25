@@ -129,15 +129,19 @@ public class AddMeetingDialogFragment extends AppCompatDialogFragment {
             }
         });
 
+        // Use the current date as the default date in the picker
+        final Calendar c = Calendar.getInstance();
+        final int year = c.get(Calendar.YEAR);
+        final int month = c.get(Calendar.MONTH);
+        final int day = c.get(Calendar.DAY_OF_MONTH);
+
+        edtMeetingDate.setText(day + "/" + month + "/" + year);
+
         selectDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                // Use the current date as the default date in the picker
-                final Calendar c = Calendar.getInstance();
-                int year = c.get(Calendar.YEAR);
-                int month = c.get(Calendar.MONTH);
-                int day = c.get(Calendar.DAY_OF_MONTH);
+
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -150,31 +154,46 @@ public class AddMeetingDialogFragment extends AppCompatDialogFragment {
             }
         });
 
+        final int hour = c.get(Calendar.HOUR_OF_DAY);
+        final int minute = c.get(Calendar.MINUTE);
+
+        edtMeetingTime.setText(getTimeString(hour , minute));
+
         selectTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                final Calendar c = Calendar.getInstance();
-                int hour = c.get(Calendar.HOUR_OF_DAY);
-                int minute = c.get(Calendar.MINUTE);
+                getTimeString(hour , minute);
 
                 TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                        SimpleDateFormat format = new SimpleDateFormat("HH:MM");
-                        try {
-                            Date date = format.parse("" + hourOfDay + ":" + minute);
-                            edtMeetingTime.setText(new SimpleDateFormat("hh:mm aa").format(date.getTime()));
-                        } catch (ParseException ex) {
-                            ex.printStackTrace();
-                        }
+                        edtMeetingTime.setText(getTimeString(hourOfDay , minute));
                     }
                 }, hour, minute, false);
                 timePickerDialog.show();
             }
         });
 
+    }
+
+    private void setCurrentTime(){
+
+    }
+
+    private String getTimeString(int hourOfDay , int min){
+
+        String timeString = null;
+        SimpleDateFormat format = new SimpleDateFormat("HH:MM");
+        try {
+            Date date = format.parse("" + hourOfDay + ":" + min);
+            timeString = new SimpleDateFormat("hh:mm aa").format(date.getTime());
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        return timeString;
     }
 
     @Override

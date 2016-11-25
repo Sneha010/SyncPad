@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * on 11/16/2016.
  */
 
-public class UpdaterService extends IntentService{
+public class UpdaterService extends IntentService {
 
     private static final String TAG = "UpdaterService";
 
@@ -39,7 +39,7 @@ public class UpdaterService extends IntentService{
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        if(!GeneralUtils.isOnline(this)){
+        if (!GeneralUtils.isOnline(this)) {
             return;
         }
         sendStickyBroadcast(
@@ -54,17 +54,16 @@ public class UpdaterService extends IntentService{
 
         try {
             JSONArray array = RemoteEndpointUtil.fetchJsonArray(GeneralUtils.getUid());
-            if (array == null) {
-                throw new JSONException("Invalid parsed item array" );
-            }
-
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject object = array.getJSONObject(i);
-                ContentValues values = GeneralUtils.getContentValues(object);
-                cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
+            if (array != null) {
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject object = array.getJSONObject(i);
+                    ContentValues values = GeneralUtils.getContentValues(object);
+                    cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
+                }
             }
 
             getContentResolver().applyBatch(ItemsContract.CONTENT_AUTHORITY, cpo);
+
 
         } catch (JSONException | RemoteException | OperationApplicationException e) {
             Log.e(TAG, "Error updating content.", e);
