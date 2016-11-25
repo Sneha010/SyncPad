@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
-import com.nearby.syncpad.callbacks.AddMeetingListener;
 import com.nearby.syncpad.data.ItemsContract;
 import com.nearby.syncpad.models.Meeting;
 import com.nearby.syncpad.util.Constants;
@@ -39,7 +38,6 @@ public class MeetingsSaveActivity extends AppCompatActivity {
     public static final String ACTION_DATA_UPDATED =
             "com.nearby.syncpad.ACTION_DATA_UPDATED";
     private Meeting mMeeting;
-    private AddMeetingListener mAddMeetingListener;
 
     @Inject
     DatabaseReference mDatabase;

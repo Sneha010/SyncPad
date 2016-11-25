@@ -92,8 +92,10 @@ public class AvailableMeetingListAdapter extends RecyclerView.Adapter<AvailableM
 
         @BindView(R.id.tvMeetingTitle)
         TextView tvMeetingTitle;
+
         @BindView(R.id.tvInitiatedBy)
         TextView tvInitiatedBy;
+
         @BindView(R.id.rlDataContent)
         RelativeLayout rlDataContent;
 

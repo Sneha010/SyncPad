@@ -129,6 +129,12 @@ public class AddMeetingDialogFragment extends AppCompatDialogFragment {
             }
         });
 
+        setDateAndTime();
+
+
+    }
+
+    private void setDateAndTime() {
         // Use the current date as the default date in the picker
         final Calendar c = Calendar.getInstance();
         final int year = c.get(Calendar.YEAR);
@@ -175,12 +181,8 @@ public class AddMeetingDialogFragment extends AppCompatDialogFragment {
                 timePickerDialog.show();
             }
         });
-
     }
 
-    private void setCurrentTime(){
-
-    }
 
     private String getTimeString(int hourOfDay , int min){
 

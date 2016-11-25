@@ -16,6 +16,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
@@ -26,20 +29,27 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ResetPasswordActivity extends AppCompatActivity {
 
-    private EditText inputEmail;
-    private Button btnReset, btnBack;
+    @BindView(R.id.email)
+    EditText inputEmail;
+
+    @BindView(R.id.btn_reset_password)
+    Button btnReset;
+
+    @BindView(R.id.btn_back)
+    Button btnBack;
+
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+
     private FirebaseAuth auth;
-    private ProgressBar progressBar;
+    private Unbinder binder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
-        inputEmail = (EditText) findViewById(R.id.email);
-        btnReset = (Button) findViewById(R.id.btn_reset_password);
-        btnBack = (Button) findViewById(R.id.btn_back);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        binder = ButterKnife.bind(this);
 
         auth = FirebaseAuth.getInstance();
 
@@ -84,5 +94,10 @@ public class ResetPasswordActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
+        binder.unbind();
+    }
 }
