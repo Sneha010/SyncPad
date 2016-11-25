@@ -50,12 +50,8 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
         setContentView(R.layout.meetings_details_layout);
         mUnbinder = ButterKnife.bind(this);
 
-
-
-
         if (savedInstanceState == null) {
             if (getIntent() != null) {
-               //mId = ItemsContract.Items.getItemId(getIntent().getData());
                 mItemId = getIntent().getExtras().getString("item_id");
             }
         }

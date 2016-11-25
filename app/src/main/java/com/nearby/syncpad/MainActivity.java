@@ -272,9 +272,7 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
 
                     Intent i = new Intent(MainActivity.this, MeetingDetailsActivity.class);
                     i.putExtra("item_id", mCursor.getString(MeetingNotesLoader.Query.MEETING_ID));
-                    ActivityOptionsCompat options = ActivityOptionsCompat.
-                            makeSceneTransitionAnimation(MainActivity.this, vh.rlMainContentView, "meetingHeader");
-                    startActivity(i, options.toBundle());
+                    startActivity(i);
 
                    /* startActivity(new Intent(Intent.ACTION_VIEW,
                             ItemsContract.Items.buildItemUri(mCursor.getString(MeetingNotesLoader.Query.MEETING_ID))));*/
@@ -286,8 +284,8 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             mCursor.moveToPosition(position);
-            holder.mTvMeetingTitle.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_NAME));
-            holder.mTvNotes.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_NOTES));
+            holder.tvMeetingTitle.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_NAME));
+            holder.tvDate.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_DATE));
         }
 
         @Override
@@ -298,11 +296,11 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(tvMeetingTitle)
-        TextView mTvMeetingTitle;
+        @BindView(R.id.tvMeetingTitle)
+        TextView tvMeetingTitle;
 
-        @BindView(R.id.tvNotes)
-        TextView mTvNotes;
+        @BindView(R.id.tvDate)
+        TextView tvDate;
 
         @BindView(R.id.rlMainContentView)
         RelativeLayout rlMainContentView;
