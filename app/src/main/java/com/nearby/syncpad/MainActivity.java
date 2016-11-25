@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
                 refresh();
             }
         });
+
     }
 
     @Override

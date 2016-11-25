@@ -6,21 +6,28 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 import com.nearby.syncpad.data.MeetingNotesLoader;
+import com.nearby.syncpad.fragments.MeetingInfoFragment;
+import com.nearby.syncpad.fragments.MeetingNotesFragment;
 import com.nearby.syncpad.util.GeneralUtils;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
-import static com.nearby.syncpad.R.id.tvNotes;
 
 /**
  * Created by Sneha Khadatare on 11/20/2016.
@@ -30,18 +37,22 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
 
     private static final String TAG = "MeetingDetailsActivity";
 
-    @BindView(tvNotes)
-    TextView mTvNotes;
-
-    @BindView(R.id.tvParticipant)
-    TextView mTvParticipant;
-
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+
+    @BindView(R.id.tabLayout)
+    TabLayout tabLayout;
+
+    @BindView(R.id.viewpager)
+    ViewPager viewpager;
+
+    @BindView(R.id.rlMainContentView)
+    RelativeLayout rlMainContentView;
 
     private Unbinder mUnbinder;
     private Cursor mCursor;
     private String mItemId;
+    private MyPagerAdapter mAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,8 +69,8 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
         getLoaderManager().initLoader(0, null, this);
 
         initialise();
-        displayMeetingDetails();
     }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -81,9 +92,20 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        ArrayList<Fragment> fragmentList = new ArrayList<Fragment>();
+
+        fragmentList.add(MeetingInfoFragment.newInstance());
+        fragmentList.add(MeetingNotesFragment.newInstance());
+
+        mAdapter = new MyPagerAdapter(getSupportFragmentManager(),fragmentList);
+        viewpager.setAdapter(mAdapter);
+        viewpager.setOffscreenPageLimit(fragmentList.size());
+        tabLayout.setupWithViewPager(viewpager);
+
+        GeneralUtils.applyFontedTab(MeetingDetailsActivity.this, viewpager, tabLayout);
     }
 
-    private void displayMeetingDetails() {
+   /* private void displayMeetingDetails() {
 
         //TODO display meeting using bean
 
@@ -99,7 +121,33 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
         }
 
     }
+*/
 
+    class MyPagerAdapter extends FragmentStatePagerAdapter{
+
+        ArrayList<Fragment> fragmentList;
+        String[] titleArray = {"MEETING INFO" , "MEETING NOTES"};
+
+        public MyPagerAdapter(FragmentManager fm, ArrayList<Fragment> fragmentList) {
+            super(fm);
+            this.fragmentList = fragmentList;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragmentList.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titleArray[position];
+        }
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -115,7 +163,7 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
             mCursor.close();
             mCursor = null;
         }
-        displayMeetingDetails();
+        //displayMeetingDetails();
     }
 
     @Override

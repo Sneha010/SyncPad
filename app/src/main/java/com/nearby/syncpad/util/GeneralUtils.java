@@ -1,5 +1,6 @@
 package com.nearby.syncpad.util;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,7 +13,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
@@ -215,6 +218,15 @@ public abstract class GeneralUtils {
 
     public static String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
+
+    public static void applyFontedTab(Activity activity, ViewPager viewPager, TabLayout tabLayout) {
+        for (int i = 0; i < viewPager.getAdapter().getCount(); i++) {
+            TextView tv = (TextView) activity.getLayoutInflater().inflate(R.layout.item_tab, null);
+            if (i == viewPager.getCurrentItem()) tv.setSelected(true);
+            tv.setText(viewPager.getAdapter().getPageTitle(i));
+            tabLayout.getTabAt(i).setCustomView(tv);
+        }
     }
 
 }
