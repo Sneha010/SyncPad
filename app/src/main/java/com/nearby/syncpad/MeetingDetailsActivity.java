@@ -81,6 +81,7 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
         getLoaderManager().initLoader(0, null, this);
 
         setToolbar();
+        showProgress();
     }
 
     @Override
@@ -119,7 +120,8 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
             meeting.setParticipantNameList(mCursor.getString(MeetingNotesLoader.Query.MEETING_PARTICIPANTS));
             mMeeting = meeting;
 
-            displayMeetingConent(meeting);
+            showContent();
+            displayMeetingContent(meeting);
 
         }else{
             showError();
@@ -128,7 +130,7 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
 
     }
 
-    private void displayMeetingConent(Meeting meeting) {
+    private void displayMeetingContent(Meeting meeting) {
 
         getSupportActionBar().setTitle(meeting.getMeetingName());
 
@@ -145,23 +147,6 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
         GeneralUtils.applyFontedTab(MeetingDetailsActivity.this, viewpager, tabLayout);
     }
 
-   /* private void displayMeetingDetails() {
-
-        //TODO display meeting using bean
-
-        if (mCursor != null) {
-
-            getSupportActionBar().setTitle(mCursor.getString(MeetingNotesLoader.Query.MEETING_NAME));
-
-            if (!GeneralUtils.isEmpty(mCursor.getString(MeetingNotesLoader.Query.MEETING_NOTES)))
-                mTvNotes.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_NOTES));
-            if (!GeneralUtils.isEmpty(mCursor.getString(MeetingNotesLoader.Query.MEETING_PARTICIPANTS)))
-            mTvParticipant.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_PARTICIPANTS));
-
-        }
-
-    }
-*/
 
     class MyPagerAdapter extends FragmentStatePagerAdapter{
 
@@ -203,7 +188,6 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
             mCursor.close();
             mCursor = null;
         }
-        //displayMeetingDetails();
 
         loadContent();
 
