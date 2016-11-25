@@ -48,4 +48,11 @@
     <string name="profile_org_hint">My Organisation</string>
     <string name="profile_role_hint">My Role</string>
     <string name="profile_email_hint">My Email Id</string>
+
+    <!--My Meeting Information-->
+    <string name="date">Date: </string>
+    <string name="time">Time:</string>
+    <string name="venue">Venue:</string>
+    <string name="agenda">Agenda</string>
+    <string name="attendee">Attendees</string>
 </resources>
