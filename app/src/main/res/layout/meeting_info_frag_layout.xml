@@ -16,14 +16,15 @@
             android:layout_height="wrap_content"
             android:text="@string/date"
             android:textColor="@color/primaryTextColor"
+            fontPath="fonts/gothamblack.ttf"
             android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/tvDatevalue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/date"
             android:textColor="@color/primaryTextColor"
+            android:layout_marginLeft="10dp"
             android:textSize="16sp"/>
 
     </LinearLayout>
@@ -33,14 +34,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="15dp">
 
         <TextView
             android:id="@+id/tvTimeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/time"
             android:textColor="@color/primaryTextColor"
+            fontPath="fonts/gothamblack.ttf"
             android:textSize="18sp"/>
 
         <TextView
@@ -48,6 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/time"
+            android:layout_marginLeft="10dp"
             android:textColor="@color/primaryTextColor"
             android:textSize="16sp"/>
 
@@ -58,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="15dp">
 
         <TextView
             android:id="@+id/tvVenueLabel"
@@ -66,13 +68,14 @@
             android:layout_height="wrap_content"
             android:text="@string/time"
             android:textColor="@color/primaryTextColor"
+            fontPath="fonts/gothamblack.ttf"
             android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/tvVenueValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/time"
+            android:layout_marginLeft="10dp"
             android:textColor="@color/primaryTextColor"
             android:textSize="16sp"/>
 
@@ -83,14 +86,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="15dp">
 
         <TextView
             android:id="@+id/tvAgendaLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/agenda"
             android:textColor="@color/primaryTextColor"
+            fontPath="fonts/gothamblack.ttf"
             android:textSize="18sp"/>
 
         <TextView
@@ -99,7 +102,8 @@
             android:layout_height="wrap_content"
             android:text="@string/agenda"
             android:textColor="@color/primaryTextColor"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"/>
 
     </LinearLayout>
 
@@ -108,7 +112,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="15dp">
 
         <TextView
             android:id="@+id/tvAttendeesLabel"
@@ -116,6 +120,7 @@
             android:layout_height="wrap_content"
             android:text="@string/attendee"
             android:textColor="@color/primaryTextColor"
+            fontPath="fonts/gothamblack.ttf"
             android:textSize="16sp"/>
 
 
