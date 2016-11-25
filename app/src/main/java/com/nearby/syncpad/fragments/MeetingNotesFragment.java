@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nearby.syncpad.R;
+import com.nearby.syncpad.util.Constants;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -19,8 +20,11 @@ public class MeetingNotesFragment extends Fragment {
 
     private Unbinder binder;
 
-    public static MeetingNotesFragment newInstance() {
+    public static MeetingNotesFragment newInstance(String notes) {
         MeetingNotesFragment fragment = new MeetingNotesFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.MEETING_NOTES , notes);
+        fragment.setArguments(bundle);
         return fragment;
     }
 

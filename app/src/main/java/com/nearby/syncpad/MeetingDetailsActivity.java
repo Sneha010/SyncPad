@@ -15,11 +15,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.nearby.syncpad.data.MeetingNotesLoader;
 import com.nearby.syncpad.fragments.MeetingInfoFragment;
 import com.nearby.syncpad.fragments.MeetingNotesFragment;
+import com.nearby.syncpad.models.Meeting;
 import com.nearby.syncpad.util.GeneralUtils;
 
 import java.util.ArrayList;
@@ -46,13 +49,22 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
     @BindView(R.id.viewpager)
     ViewPager viewpager;
 
-    @BindView(R.id.rlMainContentView)
-    RelativeLayout rlMainContentView;
+    @BindView(R.id.llMainContent)
+    LinearLayout llMainContent;
+
+    @BindView(R.id.rl_progress)
+    RelativeLayout rlProgress;
+
+    @BindView(R.id.tvError)
+    TextView tvError;
+
+
 
     private Unbinder mUnbinder;
     private Cursor mCursor;
     private String mItemId;
     private MyPagerAdapter mAdapter;
+    private Meeting mMeeting;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +80,7 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
         }
         getLoaderManager().initLoader(0, null, this);
 
-        initialise();
+        setToolbar();
     }
 
     @Override
@@ -77,7 +89,7 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
     }
 
 
-    public void initialise() {
+    public void setToolbar() {
 
         setSupportActionBar(mToolbar);
 
@@ -92,10 +104,38 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+    }
+
+    private void loadContent() {
+
+        if (mCursor != null) {
+            Meeting meeting = new Meeting();
+            meeting.setMeetingName(mCursor.getString(MeetingNotesLoader.Query.MEETING_NAME));
+            meeting.setMeetingDate(mCursor.getString(MeetingNotesLoader.Query.MEETING_DATE));
+            meeting.setMeetingTime(mCursor.getString(MeetingNotesLoader.Query.MEETING_TIME));
+            meeting.setMeetingVenue(mCursor.getString(MeetingNotesLoader.Query.MEETING_VENUE));
+            meeting.setMeetingAgenda(mCursor.getString(MeetingNotesLoader.Query.MEETING_AGENDA));
+            meeting.setNotesList(mCursor.getString(MeetingNotesLoader.Query.MEETING_NOTES));
+            meeting.setParticipantNameList(mCursor.getString(MeetingNotesLoader.Query.MEETING_PARTICIPANTS));
+            mMeeting = meeting;
+
+            displayMeetingConent(meeting);
+
+        }else{
+            showError();
+        }
+
+
+    }
+
+    private void displayMeetingConent(Meeting meeting) {
+
+        getSupportActionBar().setTitle(meeting.getMeetingName());
+
         ArrayList<Fragment> fragmentList = new ArrayList<Fragment>();
 
-        fragmentList.add(MeetingInfoFragment.newInstance());
-        fragmentList.add(MeetingNotesFragment.newInstance());
+        fragmentList.add(MeetingInfoFragment.newInstance(mMeeting));
+        fragmentList.add(MeetingNotesFragment.newInstance(meeting.getNotesList()));
 
         mAdapter = new MyPagerAdapter(getSupportFragmentManager(),fragmentList);
         viewpager.setAdapter(mAdapter);
@@ -164,6 +204,10 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
             mCursor = null;
         }
         //displayMeetingDetails();
+
+        loadContent();
+
+
     }
 
     @Override
@@ -175,5 +219,23 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
     protected void onDestroy() {
         super.onDestroy();
         mUnbinder.unbind();
+    }
+
+    private void showProgress(){
+        rlProgress.setVisibility(View.VISIBLE);
+        tvError.setVisibility(View.GONE);
+        llMainContent.setVisibility(View.GONE);
+    }
+
+    private void showError(){
+        rlProgress.setVisibility(View.GONE);
+        tvError.setVisibility(View.VISIBLE);
+        llMainContent.setVisibility(View.GONE);
+    }
+
+    private void showContent(){
+        rlProgress.setVisibility(View.GONE);
+        tvError.setVisibility(View.GONE);
+        llMainContent.setVisibility(View.VISIBLE);
     }
 }
