@@ -6,13 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nearby.syncpad.R;
 import com.nearby.syncpad.util.Constants;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,7 +63,7 @@ public class MeetingNotesFragment extends Fragment {
 
     private void showMeetingNotes() {
 
-        String[] noteList = mNotes.split("||");
+        String[] noteList = mNotes.split("\\|\\|");
 
         if (noteList != null && noteList.length > 0) {
             for (int i = 0; i < noteList.length; i++) {

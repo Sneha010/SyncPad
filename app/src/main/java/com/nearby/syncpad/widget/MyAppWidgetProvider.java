@@ -37,12 +37,13 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             remoteViews.setOnClickPendingIntent(R.id.rlHeader, pendingIntent);
 
             setRemoteAdapter(context, remoteViews);
-/*
+
             Intent clickIntentTemplate = new Intent(context, MeetingDetailsActivity.class);
             PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
                     .addNextIntentWithParentStack(clickIntentTemplate)
                     .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            remoteViews.setPendingIntentTemplate(R.id.widget_list, clickPendingIntentTemplate);*/
+            remoteViews.setPendingIntentTemplate(R.id.widget_list, clickPendingIntentTemplate);
+
             remoteViews.setEmptyView(R.id.widget_list, R.id.ll_no_meetings);
 
 
