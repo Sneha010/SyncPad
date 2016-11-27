@@ -307,8 +307,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
     };
 
     private void generateMeetingMOM() {
-        mCurrentMeeting.setNotesList(convertToStringFromArrayList(noteList));
-        mCurrentMeeting.setParticipantNameList(convertToStringFromArrayList(participantNameList));
+        mCurrentMeeting.setMeetingNotes(convertToStringFromArrayList(noteList));
+        mCurrentMeeting.setMeetingParticipants(convertToStringFromArrayList(participantNameList));
 
         Intent i = new Intent(ActiveMeetingActivity.this, MeetingsSaveActivity.class);
         i.putExtra(Constants.MEETING, mCurrentMeeting);

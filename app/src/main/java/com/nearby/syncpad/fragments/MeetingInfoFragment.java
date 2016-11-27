@@ -85,8 +85,8 @@ public class MeetingInfoFragment extends Fragment {
             else
                 tvAgendaValue.setText(getString(R.string.na));
 
-            if(!GeneralUtils.isEmpty(mMeeting.getParticipantNameList()))
-                tvAttendeesValue.setText(mMeeting.getParticipantNameList().replace("||","\n"));
+            if(!GeneralUtils.isEmpty(mMeeting.getMeetingParticipants()))
+                tvAttendeesValue.setText(mMeeting.getMeetingParticipants().replace("||","\n"));
             else
                 tvAttendeesValue.setText(getString(R.string.na));
 

@@ -116,8 +116,8 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
             meeting.setMeetingTime(mCursor.getString(MeetingNotesLoader.Query.MEETING_TIME));
             meeting.setMeetingVenue(mCursor.getString(MeetingNotesLoader.Query.MEETING_VENUE));
             meeting.setMeetingAgenda(mCursor.getString(MeetingNotesLoader.Query.MEETING_AGENDA));
-            meeting.setNotesList(mCursor.getString(MeetingNotesLoader.Query.MEETING_NOTES));
-            meeting.setParticipantNameList(mCursor.getString(MeetingNotesLoader.Query.MEETING_PARTICIPANTS));
+            meeting.setMeetingNotes(mCursor.getString(MeetingNotesLoader.Query.MEETING_NOTES));
+            meeting.setMeetingParticipants(mCursor.getString(MeetingNotesLoader.Query.MEETING_PARTICIPANTS));
             mMeeting = meeting;
 
             showContent();
@@ -137,7 +137,7 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
         ArrayList<Fragment> fragmentList = new ArrayList<Fragment>();
 
         fragmentList.add(MeetingInfoFragment.newInstance(mMeeting));
-        fragmentList.add(MeetingNotesFragment.newInstance(meeting.getNotesList()));
+        fragmentList.add(MeetingNotesFragment.newInstance(meeting.getMeetingNotes()));
 
         mAdapter = new MyPagerAdapter(getSupportFragmentManager(),fragmentList);
         viewpager.setAdapter(mAdapter);

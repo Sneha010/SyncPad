@@ -12,12 +12,25 @@
         android:layout_height="@dimen/abc_action_bar_default_height_material"
         android:background="@color/colorPrimary">
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/widgetAppIcon"
+            android:layout_width="40dp"
+            android:layout_height="45dp"
             android:contentDescription="@string/app_name"
             android:layout_gravity="center"
             android:src="@drawable/app_icon"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
             />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:layout_toRightOf="@+id/widgetAppIcon"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/large_text_size"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/white"/>
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"

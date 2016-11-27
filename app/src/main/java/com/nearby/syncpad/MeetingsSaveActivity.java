@@ -113,8 +113,8 @@ public class MeetingsSaveActivity extends AppCompatActivity {
             else
                 mTvAgendaValue.setText(getString(R.string.na));
 
-            if(!GeneralUtils.isEmpty(mMeeting.getParticipantNameList()))
-                mTvAttendeesValue.setText(mMeeting.getParticipantNameList().replace("||","\n"));
+            if(!GeneralUtils.isEmpty(mMeeting.getMeetingParticipants()))
+                mTvAttendeesValue.setText(mMeeting.getMeetingParticipants().replace("||","\n"));
             else
                 mTvAttendeesValue.setText(getString(R.string.na));
 
@@ -130,7 +130,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
 
     private void showMeetingNotes() {
 
-        String[] noteList = mMeeting.getNotesList().split("\\|\\|");
+        String[] noteList = mMeeting.getMeetingNotes().split("\\|\\|");
 
         if (noteList != null && noteList.length > 0) {
             for (int i = 0; i < noteList.length; i++) {
@@ -239,8 +239,8 @@ public class MeetingsSaveActivity extends AppCompatActivity {
             }
         });
 
-        //addMeetingToDb(mMeeting);
-        //pdateWidgets();
+        addMeetingToDb(mMeeting);
+        updateWidgets();
     }
 
     private void addMeetingToDb(Meeting meeting) {
