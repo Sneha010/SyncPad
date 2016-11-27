@@ -10,10 +10,12 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
 import com.nearby.syncpad.data.ItemsContract;
@@ -116,37 +118,33 @@ public class MeetingsSaveActivity extends AppCompatActivity {
     private void saveAndSyncMeeting(){
 
         syncWithFirebaseDb();
-        finish();
-/*
-        mDatabase.child("user-meetings").child(GeneralUtils.getUid()).addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // Get user value
-                        Meeting meeting = dataSnapshot.getValue(Meeting.class);
-
-                        // [START_EXCLUDE]
-                        if (meeting == null) {
-                            // User is null, error out
-                            Log.e(TAG, "User " + GeneralUtils.getUid() + " is unexpectedly null");
-                            Toast.makeText(MeetingsSaveActivity.this,
-                                    "Error: could not fetch user.",
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            // Write new post
-                            syncWithFirebaseDb();
-                        }
-
-                        // Finish this Activity, back to the stream
-                        finish();
-                        // [END_EXCLUDE]
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
-                    }
-                });*/
+//        mDatabase.child("user-meetings").child(GeneralUtils.getUid()).addListenerForSingleValueEvent(
+//                new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        // Get user value
+//                        Meeting meeting = dataSnapshot.getValue(Meeting.class);
+//
+//                        // [START_EXCLUDE]
+//                        if (meeting == null) {
+//                            // User is null, error out
+//                            Log.d(TAG, "onDataChange: Meeting is null");
+//                        } else {
+//                            Log.d(TAG, "onDataChange: meeting is not null added meeting is"+meeting.getMeetingName());
+//                            // Write new post
+//                            syncWithFirebaseDb();
+//                        }
+//
+//                        // Finish this Activity, back to the stream
+//                        finish();
+//                        // [END_EXCLUDE]
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+//                    }
+//                });
 
 
     }
@@ -160,10 +158,19 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         Map<String, Object> postValues = mMeeting.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/user-meetings/" + userId + "/" + key, postValues);
-        mDatabase.updateChildren(childUpdates);
+        mDatabase.updateChildren(childUpdates, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    Log.d(TAG, "onComplete: error");
+                } else {
+                    finish();
+                }
+            }
+        });
 
-        addMeetingToDb(mMeeting);
-        updateWidgets();
+        //addMeetingToDb(mMeeting);
+        //pdateWidgets();
     }
 
     private void addMeetingToDb(Meeting meeting){

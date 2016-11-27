@@ -29,7 +29,7 @@
             android:textColor="@color/primaryTextColor"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textSize="18sp"
+            android:textSize="@dimen/large_text_size"
             />
 
         <TextView
@@ -42,7 +42,23 @@
             android:paddingBottom="16dp"
             android:layout_below="@id/tvMeetingTitle"
             android:textColor="@color/colorPrimary"
-            android:textSize="15sp"
+            android:textSize="@dimen/small_text_size"
+            android:layout_marginTop="5dp"
+            />
+
+        <TextView
+            android:id="@+id/tvTime"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="16dp"
+            android:layout_below="@id/tvMeetingTitle"
+            android:textColor="@color/colorPrimary"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:textSize="@dimen/small_text_size"
             />
     </RelativeLayout>
 

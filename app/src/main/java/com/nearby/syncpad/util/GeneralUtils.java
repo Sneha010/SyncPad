@@ -235,6 +235,22 @@ public abstract class GeneralUtils {
         }
     }
 
+    public static String getFormattedDate(String date) {
+
+        Date actualDateFormat ;
+        String dateString = null;
+
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            actualDateFormat = format.parse(date);
+            dateString = new SimpleDateFormat("dd MMMM, yyyy").format(actualDateFormat);
+            return dateString;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return date;
+        }
+    }
+
     public static String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }

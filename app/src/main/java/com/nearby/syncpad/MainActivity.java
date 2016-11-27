@@ -31,6 +31,7 @@ import com.nearby.syncpad.data.MeetingNotesLoader;
 import com.nearby.syncpad.data.UpdaterService;
 import com.nearby.syncpad.fragments.AddMeetingDialogFragment;
 import com.nearby.syncpad.fragments.ScanMeetingsDialogFragment;
+import com.nearby.syncpad.util.GeneralUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -285,7 +286,8 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
         public void onBindViewHolder(ViewHolder holder, int position) {
             mCursor.moveToPosition(position);
             holder.tvMeetingTitle.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_NAME));
-            holder.tvDate.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_DATE));
+            holder.tvDate.setText(GeneralUtils.getFormattedDate(mCursor.getString(MeetingNotesLoader.Query.MEETING_DATE)));
+            holder.tvTime.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_TIME));
         }
 
         @Override
@@ -301,6 +303,9 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
 
         @BindView(R.id.tvDate)
         TextView tvDate;
+
+        @BindView(R.id.tvTime)
+        TextView tvTime;
 
         @BindView(R.id.rlMainContentView)
         RelativeLayout rlMainContentView;

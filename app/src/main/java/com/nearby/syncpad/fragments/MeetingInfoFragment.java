@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nearby.syncpad.R;
@@ -67,7 +66,7 @@ public class MeetingInfoFragment extends Fragment {
 
         if (mMeeting != null) {
             if(!GeneralUtils.isEmpty(mMeeting.getMeetingDate()))
-                tvDateValue.setText(mMeeting.getMeetingDate());
+                tvDateValue.setText(GeneralUtils.getFormattedDate(mMeeting.getMeetingDate()));
             else
                 tvDateValue.setText(getString(R.string.na));
 

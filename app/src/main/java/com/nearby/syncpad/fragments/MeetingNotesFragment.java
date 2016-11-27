@@ -1,7 +1,9 @@
 package com.nearby.syncpad.fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,14 +68,25 @@ public class MeetingNotesFragment extends Fragment {
         String[] noteList = mNotes.split("\\|\\|");
 
         if (noteList != null && noteList.length > 0) {
-            for (int i = 0; i < noteList.length; i++) {
+            for (int i = 0; i < 5; i++) {
                 TextView textView = new TextView(getActivity());
-                textView.setText(noteList[i]);
+                textView.setText(noteList[0]);
+                textView.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/gothambook.ttf"));
+
+                if(i%2==0)
+                    textView.setBackground(ContextCompat.getDrawable(getActivity() , R.drawable.notes_bg_pink));
+                else
+                    textView.setBackground(ContextCompat.getDrawable(getActivity() , R.drawable.notes_bg_blue));
+
+
 
                 LinearLayout.LayoutParams params =
                         new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
-
+                params.setMargins(0 , 8 ,0,0);
+                textView.setPadding(15,15,15,15);
+                textView.setTextSize(16);
+                textView.setTextColor(ContextCompat.getColor(getActivity() , R.color.primaryTextColor));
                 textView.setLayoutParams(params);
                 llContainer.addView(textView, params);
             }
