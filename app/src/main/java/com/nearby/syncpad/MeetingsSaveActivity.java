@@ -155,6 +155,8 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         final String userId = GeneralUtils.getUid();
         String key = mDatabase.child("user-meetings/"+userId).push().getKey();
         mMeeting.setMeetingId(key);
+        mMeeting.setMeetingTimeStamp(GeneralUtils.getTimeInMillis(mMeeting.getMeetingDate(),
+                mMeeting.getMeetingTime()));
         Map<String, Object> postValues = mMeeting.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/user-meetings/" + userId + "/" + key, postValues);
@@ -170,8 +172,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         ArrayList<ContentProviderOperation> cpo = new ArrayList<ContentProviderOperation>();
         Uri dirUri = ItemsContract.Items.buildDirUri();
 
-        ContentValues values = null;
-            values = GeneralUtils.getContentValues(new JSONObject(new Gson().toJson(meeting)));
+        ContentValues values = GeneralUtils.getContentValues(new JSONObject(new Gson().toJson(meeting)));
 
         cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
 

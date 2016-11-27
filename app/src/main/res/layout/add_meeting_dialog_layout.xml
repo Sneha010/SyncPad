@@ -55,9 +55,8 @@
         android:textSize="16sp"
         android:layout_below="@id/add_name_text"
         android:textColor="@color/primaryTextColor"
-        android:background="@color/light_pink"
-        android:padding="5dp"
-        android:textColorHint="@color/secondaryTextColor" />
+        android:inputType="textCapSentences"
+        android:textColorHint="@color/light_gray" />
 
     <TextView
         android:id="@+id/add_date_text"
@@ -84,9 +83,7 @@
         android:hint="Add meeting date"
         android:textSize="16sp"
         android:textColor="@color/primaryTextColor"
-        android:background="@color/light_pink"
-        android:padding="5dp"
-        android:textColorHint="@color/secondaryTextColor"
+        android:textColorHint="@color/light_gray"
         android:layout_weight="1"/>
     <TextView
         android:id="@+id/select_date_button"
@@ -126,12 +123,10 @@
         android:layout_height="wrap_content"
         android:hint="Add meeting time"
         android:textSize="16sp"
-        android:padding="5dp"
         android:layout_below="@id/add_title_time"
         android:textColor="@color/primaryTextColor"
-        android:background="@color/light_pink"
         android:layout_weight="1"
-        android:textColorHint="@color/secondaryTextColor" />
+        android:textColorHint="@color/light_gray" />
 
             <TextView
                 android:id="@+id/select_time_button"
@@ -163,11 +158,10 @@
         android:layout_marginTop="5dp"
         android:hint="Add meeting venue"
         android:textSize="16sp"
-        android:padding="5dp"
-        android:background="@color/light_pink"
         android:layout_below="@id/add_meeting_venue"
         android:textColor="@color/primaryTextColor"
-        android:textColorHint="@color/secondaryTextColor" />
+        android:inputType="textCapSentences"
+        android:textColorHint="@color/light_gray" />
 
     <TextView
         android:id="@+id/add_agenda_text"
@@ -187,13 +181,12 @@
         android:layout_marginTop="5dp"
         android:hint="Add meeting agenda"
         android:textSize="16sp"
-        android:lines="6"
         android:gravity="top|left"
-        android:padding="5dp"
         android:layout_below="@id/add_agenda_text"
+        android:lineSpacingMultiplier="1.2"
         android:textColor="@color/primaryTextColor"
-        android:textColorHint="@color/secondaryTextColor"
-        android:background="@color/light_pink"/>
+        android:textColorHint="@color/light_gray"
+        />
 
     <LinearLayout
         android:id="@+id/ll_buttons"
@@ -201,7 +194,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_below="@id/edtMeetingAgenda"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:weightSum="2">
 
         <TextView

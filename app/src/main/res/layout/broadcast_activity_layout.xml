@@ -60,7 +60,7 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:paddingLeft="8dp"
-            android:textColorHint="@color/secondaryTextColor" />
+            android:textColorHint="@color/light_gray" />
 
         <ImageView
             android:id="@+id/send_button"

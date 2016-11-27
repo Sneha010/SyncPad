@@ -22,7 +22,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.nearby.syncpad.R;
 import com.nearby.syncpad.data.ItemsContract;
@@ -33,6 +32,10 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -199,10 +202,9 @@ public abstract class GeneralUtils {
             return false;
     }
 
-    public static ContentValues getContentValues(JSONObject jsonObject) throws JSONException {
+    public static ContentValues getContentValues(JSONObject jsonObject ) throws JSONException {
 
         ContentValues values = new ContentValues();
-
         values.put(ItemsContract.Items.MEETING_ID, jsonObject.getString("meetingId" ));
         values.put(ItemsContract.Items.MEETING_NAME, jsonObject.getString("meetingName" ));
         values.put(ItemsContract.Items.MEETING_DATE, jsonObject.getString("meetingDate" ));
@@ -211,9 +213,26 @@ public abstract class GeneralUtils {
         values.put(ItemsContract.Items.MEETING_AGENDA, jsonObject.getString("meetingAgenda" ));
         values.put(ItemsContract.Items.MEETING_NOTES, jsonObject.getString("meetingNotes" ));
         values.put(ItemsContract.Items.MEETING_PARTICIPANTS, jsonObject.getString("meetingParticipants" ));
+        values.put(ItemsContract.Items.MEETING_TIMESTAMP, jsonObject.getString("meetingTimeStamp" ));
 
         return values;
 
+    }
+
+    public static long getTimeInMillis(String date, String time) {
+
+        Date actualDateTime ;
+
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm aa");
+        try {
+            actualDateTime = format.parse(date + " " + time);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(actualDateTime);
+            return calendar.getTimeInMillis();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 1;
+        }
     }
 
     public static String getUid() {

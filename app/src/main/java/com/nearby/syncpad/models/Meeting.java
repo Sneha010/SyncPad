@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import com.google.firebase.database.Exclude;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +19,7 @@ public class Meeting implements Parcelable {
     private String meetingAgenda = "";
     private String participantNameList = "";
     private String notesList = "";
+    private long meetingTimeStamp;
 
     public String getMeetingId() {
         return meetingId;
@@ -50,6 +50,14 @@ public class Meeting implements Parcelable {
             return new Meeting[size];
         }
     };
+
+    public long getMeetingTimeStamp() {
+        return meetingTimeStamp;
+    }
+
+    public void setMeetingTimeStamp(long meetingTimeStamp) {
+        this.meetingTimeStamp = meetingTimeStamp;
+    }
 
     public Meeting() {
 
@@ -141,6 +149,7 @@ public class Meeting implements Parcelable {
         result.put("meetingAgenda", meetingAgenda);
         result.put("meetingNotes", notesList);
         result.put("meetingParticipants", participantNameList);
+        result.put("meetingTimeStamp", meetingTimeStamp);
 
         return result;
     }

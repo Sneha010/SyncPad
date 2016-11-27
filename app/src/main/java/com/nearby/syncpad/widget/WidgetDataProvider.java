@@ -1,6 +1,5 @@
 package com.nearby.syncpad.widget;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -60,7 +59,6 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
 
             Intent intent = new Intent();
             intent.putExtra("item_id" , mCursor.getString(MeetingNotesLoader.Query.MEETING_ID));
-            PendingIntent pendingIntent = PendingIntent.getActivity(mContext , 0 ,intent, 0);
             remoteViews.setOnClickFillInIntent(R.id.rlMainContentView , intent);
             return remoteViews;
         }else{

@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -37,8 +36,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
-import static com.nearby.syncpad.R.id.tvMeetingTitle;
 
 public class MainActivity extends AppCompatActivity implements DismissScanDialogListener,
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -219,6 +216,8 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
             dFragment.dismiss();
         }
     }
+
+
 
 
     @Override
