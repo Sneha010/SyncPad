@@ -58,4 +58,5 @@
     <string name="venue">Venue:</string>
     <string name="agenda">Agenda</string>
     <string name="attendee">Attendees</string>
+    <string name="meeting_notes">Meeting Notes</string>
 </resources>
