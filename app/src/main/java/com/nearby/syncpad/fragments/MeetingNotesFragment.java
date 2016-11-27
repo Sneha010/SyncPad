@@ -68,9 +68,9 @@ public class MeetingNotesFragment extends Fragment {
         String[] noteList = mNotes.split("\\|\\|");
 
         if (noteList != null && noteList.length > 0) {
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < noteList.length; i++) {
                 TextView textView = new TextView(getActivity());
-                textView.setText(noteList[0]);
+                textView.setText(noteList[i]);
                 textView.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/gothambook.ttf"));
 
                 if(i%2==0)
