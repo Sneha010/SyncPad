@@ -95,6 +95,7 @@
     <string name="save">Save</string>
     <string name="logout">Logout</string>
     <string name="participants">Participants</string>
+    <string name="share_via">"Share via : "</string>
 
     <!--Content Descriptions-->
     <string name="app_name_on_login_screen">App name on login screen</string>
@@ -149,6 +150,8 @@
     <string name="loading_the_content">Loading the content</string>
     <string name="my_profile_photo">My profile photo</string>
     <string name="close_button">Close button</string>
+
+
 
 
 </resources>

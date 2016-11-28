@@ -2,6 +2,7 @@ package com.nearby.syncpad;
 
 import android.app.LoaderManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -58,7 +61,6 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
 
     @BindView(R.id.tvError)
     TextView tvError;
-
 
 
     private Unbinder mUnbinder;
@@ -124,7 +126,7 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
             showContent();
             displayMeetingContent(meeting);
 
-        }else{
+        } else {
             showError();
         }
 
@@ -140,7 +142,7 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
         fragmentList.add(MeetingInfoFragment.newInstance(mMeeting));
         fragmentList.add(MeetingNotesFragment.newInstance(meeting.getMeetingNotes()));
 
-        mAdapter = new MyPagerAdapter(getSupportFragmentManager(),fragmentList);
+        mAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragmentList);
         viewpager.setAdapter(mAdapter);
         viewpager.setOffscreenPageLimit(fragmentList.size());
         tabLayout.setupWithViewPager(viewpager);
@@ -149,10 +151,10 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
     }
 
 
-    class MyPagerAdapter extends FragmentStatePagerAdapter{
+    class MyPagerAdapter extends FragmentStatePagerAdapter {
 
         ArrayList<Fragment> fragmentList;
-        String[] titleArray = {Constants.MEETING_INFO , Constants.MEETING_NOTES};
+        String[] titleArray = {Constants.MEETING_INFO, Constants.MEETING_NOTES};
 
         public MyPagerAdapter(FragmentManager fm, ArrayList<Fragment> fragmentList) {
             super(fm);
@@ -206,21 +208,63 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
         mUnbinder.unbind();
     }
 
-    private void showProgress(){
+    private void showProgress() {
         rlProgress.setVisibility(View.VISIBLE);
         tvError.setVisibility(View.GONE);
         llMainContent.setVisibility(View.GONE);
     }
 
-    private void showError(){
+    private void showError() {
         rlProgress.setVisibility(View.GONE);
         tvError.setVisibility(View.VISIBLE);
         llMainContent.setVisibility(View.GONE);
     }
 
-    private void showContent(){
+    private void showContent() {
         rlProgress.setVisibility(View.GONE);
         tvError.setVisibility(View.GONE);
         llMainContent.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.share, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.share) {
+
+            createShareChooser();
+            return true;
+        } else {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void createShareChooser() {
+
+        String venue , agenda , notes ;
+        venue = !GeneralUtils.isEmpty(mMeeting.getMeetingVenue()) ? mMeeting.getMeetingVenue() : "NA";
+        agenda =  !GeneralUtils.isEmpty(mMeeting.getMeetingAgenda()) ? mMeeting.getMeetingAgenda() : "NA";
+        notes =  !GeneralUtils.isEmpty(mMeeting.getMeetingNotes())? mMeeting.getMeetingNotes().replace("||", "\n") : "";
+
+        String shareBody = mMeeting.getMeetingDate() + " at " + mMeeting.getMeetingTime() + "\n" +
+                "Venue : "+venue +"\n"+ "Agenda : "+ agenda +"\n"+ "Points : " + notes;
+
+        Log.d(TAG, "createShareChooser: "+shareBody);
+
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "MOM of "+mMeeting.getMeetingName());
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_via)));
     }
 }
