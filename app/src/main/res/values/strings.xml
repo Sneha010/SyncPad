@@ -96,5 +96,59 @@
     <string name="logout">Logout</string>
     <string name="participants">Participants</string>
 
+    <!--Content Descriptions-->
+    <string name="app_name_on_login_screen">App name on login screen</string>
+    <string name="input_field_for_email">Input field for email</string>
+    <string name="input_field_for_password">Input field for password</string>
+    <string name="app_icon_on_login_screen">App icon on login screen</string>
+    <string name="sign_in_button">Sign in button</string>
+    <string name="sign_up_button">Sign up button</string>
+    <string name="forgot_password_option">Forgot password option</string>
+    <string name="meeting_list_view">Meeting list view</string>
+    <string name="swipe_to_refresh">Swipe to refresh</string>
+    <string name="no_meetings_has_been_added">No meetings has been added</string>
+    <string name="floating_action_menu">Floating action menu</string>
+    <string name="floating_action_button_for_starting_new_meeting">Floating action button for starting new meeting</string>
+    <string name="floating_action_button_for_joining_existing_meeting">Floating action button for joining existing meeting</string>
+    <string name="label_for_meeting_agenda">Label for meeting agenda</string>
+    <string name="value_for_meeting_agenda">Value for meeting agenda</string>
+    <string name="label_for_meeting_notes">label for meeting notes</string>
+    <string name="label_for_attendees">Label for attendees</string>
+    <string name="value_for_attendees">Value for attendees</string>
+    <string name="forgot_password_text">Forgot password text</string>
+    <string name="forgot_password_instructions">forgot password instructions</string>
+    <string name="button_for_reset_email">Button for reset email</string>
+    <string name="back_button">Back button</string>
+    <string name="add_meeting_title">Add meeting title</string>
+    <string name="add_meeting_name_label">Add meeting name label</string>
+    <string name="input_field_for_adding_meeting_name">Input field for adding meeting name</string>
+    <string name="add_date_label">Add date label</string>
+    <string name="input_field_for_adding_date">Input field for adding date</string>
+    <string name="select_date_button">Select date button</string>
+    <string name="add_meeting_time_label">Add meeting time label</string>
+    <string name="input_field_for_adding_time">Input field for adding time</string>
+    <string name="select_button_for_time">select button for time</string>
+    <string name="add_meeting_venue_label">Add meeting venue label</string>
+    <string name="input_field_for_adding_meeting_venue">Input field for adding meeting venue</string>
+    <string name="add_meeting_agenda_label">Add meeting agenda label</string>
+    <string name="input_field_for_adding_meeting_agenda">Input field for adding meeting agenda</string>
+    <string name="cancel_button">cancel button</string>
+    <string name="add_button_for_adding_meeting">Add button for adding meeting</string>
+    <string name="meeting_title">Meeting title</string>
+    <string name="initiated_by_description">initiated by description</string>
+    <string name="button_to_start_or_stop_the_meeting">button to start or stop the meeting</string>
+    <string name="active_note_list">active note list</string>
+    <string name="input_field_for_adding_notes">Input field for adding notes</string>
+    <string name="send_button">send button</string>
+    <string name="input_field_for_adding_user_name">Input field for adding user name</string>
+    <string name="input_field_for_adding_organisation_name">Input field for adding organisation name</string>
+    <string name="input_field_for_adding_role">Input field for adding role</string>
+    <string name="save_button">Save button</string>
+    <string name="logout_button">Logout button</string>
+    <string name="participants_list">participants list</string>
+    <string name="loading_the_content">Loading the content</string>
+    <string name="my_profile_photo">My profile photo</string>
+    <string name="close_button">Close button</string>
+
 
 </resources>

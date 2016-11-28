@@ -21,6 +21,7 @@
             android:id="@+id/ivImageIcon"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:contentDescription="@string/app_icon_on_login_screen"
             android:src="@drawable/app_icon"/>
 
         <TextView
@@ -30,6 +31,7 @@
             android:text="@string/app_name"
             android:textSize="40sp"
             android:layout_marginTop="10dp"
+            android:contentDescription="@string/app_name_on_login_screen"
             android:textColor="@color/white"/>
 
     </LinearLayout>
@@ -57,6 +59,7 @@
                 android:ellipsize="end"
                 android:hint="@string/login_email"
                 android:inputType="textEmailAddress"
+                android:contentDescription="@string/input_field_for_email"
                 android:maxLines="1" />
 
             <EditText
@@ -66,6 +69,7 @@
                 android:ellipsize="end"
                 android:hint="@string/login_password"
                 android:inputType="textPassword"
+                android:contentDescription="@string/input_field_for_password"
                 android:maxLines="1" />
         </LinearLayout>
 
@@ -84,6 +88,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:textColor="@color/colorAccent"
+                android:contentDescription="@string/sign_in_button"
                 android:text="@string/sign_in" />
 
 
@@ -95,6 +100,7 @@
                 android:textColor="@color/colorAccent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
+                android:contentDescription="@string/sign_up_button"
                 android:text="@string/sign_up" />
 
         </LinearLayout>
@@ -106,6 +112,7 @@
             android:textColor="@color/white"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
+            android:contentDescription="@string/forgot_password_option"
             android:text="@string/forgot_password" />
 
     </RelativeLayout>

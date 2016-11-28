@@ -45,6 +45,7 @@
             android:text="@string/agenda"
             android:textColor="@color/primaryTextColor"
             fontPath="fonts/gothamblack.ttf"
+            android:contentDescription="@string/label_for_meeting_agenda"
             android:textSize="@dimen/medium_text_size"/>
 
         <TextView
@@ -54,6 +55,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/agenda"
             android:textColor="@color/colorPrimaryDark"
+            android:contentDescription="@string/value_for_meeting_agenda"
             android:textSize="@dimen/medium_text_size"/>
 
     </LinearLayout>
@@ -66,6 +68,7 @@
             android:textColor="@color/primaryTextColor"
             android:layout_marginTop="15dp"
             fontPath="fonts/gothamblack.ttf"
+            android:contentDescription="@string/label_for_meeting_notes"
             android:textSize="@dimen/medium_text_size"/>
 
 
@@ -91,6 +94,7 @@
             android:text="@string/attendee"
             android:textColor="@color/primaryTextColor"
             fontPath="fonts/gothamblack.ttf"
+            android:contentDescription="@string/label_for_attendees"
             android:textSize="@dimen/medium_text_size"/>
 
         <TextView
@@ -100,6 +104,7 @@
             android:textColor="@color/colorAccent"
             android:lineSpacingMultiplier="1.3"
             android:textSize="@dimen/medium_text_size"
+            android:contentDescription="@string/value_for_attendees"
             android:layout_marginTop="10dp"/>
     </LinearLayout>
 
