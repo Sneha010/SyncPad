@@ -28,7 +28,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/iv_imgCross"
             android:gravity="center"
-            android:text="Participants"
+            android:text="@string/participants"
             android:textStyle="bold"
             fontPath="fonts/gothamblack.ttf"
             android:textColor="@color/colorPrimary"

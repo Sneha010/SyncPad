@@ -50,7 +50,7 @@ public class AvailableMeetingListAdapter extends RecyclerView.Adapter<AvailableM
 
             if (!meetingList.get(position).getName().isEmpty()) {
                 holder.tvInitiatedBy.setVisibility(View.VISIBLE);
-                holder.tvInitiatedBy.setText("Initiated by " + meetingList.get(position).getName());
+                holder.tvInitiatedBy.setText(context.getString(R.string.initiated_by) + meetingList.get(position).getName());
             } else {
                 holder.tvInitiatedBy.setVisibility(View.GONE);
             }

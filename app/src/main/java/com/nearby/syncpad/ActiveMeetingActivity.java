@@ -163,9 +163,9 @@ public class ActiveMeetingActivity extends AppCompatActivity
         startMeetingText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (((TextView) view).getText().equals("Stop Meeting")) {
+                if (((TextView) view).getText().equals(getString(R.string.stop_meeting))) {
                     stopMeeting();
-                } else if (((TextView) view).getText().equals("Start Meeting")) {
+                } else if (((TextView) view).getText().equals(getString(R.string.start_meeting))) {
                     startMeeting();
                 }
             }
@@ -184,7 +184,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
         participant.setRole(mProfileStore.getMyProfile().getRole());
         participant.setEmailAddress(mProfileStore.getMyProfile().getEmailAddress());
         participant.setOrganisation(mProfileStore.getMyProfile().getOrganisation());
-        participant.setAttendance("present");
+        participant.setAttendance(Constants.PRESENT);
         participant.setIsHost(mIsHost);
         participant.setMeeting(mCurrentMeeting);
         participant.setImageBytes(mProfileStore.getMyProfile().getImageBytes());
@@ -227,22 +227,10 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
     @Override
     public void onConnectionSuspended(int cause) {
-        Log.i(TAG, "GoogleApiClient connection suspended: "
-                + connectionSuspendedCauseToString(cause));
+        Log.i(TAG, "onConnectionSuspended called");
         GeneralUtils.displayCustomToast(ActiveMeetingActivity.this,
                 getString(R.string.nearby_connection_error));
         stopMeeting();
-    }
-
-    private static String connectionSuspendedCauseToString(int cause) {
-        switch (cause) {
-            case CAUSE_NETWORK_LOST:
-                return "CAUSE_NETWORK_LOST";
-            case CAUSE_SERVICE_DISCONNECTED:
-                return "CAUSE_SERVICE_DISCONNECTED";
-            default:
-                return "CAUSE_UNKNOWN: " + cause;
-        }
     }
 
 
@@ -260,8 +248,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
     private void startMeeting() {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
 
-            GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, "Meeting Started");
-            startMeetingText.setText("Stop Meeting");
+            GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, getString(R.string.meeting_started));
+            startMeetingText.setText(getString(R.string.stop_meeting));
             startMeetingText.setCompoundDrawablesWithIntrinsicBounds(
                     ContextCompat.getDrawable(ActiveMeetingActivity.this, R.drawable.stop_btn), null, null, null);
             startMeetingText.setCompoundDrawablePadding(5);
@@ -290,8 +278,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
-                    GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, "Meeting Stopped");
-                    startMeetingText.setText("Start Meeting");
+                    GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, getString(R.string.meeting_stopped));
+                    startMeetingText.setText(getString(R.string.start_meeting));
                     startMeetingText.setCompoundDrawablesWithIntrinsicBounds(
                             ContextCompat.getDrawable(ActiveMeetingActivity.this, R.drawable.start_btn), null, null, null);
                     startMeetingText.setCompoundDrawablePadding(5);
@@ -341,9 +329,10 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
                         //get message from this, use it later to get profile data and other stuff
                         Participant participant = Participant.fromNearbyMessage(message);
-                        participant.setToWhom("from_other");
+                        participant.setToWhom(Constants.FROM_OTHER);
 
-                        if (participantListFragment.isAdded() && (participant.getAttendance() != null && participant.getAttendance().equals("present"))) {
+                        if (participantListFragment.isAdded() && (participant.getAttendance() != null
+                                && participant.getAttendance().equals(Constants.PRESENT))) {
                             Log.i(TAG, "participant addded");
                             GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, participant.getName());
                             participantListFragment.addParticipant(participant);
@@ -383,7 +372,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
         participantListFragment = ParticipantsFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.mainFrame, participantListFragment, "Participant");
+        transaction.replace(R.id.mainFrame, participantListFragment, getString(R.string.participant));
         transaction.commit();
 
     }
@@ -417,7 +406,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
             participant.setName(mProfileStore.getMyProfile().getName());
             participant.setMeetingNotes(edtMeetingNotes.getText().toString());
             noteList.add(edtMeetingNotes.getText().toString());
-            participant.setToWhom("to_Me");
+            participant.setToWhom(Constants.TO_ME);
 
             myNotes = participant.newNearbyMessage();
 

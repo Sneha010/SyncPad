@@ -115,17 +115,6 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
 
     }
 
-    private void performTask() {
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                rlProgress.setVisibility(View.GONE);
-                tvNoActiveMeeting.setVisibility(View.VISIBLE);
-            }
-        }, 1000);
-    }
-
     @Override
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "onConnected called");
@@ -150,23 +139,13 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
 
     @Override
     public void onConnectionSuspended(int cause) {
-        Log.i(TAG, "GoogleApiClient connection suspended: "
-                + connectionSuspendedCauseToString(cause));
+        Log.i(TAG, "GoogleApiClient onConnectionSuspended");
         GeneralUtils.displayCustomToast(getActivity(),
                 getString(R.string.nearby_connection_error));
 
     }
 
-    private static String connectionSuspendedCauseToString(int cause) {
-        switch (cause) {
-            case CAUSE_NETWORK_LOST:
-                return "CAUSE_NETWORK_LOST";
-            case CAUSE_SERVICE_DISCONNECTED:
-                return "CAUSE_SERVICE_DISCONNECTED";
-            default:
-                return "CAUSE_UNKNOWN: " + cause;
-        }
-    }
+
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {

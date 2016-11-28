@@ -23,6 +23,7 @@ import com.nearby.syncpad.data.MeetingNotesLoader;
 import com.nearby.syncpad.fragments.MeetingInfoFragment;
 import com.nearby.syncpad.fragments.MeetingNotesFragment;
 import com.nearby.syncpad.models.Meeting;
+import com.nearby.syncpad.util.Constants;
 import com.nearby.syncpad.util.GeneralUtils;
 
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
 
         if (savedInstanceState == null) {
             if (getIntent() != null) {
-                mItemId = getIntent().getExtras().getString("item_id");
+                mItemId = getIntent().getExtras().getString(Constants.ITEM_ID);
             }
         }
         getLoaderManager().initLoader(0, null, this);
@@ -151,7 +152,7 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
     class MyPagerAdapter extends FragmentStatePagerAdapter{
 
         ArrayList<Fragment> fragmentList;
-        String[] titleArray = {"MEETING INFO" , "MEETING NOTES"};
+        String[] titleArray = {Constants.MEETING_INFO , Constants.MEETING_NOTES};
 
         public MyPagerAdapter(FragmentManager fm, ArrayList<Fragment> fragmentList) {
             super(fm);

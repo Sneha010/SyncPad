@@ -31,6 +31,7 @@ import com.nearby.syncpad.data.MeetingNotesLoader;
 import com.nearby.syncpad.data.UpdaterService;
 import com.nearby.syncpad.fragments.AddMeetingDialogFragment;
 import com.nearby.syncpad.fragments.ScanMeetingsDialogFragment;
+import com.nearby.syncpad.util.Constants;
 import com.nearby.syncpad.util.GeneralUtils;
 
 import butterknife.BindView;
@@ -186,14 +187,14 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
 
     private void startMeeting_Dialog() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("meeting_dialog");
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(getString(R.string.meeting_dialog));
         if (prev != null) {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
 
         addMeetingDialogFragment = AddMeetingDialogFragment.newInstance();
-        addMeetingDialogFragment.show(ft, "meeting_dialog");
+        addMeetingDialogFragment.show(ft, getString(R.string.meeting_dialog));
     }
 
     ScanMeetingsDialogFragment dFragment;
@@ -201,14 +202,14 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
     private void scanNearbyMeetings() {
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("scan_dialog");
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(getString(R.string.scan_dialog));
         if (prev != null) {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
 
         dFragment = ScanMeetingsDialogFragment.newInstance();
-        dFragment.show(ft, "scan_dialog");
+        dFragment.show(ft, getString(R.string.scan_dialog));
 
     }
 
@@ -288,11 +289,8 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
                     mCursor.moveToPosition(vh.getAdapterPosition());
 
                     Intent i = new Intent(MainActivity.this, MeetingDetailsActivity.class);
-                    i.putExtra("item_id", mCursor.getString(MeetingNotesLoader.Query.MEETING_ID));
+                    i.putExtra(Constants.ITEM_ID, mCursor.getString(MeetingNotesLoader.Query.MEETING_ID));
                     startActivity(i);
-
-                   /* startActivity(new Intent(Intent.ACTION_VIEW,
-                            ItemsContract.Items.buildItemUri(mCursor.getString(MeetingNotesLoader.Query.MEETING_ID))));*/
                 }
             });
             return vh;

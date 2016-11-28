@@ -139,7 +139,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
             for (int i = 0; i < noteList.length; i++) {
                 TextView textView = new TextView(this);
                 textView.setText(noteList[i]);
-                textView.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/gothambook.ttf"));
+                textView.setTypeface(Typeface.createFromAsset(getAssets(), Constants.GOTHAMBOOK_FONT));
 
                 if(i%2==0)
                     textView.setBackground(ContextCompat.getDrawable(this , R.drawable.notes_bg_pink));
@@ -195,7 +195,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         finish();
 */
 
-        mDatabase.child("users").child(GeneralUtils.getUid()).addListenerForSingleValueEvent(
+        mDatabase.child(Constants.USERS).child(GeneralUtils.getUid()).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -228,13 +228,13 @@ public class MeetingsSaveActivity extends AppCompatActivity {
 
     private void syncWithFirebaseDb() {
         final String userId = GeneralUtils.getUid();
-        String key = mDatabase.child("user-meetings/" + userId).push().getKey();
+        String key = mDatabase.child(Constants.USER_MEETINGS + "/" + userId).push().getKey();
         mMeeting.setMeetingId(key);
         mMeeting.setMeetingTimeStamp(GeneralUtils.getTimeInMillis(mMeeting.getMeetingDate(),
                 mMeeting.getMeetingTime()));
         Map<String, Object> postValues = mMeeting.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/user-meetings/" + userId + "/" + key, postValues);
+        childUpdates.put("/"+Constants.USER_MEETINGS +"/"+ userId + "/" + key, postValues);
         mDatabase.updateChildren(childUpdates);
 
         addMeetingToDb(mMeeting);

@@ -71,7 +71,7 @@ public class MeetingNotesFragment extends Fragment {
             for (int i = 0; i < noteList.length; i++) {
                 TextView textView = new TextView(getActivity());
                 textView.setText(noteList[i]);
-                textView.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/gothambook.ttf"));
+                textView.setTypeface(Typeface.createFromAsset(getContext().getAssets(), Constants.GOTHAMBOOK_FONT));
 
                 if(i%2==0)
                     textView.setBackground(ContextCompat.getDrawable(getActivity() , R.drawable.notes_bg_pink));

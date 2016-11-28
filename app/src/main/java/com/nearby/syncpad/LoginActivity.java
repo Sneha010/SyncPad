@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.nearby.syncpad.models.Participant;
 import com.nearby.syncpad.models.User;
 import com.nearby.syncpad.storedata.ProfileStore;
+import com.nearby.syncpad.util.Constants;
 
 import javax.inject.Inject;
 
@@ -129,7 +130,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         if (task.isSuccessful()) {
                             onAuthSuccess(task.getResult().getUser());
                         } else {
-                            Toast.makeText(LoginActivity.this, "Sign In Failed",
+                            Toast.makeText(LoginActivity.this, R.string.sign_in_failed,
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -156,7 +157,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         if (task.isSuccessful()) {
                             onAuthSuccess(task.getResult().getUser());
                         } else {
-                            Toast.makeText(LoginActivity.this, "Sign Up Failed",
+                            Toast.makeText(LoginActivity.this, R.string.sign_up_falied,
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -184,8 +185,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private String usernameFromEmail(String email) {
-        if (email.contains("@")) {
-            return email.split("@")[0];
+        if (email.contains(getString(R.string.at_the_rate))) {
+            return email.split(getString(R.string.at_the_rate))[0];
         } else {
             return email;
         }
@@ -194,14 +195,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private boolean validateForm() {
         boolean result = true;
         if (TextUtils.isEmpty(fieldEmail.getText().toString())) {
-            fieldEmail.setError("Required");
+            fieldEmail.setError(getString(R.string.required));
             result = false;
         } else {
             fieldEmail.setError(null);
         }
 
         if (TextUtils.isEmpty(fieldPassword.getText().toString())) {
-            fieldPassword.setError("Required");
+            fieldPassword.setError(getString(R.string.required));
             result = false;
         } else {
             fieldPassword.setError(null);
@@ -213,7 +214,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     // [START basic_write]
     private void writeNewUser(String userId, String name, String email) {
         User user = new User(name, email);
-        mDatabase.child("users").child(userId).setValue(user);
+        mDatabase.child(Constants.USERS).child(userId).setValue(user);
     }
     // [END basic_write]
 
@@ -221,7 +222,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setCancelable(false);
-            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.setMessage(getString(R.string.loading));
         }
 
         mProgressDialog.show();

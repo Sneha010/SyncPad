@@ -1,5 +1,7 @@
 package com.nearby.syncpad;
 
+import android.*;
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -141,7 +143,7 @@ public class MyProfileActivity extends AppCompatActivity {
     private void init() {
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("My Profile");
+        getSupportActionBar().setTitle(R.string.my_profile);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -216,23 +218,23 @@ public class MyProfileActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(myName.getText().toString())) {
             myNameTIL.setErrorEnabled(true);
-            myNameTIL.setError("Cannot be empty");
+            myNameTIL.setError(getString(R.string.cannot_be_empty));
             return;
         }
         if (TextUtils.isEmpty(myOrg.getText().toString())) {
             myOrgTIL.setErrorEnabled(true);
-            myOrgTIL.setError("Cannot be empty");
+            myOrgTIL.setError(getString(R.string.cannot_be_empty));
             return;
         }
         if (TextUtils.isEmpty(myRole.getText().toString())) {
             myRoleTIL.setErrorEnabled(true);
-            myRoleTIL.setError("Cannot be empty");
+            myRoleTIL.setError(getString(R.string.cannot_be_empty));
             return;
         }
 
         if (TextUtils.isEmpty(myEmailId.getText().toString())) {
             myEmailTIL.setErrorEnabled(true);
-            myEmailTIL.setError("Cannot be empty");
+            myEmailTIL.setError(getString(R.string.cannot_be_empty));
             return;
         }
 
@@ -403,9 +405,9 @@ public class MyProfileActivity extends AppCompatActivity {
             case 0: {
 
                 PermissionRequest.inside(this)
-                        .withRequestId("Gallery")
-                        .forPermissions(new MPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                                "Application wants to read your image for profile picture"))
+                        .withRequestId(getString(R.string.gallery))
+                        .forPermissions(new MPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
+                                getString(R.string.photo_permission)))
                         .request(new PermissionRequest.GrantPermissionListener() {
                             @Override
                             public void grantedPermission(List<String> permissions) {
@@ -436,7 +438,7 @@ public class MyProfileActivity extends AppCompatActivity {
                     Intent.ACTION_PICK,
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-            intent.setType("image/*");
+            intent.setType(getString(R.string.image_path));
 
             startActivityForResult(Intent.createChooser(intent,
                     getString(R.string.select_pic)), GALLERY_INTENT_CALLED);
@@ -444,7 +446,7 @@ public class MyProfileActivity extends AppCompatActivity {
             //For kitkat and above versions..
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("image/*");
+            intent.setType(getString(R.string.image_path));
             //intent.setType("image/jpeg");
             startActivityForResult(intent, GALLERY_KITKAT_INTENT_CALLED);
         }
@@ -455,7 +457,7 @@ public class MyProfileActivity extends AppCompatActivity {
                 "yyyyMMdd-HHmmss");
         if (GeneralUtils.checkSDCard()) {
             photo = new File(Environment.getExternalStorageDirectory(),
-                    dateFormat.format(new Date()) + ".jpg");
+                    dateFormat.format(new Date()) + getString(R.string.jpeg_ext));
             Intent cameraintent = new Intent(
                     "android.media.action.IMAGE_CAPTURE");
             cameraintent.putExtra(MediaStore.EXTRA_OUTPUT,

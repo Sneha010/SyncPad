@@ -93,7 +93,7 @@ public class AddMeetingDialogFragment extends AppCompatDialogFragment {
             public void onClick(View view) {
 
                 if (edtMeetingName.getText() == null || (edtMeetingName.getText() != null && edtMeetingName.getText().toString().length() == 0)) {
-                    Toast.makeText(getActivity(), "Please enter meeting title", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.enter_meeting_title, Toast.LENGTH_SHORT).show();
                 } else {
                     Meeting meetingBean = new Meeting();
                     if (edtMeetingName.getText() != null && edtMeetingName.getText().toString().length() > 0) {
