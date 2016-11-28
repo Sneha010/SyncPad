@@ -19,11 +19,14 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.nearby.syncpad.data.ItemsContract;
 import com.nearby.syncpad.models.Meeting;
+import com.nearby.syncpad.models.User;
 import com.nearby.syncpad.util.Constants;
 import com.nearby.syncpad.util.GeneralUtils;
 
@@ -186,35 +189,39 @@ public class MeetingsSaveActivity extends AppCompatActivity {
     }
 
     private void saveAndSyncMeeting() {
+/*
 
         syncWithFirebaseDb();
-//        mDatabase.child("user-meetings").child(GeneralUtils.getUid()).addListenerForSingleValueEvent(
-//                new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        // Get user value
-//                        Meeting meeting = dataSnapshot.getValue(Meeting.class);
-//
-//                        // [START_EXCLUDE]
-//                        if (meeting == null) {
-//                            // User is null, error out
-//                            Log.d(TAG, "onDataChange: Meeting is null");
-//                        } else {
-//                            Log.d(TAG, "onDataChange: meeting is not null added meeting is"+meeting.getMeetingName());
-//                            // Write new post
-//                            syncWithFirebaseDb();
-//                        }
-//
-//                        // Finish this Activity, back to the stream
-//                        finish();
-//                        // [END_EXCLUDE]
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
-//                    }
-//                });
+        finish();
+*/
+
+        mDatabase.child("users").child(GeneralUtils.getUid()).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get user value
+                        User user = dataSnapshot.getValue(User.class);
+
+                        // [START_EXCLUDE]
+                        if (user == null) {
+                            // User is null, error out
+                            Log.d(TAG, "onDataChange: user is null");
+                        } else {
+                            Log.d(TAG, "onDataChange: meeting is not null added meeting is");
+                            // Write new post
+                            syncWithFirebaseDb();
+                        }
+
+                        // Finish this Activity, back to the stream
+                        finish();
+                        // [END_EXCLUDE]
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                    }
+                });
 
 
     }
@@ -228,16 +235,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         Map<String, Object> postValues = mMeeting.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/user-meetings/" + userId + "/" + key, postValues);
-        mDatabase.updateChildren(childUpdates, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError != null) {
-                    Log.d(TAG, "onComplete: error");
-                } else {
-                    finish();
-                }
-            }
-        });
+        mDatabase.updateChildren(childUpdates);
 
         addMeetingToDb(mMeeting);
         updateWidgets();

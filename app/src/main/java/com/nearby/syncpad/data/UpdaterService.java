@@ -40,6 +40,8 @@ public class UpdaterService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
         if (!GeneralUtils.isOnline(this)) {
+            sendStickyBroadcast(
+                    new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, false));
             return;
         }
         sendStickyBroadcast(

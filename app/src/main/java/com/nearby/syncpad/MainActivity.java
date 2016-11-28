@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d("@@@", "onStart: mainActivity");
         refresh();
         registerReceiver(mRefreshingReceiver,
                 new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
@@ -218,7 +219,15 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
         }
     }
 
+    private void displayNoNnotes(){
+        llNoMeetingsAdded.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setVisibility(View.GONE);
+    }
 
+    private void displayMeetingList(){
+        llNoMeetingsAdded.setVisibility(View.GONE);
+        swipeRefreshLayout.setVisibility(View.VISIBLE);
+    }
 
 
     @Override
@@ -229,14 +238,21 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         Log.d("@@@", "onLoadFinished: ");
-        Adapter adapter = new Adapter(cursor);
-        adapter.setHasStableIds(true);
-        meetingRycyclerView.setAdapter(adapter);
-        // int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm =
-                new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        meetingRycyclerView.setLayoutManager(sglm);
-        swipeRefreshLayout.setRefreshing(mIsRefreshing);
+
+        if (cursor != null && cursor.getCount() > 0) {
+            displayMeetingList();
+            Adapter adapter = new Adapter(cursor);
+            adapter.setHasStableIds(true);
+            meetingRycyclerView.setAdapter(adapter);
+            StaggeredGridLayoutManager sglm =
+                    new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+            meetingRycyclerView.setLayoutManager(sglm);
+            swipeRefreshLayout.setRefreshing(mIsRefreshing);
+        }
+        else{
+            displayNoNnotes();
+        }
+
     }
 
     @Override
