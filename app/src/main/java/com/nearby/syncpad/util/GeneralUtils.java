@@ -252,7 +252,15 @@ public abstract class GeneralUtils {
     }
 
     public static String getUid() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        try {
+            return FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return null;
+        }
     }
 
     public static void applyFontedTab(Activity activity, ViewPager viewPager, TabLayout tabLayout) {

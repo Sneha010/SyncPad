@@ -11,10 +11,12 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.nearby.syncpad.LoginActivity;
 import com.nearby.syncpad.MainActivity;
 import com.nearby.syncpad.MeetingDetailsActivity;
 import com.nearby.syncpad.MeetingsSaveActivity;
 import com.nearby.syncpad.R;
+import com.nearby.syncpad.util.GeneralUtils;
 
 /**
  * Created by Sneha Khadatare : 587823
@@ -32,9 +34,18 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
             // Create an Intent to launch MainActivity
-            Intent intent = new Intent(context, MainActivity.class);
+            Intent intent;
+            if(!GeneralUtils.isEmpty(GeneralUtils.getUid())){
+                intent = new Intent(context, MainActivity.class);
+                Log.d("@@@", "onUpdate: MainActivity");
+            }else{
+                intent = new Intent(context, LoginActivity.class);
+                Log.d("@@@", "onUpdate: LoginActivity");
+            }
+
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
             remoteViews.setOnClickPendingIntent(R.id.rlHeader, pendingIntent);
+            remoteViews.setOnClickPendingIntent(R.id.ll_no_meetings, pendingIntent);
 
             setRemoteAdapter(context, remoteViews);
 

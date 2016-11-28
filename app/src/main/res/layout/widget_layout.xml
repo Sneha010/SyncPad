@@ -19,7 +19,7 @@
             android:layout_gravity="center"
             android:src="@drawable/app_icon"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="14dp"
             />
 
         <TextView
@@ -41,8 +41,10 @@
             android:id="@+id/widget_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@null"
-            android:dividerHeight="0dp"
+            android:divider="@color/dividerColor"
+            android:dividerHeight="1dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
             tools:listitem="@layout/meetings_list_item"
             android:visibility="visible"/>
         <LinearLayout

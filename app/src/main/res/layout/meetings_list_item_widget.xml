@@ -8,9 +8,7 @@
             android:id="@+id/tvMeetingTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
             android:paddingTop="16dp"
-            android:paddingRight="16dp"
             android:paddingBottom="4dp"
             android:textColor="@color/primaryTextColor"
             android:ellipsize="end"
@@ -22,8 +20,6 @@
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
             android:paddingBottom="16dp"
             android:layout_below="@id/tvMeetingTitle"
             android:textColor="@color/colorPrimary"
@@ -35,7 +31,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:paddingBottom="16dp"
         android:layout_below="@id/tvMeetingTitle"
         android:textColor="@color/colorPrimary"
@@ -43,13 +38,6 @@
         android:layout_marginTop="5dp"
         android:textSize="@dimen/small_text_size"
         />
-    <View
-        android:id="@+id/sep_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/tvDate"
-        android:background="@color/dividerColor" />
+
     </RelativeLayout>
 
