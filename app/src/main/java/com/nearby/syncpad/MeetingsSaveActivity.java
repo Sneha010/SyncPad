@@ -5,9 +5,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -250,6 +252,11 @@ public class MeetingsSaveActivity extends AppCompatActivity {
             ContentValues values = GeneralUtils.getContentValues(new JSONObject(new Gson().toJson(meeting)));
 
             cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
+            try {
+                getContentResolver().applyBatch(ItemsContract.CONTENT_AUTHORITY, cpo);
+            } catch (RemoteException | OperationApplicationException e) {
+                e.printStackTrace();
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

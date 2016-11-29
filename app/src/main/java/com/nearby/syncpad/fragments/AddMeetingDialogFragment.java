@@ -141,7 +141,7 @@ public class AddMeetingDialogFragment extends AppCompatDialogFragment {
         final int month = c.get(Calendar.MONTH);
         final int day = c.get(Calendar.DAY_OF_MONTH);
 
-        edtMeetingDate.setText(day + "/" + month + "/" + year);
+        edtMeetingDate.setText(day + "/" + (month+1) + "/" + year);
 
         selectDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,7 +152,7 @@ public class AddMeetingDialogFragment extends AppCompatDialogFragment {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        edtMeetingDate.setText(dayOfMonth + "/" + month + "/" + year);
+                        edtMeetingDate.setText(dayOfMonth + "/" + ( month + 1)  + "/" + year);
                     }
                 }, year, month, day);
                 datePickerDialog.show();
@@ -187,10 +187,10 @@ public class AddMeetingDialogFragment extends AppCompatDialogFragment {
     private String getTimeString(int hourOfDay , int min){
 
         String timeString = null;
-        SimpleDateFormat format = new SimpleDateFormat("HH:MM");
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
         try {
             Date date = format.parse("" + hourOfDay + ":" + min);
-            timeString = new SimpleDateFormat("hh:mm aa").format(date.getTime());
+            timeString = new SimpleDateFormat("hh:mm aa").format(date);
         } catch (ParseException ex) {
             ex.printStackTrace();
         }

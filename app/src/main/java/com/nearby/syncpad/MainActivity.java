@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
     FloatingActionMenu floatingActionMenu;
 
     private Unbinder binder;
+    boolean isDataAvailable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,10 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refresh();
+                if(!isDataAvailable)
+                    refresh();
+                else
+                    swipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -131,7 +135,12 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
     protected void onStart() {
         super.onStart();
         Log.d("@@@", "onStart: mainActivity");
-        refresh();
+
+        if(!isDataAvailable){
+            swipeRefreshLayout.setRefreshing(true);
+            refresh();
+        }
+
         registerReceiver(mRefreshingReceiver,
                 new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
     }
@@ -241,6 +250,7 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
         Log.d("@@@", "onLoadFinished: ");
 
         if (cursor != null && cursor.getCount() > 0) {
+            Log.d("@@@", "onLoadFinished: cursor not null");
             displayMeetingList();
             Adapter adapter = new Adapter(cursor);
             adapter.setHasStableIds(true);
@@ -249,8 +259,12 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
                     new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
             meetingRycyclerView.setLayoutManager(sglm);
             swipeRefreshLayout.setRefreshing(mIsRefreshing);
+            isDataAvailable = true;
+
         }
         else{
+            Log.d("@@@", "onLoadFinished: cursor ull");
+            isDataAvailable = false;
             displayNoNnotes();
         }
 
@@ -258,8 +272,11 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        if (meetingRycyclerView != null)
+        if (meetingRycyclerView != null){
+            isDataAvailable = false;
             meetingRycyclerView.setAdapter(null);
+        }
+
     }
 
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {

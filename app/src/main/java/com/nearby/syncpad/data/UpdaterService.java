@@ -8,7 +8,9 @@ import android.content.OperationApplicationException;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.nearby.syncpad.R;
 import com.nearby.syncpad.remote.RemoteEndpointUtil;
 import com.nearby.syncpad.util.GeneralUtils;
 
@@ -40,6 +42,7 @@ public class UpdaterService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
         if (!GeneralUtils.isOnline(this)) {
+            Toast.makeText(this, getString(R.string.no_internet_connectivity), Toast.LENGTH_SHORT).show();
             sendStickyBroadcast(
                     new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, false));
             return;
@@ -52,21 +55,21 @@ public class UpdaterService extends IntentService {
 
         Uri dirUri = ItemsContract.Items.buildDirUri();
 
-        // Delete all items
-        cpo.add(ContentProviderOperation.newDelete(dirUri).build());
-
         try {
             JSONArray array = RemoteEndpointUtil.fetchJsonArray(GeneralUtils.getUid());
             if (array != null) {
+
+                // Delete all items
+                cpo.add(ContentProviderOperation.newDelete(dirUri).build());
+
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject object = array.getJSONObject(i);
                     ContentValues values = GeneralUtils.getContentValues(object);
                     cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
+
+                    getContentResolver().applyBatch(ItemsContract.CONTENT_AUTHORITY, cpo);
                 }
             }
-
-            getContentResolver().applyBatch(ItemsContract.CONTENT_AUTHORITY, cpo);
-
 
         } catch (JSONException | RemoteException | OperationApplicationException e) {
             Log.e(TAG, "Error updating content.", e);

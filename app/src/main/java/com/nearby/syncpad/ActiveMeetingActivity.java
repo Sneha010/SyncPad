@@ -394,11 +394,6 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
         Log.i(TAG, "publishNotes called");
 
-        InputMethodManager imm = (InputMethodManager) this
-                .getSystemService(Activity.INPUT_METHOD_SERVICE);
-        if (getCurrentFocus() != null)
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
 
         if (edtMeetingNotes.getText() != null && edtMeetingNotes.getText().toString().length() > 0) {
 
