@@ -84,9 +84,10 @@ public class ParticipantsFragment extends Fragment {
     }
 
     public void addParticipant(Participant participant) {
-        if (mParticipants.size() == 0) {
+     /*   if (mParticipants.size() == 0) {
             adapter.updateList(participant);
         } else {
+
             for (Participant p : mParticipants) {
 
                 if (!p.getEmailAddress().equalsIgnoreCase(participant.getEmailAddress())) {
@@ -95,7 +96,9 @@ public class ParticipantsFragment extends Fragment {
 
             }
 
-        }
+        }*/
+
+        adapter.updateList(participant);
 
     }
 

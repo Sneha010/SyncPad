@@ -61,6 +61,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Inject
     ProfileStore mProfileStore;
 
+    boolean isAlreadyLogin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +93,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         // Check auth on Activity start
         if (mAuth.getCurrentUser() != null) {
+            isAlreadyLogin = true;
             onAuthSuccess(mAuth.getCurrentUser());
+        }else{
+            isAlreadyLogin = false;
         }
     }
 
@@ -167,8 +172,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void onAuthSuccess(FirebaseUser user) {
         String username = usernameFromEmail(user.getEmail());
 
-        //Save username and email in my profile shared preferences
-        saveBasicInfoToProfile(user, username);
+        if(!isAlreadyLogin){
+            //Save username and email in my profile shared preferences
+            saveBasicInfoToProfile(user, username);
+        }
         // Write new user
         writeNewUser(user.getUid(), username, user.getEmail());
 

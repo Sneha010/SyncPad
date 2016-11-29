@@ -86,6 +86,7 @@ public class ParticipantListItemAdapter extends RecyclerView.Adapter<Participant
                 if (mParticipants.get(i).getEmailAddress() != null && participant.getEmailAddress() != null
                         && mParticipants.get(i).getEmailAddress().equals(participant.getEmailAddress())) {
                     gotSameProfile = true;
+                    break;
                 }
             }
         }

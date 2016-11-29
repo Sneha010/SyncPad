@@ -84,7 +84,7 @@ public class MeetingNotesFragment extends Fragment {
                         new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0 , 8 ,0,0);
-                textView.setPadding(15,15,15,15);
+                textView.setPadding(17,17,17,17);
                 textView.setTextSize(16);
                 textView.setTextColor(ContextCompat.getColor(getActivity() , R.color.primaryTextColor));
                 textView.setLayoutParams(params);

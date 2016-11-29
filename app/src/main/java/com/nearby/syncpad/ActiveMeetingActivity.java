@@ -213,7 +213,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
                 .addConnectionCallbacks(this)
                 .enableAutoManage(this, this)
                 .build();
-        mGoogleApiClient.connect();
+        //mGoogleApiClient.connect();
 
     }
 
