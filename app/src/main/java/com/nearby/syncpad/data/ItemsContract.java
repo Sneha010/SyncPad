@@ -24,13 +24,16 @@ public class ItemsContract {
 		String MEETING_NOTES = "meeting_notes";
 		/** Type: TEXT NOT NULL */
 		String MEETING_PARTICIPANTS = "meeting_participants";
+		/** Type: INT */
+		String MEETING_TIMESTAMP = "meeting_timestamp";
+
 	}
 
 	public static class Items implements ItemsColumns {
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.com.nearby.syncpad.contentprovider.meetings";
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.com.nearby.syncpad.contentprovider.meetings";
 
-        public static final String DEFAULT_SORT = MEETING_DATE + " DESC";
+        public static final String DEFAULT_SORT = MEETING_TIMESTAMP + " DESC";
 
 		/** Matches: /meetings/ */
 		public static Uri buildDirUri() {

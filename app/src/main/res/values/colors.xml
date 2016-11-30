@@ -16,6 +16,7 @@
     <color name="trans_black">#cc353535</color>
     <color name="white">#FFFFFF</color>
     <color name="light_pink">#FFFACEDD</color>
+    <color name="light_gray">#FF8C8B8B</color>
     <array name="progress_colors">
         <item>#00796B</item>
         <item>#009688</item>

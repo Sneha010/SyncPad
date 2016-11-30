@@ -1,0 +1,44 @@
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/rlMainContentView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:id="@+id/tvMeetingTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingBottom="4dp"
+            android:textColor="@color/primaryTextColor"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textSize="18sp"
+            />
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:layout_below="@id/tvMeetingTitle"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"
+            />
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
+        android:paddingBottom="16dp"
+        android:layout_below="@id/tvMeetingTitle"
+        android:textColor="@color/colorPrimary"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/small_text_size"
+        />
+
+    </RelativeLayout>
+

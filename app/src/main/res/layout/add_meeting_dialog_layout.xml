@@ -22,8 +22,9 @@
         android:id="@+id/title"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="Add new meeting"
-        android:textColor="@android:color/black"
+        android:text="@string/no_meeting_line2"
+        android:textColor="@color/primaryTextColor"
+        android:contentDescription="@string/add_meeting_title"
         android:textSize="20sp"
         />
 
@@ -43,6 +44,7 @@
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         android:layout_below="@id/sep_line"
+        android:contentDescription="@string/add_meeting_name_label"
         android:text="Title:" />
 
 
@@ -51,13 +53,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:hint="Add meeting title"
+        android:hint="@string/add_title_hint"
         android:textSize="16sp"
         android:layout_below="@id/add_name_text"
         android:textColor="@color/primaryTextColor"
-        android:background="@color/light_pink"
-        android:padding="5dp"
-        android:textColorHint="@color/secondaryTextColor" />
+        android:contentDescription="@string/input_field_for_adding_meeting_name"
+        android:inputType="textCapSentences"
+        android:textColorHint="@color/light_gray" />
 
     <TextView
         android:id="@+id/add_date_text"
@@ -66,8 +68,9 @@
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         android:layout_marginTop="5dp"
+        android:contentDescription="@string/add_date_label"
         android:layout_below="@id/edtMeetingName"
-        android:text="Date:" />
+        android:text="@string/date" />
 
 <LinearLayout
     android:id="@+id/ll_date"
@@ -81,12 +84,11 @@
         android:id="@+id/edtMeetingDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Add meeting date"
+        android:hint="@string/add_date_hint"
         android:textSize="16sp"
         android:textColor="@color/primaryTextColor"
-        android:background="@color/light_pink"
-        android:padding="5dp"
-        android:textColorHint="@color/secondaryTextColor"
+        android:textColorHint="@color/light_gray"
+        android:contentDescription="@string/input_field_for_adding_date"
         android:layout_weight="1"/>
     <TextView
         android:id="@+id/select_date_button"
@@ -95,9 +97,12 @@
         android:padding="6dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="20dp"
         android:background="@color/colorPrimary"
         android:textColor="@android:color/white"
-        android:text="Select Date"/>
+        android:contentDescription="@string/select_date_button"
+        android:text="@string/select_date"/>
         </LinearLayout>
 
 
@@ -110,7 +115,8 @@
         android:textSize="20sp"
         android:layout_marginTop="5dp"
         android:layout_below="@id/ll_date"
-        android:text="Time:" />
+        android:contentDescription="@string/add_meeting_time_label"
+        android:text="@string/time" />
 
         <LinearLayout
             android:id="@+id/ll_time"
@@ -124,14 +130,13 @@
         android:id="@+id/edtMeetingTime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Add meeting time"
+        android:hint="@string/add_time_hint"
         android:textSize="16sp"
-        android:padding="5dp"
         android:layout_below="@id/add_title_time"
         android:textColor="@color/primaryTextColor"
-        android:background="@color/light_pink"
+        android:contentDescription="@string/input_field_for_adding_time"
         android:layout_weight="1"
-        android:textColorHint="@color/secondaryTextColor" />
+        android:textColorHint="@color/light_gray" />
 
             <TextView
                 android:id="@+id/select_time_button"
@@ -140,9 +145,12 @@
                 android:padding="6dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"
                 android:background="@color/colorPrimary"
                 android:textColor="@android:color/white"
-                android:text="Select Time"/>
+                android:contentDescription="@string/select_button_for_time"
+                android:text="@string/select_time"/>
         </LinearLayout>
 
     <TextView
@@ -153,6 +161,7 @@
         android:textSize="20sp"
         android:layout_marginTop="5dp"
         android:layout_below="@id/ll_time"
+        android:contentDescription="@string/add_meeting_venue_label"
         android:text="Venue:" />
 
 
@@ -161,13 +170,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:hint="Add meeting venue"
+        android:hint="@string/add_venue_hint"
         android:textSize="16sp"
-        android:padding="5dp"
-        android:background="@color/light_pink"
         android:layout_below="@id/add_meeting_venue"
         android:textColor="@color/primaryTextColor"
-        android:textColorHint="@color/secondaryTextColor" />
+        android:inputType="textCapSentences"
+        android:contentDescription="@string/input_field_for_adding_meeting_venue"
+        android:textColorHint="@color/light_gray" />
 
     <TextView
         android:id="@+id/add_agenda_text"
@@ -177,7 +186,8 @@
         android:textSize="20sp"
         android:layout_marginTop="5dp"
         android:layout_below="@id/edtMeetingVenue"
-        android:text="Agenda:" />
+        android:contentDescription="@string/add_meeting_agenda_label"
+        android:text="@string/agenda" />
 
 
     <EditText
@@ -185,15 +195,15 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:hint="Add meeting agenda"
+        android:hint="@string/add_agenda_hint"
         android:textSize="16sp"
-        android:lines="6"
-        android:gravity="top|left"
-        android:padding="5dp"
+        android:gravity="top|start"
         android:layout_below="@id/add_agenda_text"
+        android:lineSpacingMultiplier="1.2"
         android:textColor="@color/primaryTextColor"
-        android:textColorHint="@color/secondaryTextColor"
-        android:background="@color/light_pink"/>
+        android:contentDescription="@string/input_field_for_adding_meeting_agenda"
+        android:textColorHint="@color/light_gray"
+        />
 
     <LinearLayout
         android:id="@+id/ll_buttons"
@@ -201,7 +211,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_below="@id/edtMeetingAgenda"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:weightSum="2">
 
         <TextView
@@ -210,11 +220,13 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textColor="@color/textPrimaryColor"
             android:background="@drawable/dialog_button_bg"
             android:layout_marginRight="3dp"
+            android:layout_marginEnd="3dp"
             android:textSize="20sp"
+            android:contentDescription="@string/cancel_button"
             android:padding="5dp"/>
 
         <TextView
@@ -223,9 +235,11 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Add"
+            android:text="@string/add"
             android:padding="5dp"
             android:layout_marginLeft="3dp"
+            android:layout_marginStart="3dp"
+            android:contentDescription="@string/add_button_for_adding_meeting"
             android:textColor="@color/textPrimaryColor"
             android:background="@drawable/dialog_button_bg"
             android:textSize="20sp" />

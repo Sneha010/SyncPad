@@ -2,7 +2,6 @@ package com.nearby.syncpad.fragments;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.nearby.syncpad.R;
 import com.nearby.syncpad.adapter.ParticipantListItemAdapter;
 import com.nearby.syncpad.models.Participant;
@@ -19,30 +17,22 @@ import com.nearby.syncpad.util.DataItemDecoration;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
+public class ParticipantsFragment extends Fragment {
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ParticipantsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ParticipantsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ParticipantsFragment  extends Fragment{
-
-    private OnFragmentInteractionListener mListener;
+    @BindView(R.id.participantListView)
+    RecyclerView mRecyclerView;
 
     private ArrayList<Participant> mParticipants;
-
-    RecyclerView mRecyclerView;
 
     private ParticipantListItemAdapter adapter;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-
+     *
      * @return A new instance of fragment ParticipantsFragment.
      */
 
@@ -71,7 +61,7 @@ public class ParticipantsFragment  extends Fragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_participants, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.participantListView);
+        ButterKnife.bind(this, view);
         return view;
     }
 
@@ -85,28 +75,7 @@ public class ParticipantsFragment  extends Fragment{
 
         mParticipants = new ArrayList<>();
 
-        /*Participant participant = new Participant();
-        participant.setProfilePicture(getResources().getDrawable(R.drawable.profile));
-        participant.setName("Piyush Agarwal");
-        participant.setRole("Developer");
-        participant.setEmailAddress("piyush.agarwal2@tcs.com");
-        mParticipants.add(participant);
-
-        Participant participant2 = new Participant();
-        participant2.setProfilePicture(getResources().getDrawable(R.drawable.profile2));
-        participant2.setName("Sneha Khadatare");
-        participant2.setRole("Developer");
-        participant2.setEmailAddress("sneha.khadtare@tcs.com");
-        mParticipants.add(participant2);
-
-        Participant participant3 = new Participant();
-        participant3.setProfilePicture(getResources().getDrawable(R.drawable.profile3));
-        participant3.setName("Viral Islania");
-        participant3.setRole("Developer");
-        participant3.setEmailAddress("viral.islania@tcs.com");
-        mParticipants.add(participant3);*/
-
-        adapter = new ParticipantListItemAdapter(getActivity(),mParticipants);
+        adapter = new ParticipantListItemAdapter(getActivity(), mParticipants);
 
         mRecyclerView.setAdapter(adapter);
 
@@ -114,33 +83,11 @@ public class ParticipantsFragment  extends Fragment{
 
     }
 
-   /* public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }*/
-
     public void addParticipant(Participant participant) {
-        if (mParticipants.size() == 0) {
+     /*   if (mParticipants.size() == 0) {
             adapter.updateList(participant);
-        }else {
+        } else {
+
             for (Participant p : mParticipants) {
 
                 if (!p.getEmailAddress().equalsIgnoreCase(participant.getEmailAddress())) {
@@ -149,25 +96,9 @@ public class ParticipantsFragment  extends Fragment{
 
             }
 
-        }
+        }*/
 
-    }
-
-
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-
-        void onFragmentInteraction(Uri uri);
+        adapter.updateList(participant);
 
     }
 

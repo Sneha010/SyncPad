@@ -5,6 +5,7 @@ import android.app.Application;
 import com.nearby.syncpad.components.DaggerMyApplicationComponent;
 import com.nearby.syncpad.components.MyApplicationComponent;
 import com.nearby.syncpad.modules.MyApplicationModule;
+import com.nearby.syncpad.util.Constants;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -20,7 +21,7 @@ public class SyncPadApplication extends Application{
     public void onCreate() {
         super.onCreate();
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/gothambook.ttf")
+                .setDefaultFontPath(Constants.GOTHAMBOOK_FONT)
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );

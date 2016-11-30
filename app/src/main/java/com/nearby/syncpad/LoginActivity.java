@@ -20,13 +20,18 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.nearby.syncpad.models.Participant;
 import com.nearby.syncpad.models.User;
+import com.nearby.syncpad.storedata.ProfileStore;
+import com.nearby.syncpad.util.Constants;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "LoginActivity";
 
@@ -36,50 +41,62 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Inject
     FirebaseAuth mAuth;
 
+    @BindView(R.id.field_email)
+    EditText fieldEmail;
+
+    @BindView(R.id.field_password)
+    EditText fieldPassword;
+
+    @BindView(R.id.button_sign_in)
+    Button buttonSignIn;
+
+    @BindView(R.id.button_sign_up)
+    Button buttonSignUp;
+
+    @BindView(R.id.forgot_password)
+    TextView forgotPassword;
+
     private ProgressDialog mProgressDialog;
-    private EditText mPswdField;
-    private EditText mEmailField;
-    private Button mSignInButton;
-    private Button mSignUpButton;
-    private TextView mForgotPassword;
+
+    @Inject
+    ProfileStore mProfileStore;
+
+    boolean isAlreadyLogin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
 
-        ((SyncPadApplication)getApplication()).getMyApplicationComponent().inject(this);
+        ((SyncPadApplication) getApplication()).getMyApplicationComponent().inject(this);
 
-        init();
+        setClickListeners();
     }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    private void init() {
-        //mDatabase = FirebaseDatabase.getInstance().getReference();
-        //mAuth = FirebaseAuth.getInstance();
-
-        // Views
-        mEmailField = (EditText) findViewById(R.id.field_email);
-        mPswdField = (EditText) findViewById(R.id.field_password);
-        mSignInButton = (Button) findViewById(R.id.button_sign_in);
-        mSignUpButton = (Button) findViewById(R.id.button_sign_up);
-        mForgotPassword = (TextView) findViewById(R.id.forgot_password);
-
+    private void setClickListeners() {
         // Click listeners
-        mSignInButton.setOnClickListener(this);
-        mSignUpButton.setOnClickListener(this);
-        mForgotPassword.setOnClickListener(this);
+        buttonSignIn.setOnClickListener(this);
+        buttonSignUp.setOnClickListener(this);
+        forgotPassword.setOnClickListener(this);
     }
+
     @Override
     public void onStart() {
         super.onStart();
 
         // Check auth on Activity start
         if (mAuth.getCurrentUser() != null) {
+            isAlreadyLogin = true;
             onAuthSuccess(mAuth.getCurrentUser());
+        }else{
+            isAlreadyLogin = false;
         }
     }
 
@@ -104,11 +121,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         showProgressDialog();
-        String email = mEmailField.getText().toString();
-        String password = mPswdField.getText().toString();
+        String email = fieldEmail.getText().toString();
+        String password = fieldPassword.getText().toString();
 
 
-        mAuth.signInWithEmailAndPassword(email, password )
+        mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -118,7 +135,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         if (task.isSuccessful()) {
                             onAuthSuccess(task.getResult().getUser());
                         } else {
-                            Toast.makeText(LoginActivity.this, "Sign In Failed",
+                            Toast.makeText(LoginActivity.this, R.string.sign_in_failed,
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -132,10 +149,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         showProgressDialog();
-        String password = mPswdField.getText().toString();
-        String email = mEmailField.getText().toString();
+        String password = fieldPassword.getText().toString();
+        String email = fieldEmail.getText().toString();
 
-        mAuth.createUserWithEmailAndPassword(email , password )
+        mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -145,7 +162,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         if (task.isSuccessful()) {
                             onAuthSuccess(task.getResult().getUser());
                         } else {
-                            Toast.makeText(LoginActivity.this, "Sign Up Failed",
+                            Toast.makeText(LoginActivity.this, R.string.sign_up_falied,
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -155,6 +172,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void onAuthSuccess(FirebaseUser user) {
         String username = usernameFromEmail(user.getEmail());
 
+        if(!isAlreadyLogin){
+            //Save username and email in my profile shared preferences
+            saveBasicInfoToProfile(user, username);
+        }
         // Write new user
         writeNewUser(user.getUid(), username, user.getEmail());
 
@@ -163,9 +184,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         finish();
     }
 
+    private void saveBasicInfoToProfile(FirebaseUser user, String username) {
+        Participant participant = new Participant();
+        participant.setEmailAddress(user.getEmail());
+        participant.setName(username);
+        mProfileStore.saveProfile(participant);
+    }
+
     private String usernameFromEmail(String email) {
-        if (email.contains("@")) {
-            return email.split("@")[0];
+        if (email.contains(getString(R.string.at_the_rate))) {
+            return email.split(getString(R.string.at_the_rate))[0];
         } else {
             return email;
         }
@@ -173,18 +201,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private boolean validateForm() {
         boolean result = true;
-        if (TextUtils.isEmpty(mEmailField.getText().toString())) {
-            mEmailField.setError("Required");
+        if (TextUtils.isEmpty(fieldEmail.getText().toString())) {
+            fieldEmail.setError(getString(R.string.required));
             result = false;
         } else {
-            mEmailField.setError(null);
+            fieldEmail.setError(null);
         }
 
-        if (TextUtils.isEmpty(mPswdField.getText().toString())) {
-            mPswdField.setError("Required");
+        if (TextUtils.isEmpty(fieldPassword.getText().toString())) {
+            fieldPassword.setError(getString(R.string.required));
             result = false;
         } else {
-            mPswdField.setError(null);
+            fieldPassword.setError(null);
         }
 
         return result;
@@ -193,8 +221,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     // [START basic_write]
     private void writeNewUser(String userId, String name, String email) {
         User user = new User(name, email);
-
-        mDatabase.child("users").child(userId).setValue(user);
+        mDatabase.child(Constants.USERS).child(userId).setValue(user);
     }
     // [END basic_write]
 
@@ -202,7 +229,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setCancelable(false);
-            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.setMessage(getString(R.string.loading));
         }
 
         mProgressDialog.show();

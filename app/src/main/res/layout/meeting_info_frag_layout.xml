@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/llDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:id="@+id/tvDateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/date"
+            android:textColor="@color/primaryTextColor"
+            fontPath="fonts/gothamblack.ttf"
+            android:textSize="@dimen/medium_text_size"/>
+
+        <TextView
+            android:id="@+id/tvDatevalue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textSize="@dimen/medium_text_size"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:id="@+id/tvTimeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/primaryTextColor"
+            android:text="@string/time"
+            fontPath="fonts/gothamblack.ttf"
+            android:textSize="@dimen/medium_text_size"/>
+
+        <TextView
+            android:id="@+id/tvTimeValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/time"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/medium_text_size"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llVenue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:id="@+id/tvVenueLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/venue"
+            android:textColor="@color/primaryTextColor"
+            fontPath="fonts/gothamblack.ttf"
+            android:textSize="@dimen/medium_text_size"/>
+
+        <TextView
+            android:id="@+id/tvVenueValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/medium_text_size"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llAgenda"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:id="@+id/tvAgendaLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/primaryTextColor"
+            android:text="@string/agenda"
+            fontPath="fonts/gothamblack.ttf"
+            android:textSize="@dimen/medium_text_size"/>
+
+        <TextView
+            android:id="@+id/tvAgendaValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/agenda"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/medium_text_size"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llAttendees"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:id="@+id/tvAttendeesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/attendee"
+            android:textColor="@color/primaryTextColor"
+            fontPath="fonts/gothamblack.ttf"
+            android:textSize="@dimen/medium_text_size"/>
+
+        <TextView
+            android:id="@+id/tvAttendeesValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:lineSpacingMultiplier="1.3"
+            android:textSize="@dimen/medium_text_size"
+            android:layout_marginTop="10dp"/>
+    </LinearLayout>
+
+</LinearLayout>

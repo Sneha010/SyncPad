@@ -8,7 +8,9 @@ import android.content.OperationApplicationException;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.nearby.syncpad.R;
 import com.nearby.syncpad.remote.RemoteEndpointUtil;
 import com.nearby.syncpad.util.GeneralUtils;
 
@@ -23,7 +25,7 @@ import java.util.ArrayList;
  * on 11/16/2016.
  */
 
-public class UpdaterService extends IntentService{
+public class UpdaterService extends IntentService {
 
     private static final String TAG = "UpdaterService";
 
@@ -39,32 +41,35 @@ public class UpdaterService extends IntentService{
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        if(!GeneralUtils.isOnline(this)){
+        if (!GeneralUtils.isOnline(this)) {
+            Toast.makeText(this, getString(R.string.no_internet_connectivity), Toast.LENGTH_SHORT).show();
+            sendStickyBroadcast(
+                    new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, false));
             return;
         }
         sendStickyBroadcast(
                 new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, true));
 
+
         ArrayList<ContentProviderOperation> cpo = new ArrayList<ContentProviderOperation>();
 
         Uri dirUri = ItemsContract.Items.buildDirUri();
 
-        // Delete all items
-        cpo.add(ContentProviderOperation.newDelete(dirUri).build());
-
         try {
             JSONArray array = RemoteEndpointUtil.fetchJsonArray(GeneralUtils.getUid());
-            if (array == null) {
-                throw new JSONException("Invalid parsed item array" );
-            }
+            if (array != null) {
 
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject object = array.getJSONObject(i);
-                ContentValues values = GeneralUtils.getContentValues(object);
-                cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
-            }
+                // Delete all items
+                cpo.add(ContentProviderOperation.newDelete(dirUri).build());
 
-            getContentResolver().applyBatch(ItemsContract.CONTENT_AUTHORITY, cpo);
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject object = array.getJSONObject(i);
+                    ContentValues values = GeneralUtils.getContentValues(object);
+                    cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
+
+                    getContentResolver().applyBatch(ItemsContract.CONTENT_AUTHORITY, cpo);
+                }
+            }
 
         } catch (JSONException | RemoteException | OperationApplicationException e) {
             Log.e(TAG, "Error updating content.", e);

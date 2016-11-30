@@ -1,13 +1,10 @@
 package com.nearby.syncpad;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -28,7 +25,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -41,7 +37,6 @@ import com.google.android.gms.nearby.messages.NearbyMessagesStatusCodes;
 import com.google.android.gms.nearby.messages.PublishOptions;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 import com.nearby.syncpad.adapter.ChatListItemAdapter;
-import com.nearby.syncpad.adapter.ParticipantListItemAdapter;
 import com.nearby.syncpad.fragments.ParticipantsFragment;
 import com.nearby.syncpad.models.Meeting;
 import com.nearby.syncpad.models.Participant;
@@ -51,39 +46,41 @@ import com.nearby.syncpad.util.DataItemDecoration;
 import com.nearby.syncpad.util.GeneralUtils;
 import com.nearby.syncpad.util.ImageUtility;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ActiveMeetingActivity extends AppCompatActivity
         implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener
-{
+        GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "ActiveMeetingActivity";
 
-    private ArrayList<Participant> chatParticipantsList;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
+    @BindView(R.id.chatParticipantListView)
     RecyclerView mRecyclerView;
-    private ChatListItemAdapter adapter;
-    private boolean isMeetingStarted;
-    private GoogleApiClient mGoogleApiClient;
-    private Message mProfileInformation , myNotes;
-    private boolean mIsHost;
-    private Meeting mCurrentMeeting;
-    private ImageView btnSend , ivImgCross;
-    private boolean mResolvingNearbyPermissionError = false;
-    private String mProfileImageBytes;
+
+    @BindView(R.id.startMeetingText)
     TextView startMeetingText;
+
+    @BindView(R.id.edtMeetingNotes)
     EditText edtMeetingNotes;
+
+    @BindView(R.id.rl_ParticipantsAttendance)
     RelativeLayout rl_ParticipantsAttendanceSlidingView;
-    Animation animationIn;
-    private ParticipantsFragment participantListFragment;
-    private ArrayList<String> noteList = new ArrayList<>();
-    private ArrayList<String> participantNameList = new ArrayList<>();
+
+    @BindView(R.id.send_button)
+    ImageView btnSend;
+
+    @BindView(R.id.ivImgCross)
+    ImageView ivImgCross;
 
     @Inject
     ImageUtility mImageUtility;
@@ -94,26 +91,35 @@ public class ActiveMeetingActivity extends AppCompatActivity
     @Inject
     SubscribeOptions mSubscribeOptions;
 
-    /**
-     * A {@link MessageListener} for processing messages from nearby devices.
-     */
-    private MessageListener mMessageListener;
-
-
     @Inject
     ProfileStore mProfileStore;
+
+    private ArrayList<Participant> chatParticipantsList;
+    private ChatListItemAdapter adapter;
+    private GoogleApiClient mGoogleApiClient;
+    private Message mProfileInformation, myNotes;
+    private boolean mIsHost;
+    private Meeting mCurrentMeeting;
+    private boolean mResolvingNearbyPermissionError = false;
+    Animation animationIn;
+    private ParticipantsFragment participantListFragment;
+    private ArrayList<String> noteList = new ArrayList<>();
+    private ArrayList<String> participantNameList = new ArrayList<>();
+    private MessageListener mMessageListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.broadcast_activity_layout);
+        ButterKnife.bind(this);
 
-        ((SyncPadApplication)getApplication()).getMyApplicationComponent().inject(this);
+        ((SyncPadApplication) getApplication()).getMyApplicationComponent().inject(this);
 
-        if(getIntent()!=null){
+        if (getIntent() != null) {
             mCurrentMeeting = getIntent().getExtras().getParcelable(Constants.MEETING);
-            mIsHost = getIntent().getBooleanExtra(Constants.IS_HOST , false);
+            mIsHost = getIntent().getBooleanExtra(Constants.IS_HOST, false);
         }
 
         init();
@@ -127,18 +133,10 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
     private void init() {
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(mCurrentMeeting.getMeetingName());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.chatParticipantListView) ;
-        startMeetingText = (TextView) findViewById(R.id.startMeetingText);
-        edtMeetingNotes = (EditText) findViewById(R.id.edtMeetingNotes);
-        rl_ParticipantsAttendanceSlidingView = (RelativeLayout) findViewById(R.id.rl_ParticipantsAttendance);
-        btnSend = (ImageView) findViewById(R.id.send_button);
-        ivImgCross = (ImageView) findViewById(R.id.ivImgCross);
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,14 +154,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
     }
 
-    public void setUpUI(){
+    public void setUpUI() {
 
-
-      /*  TODO Profile picture
-      if (ProfileStore.getImagePath(this) != null) {
-            new UpdatePicTask().execute(ProfileStore.getImagePath(this), "");
-        }
-*/
         setUpRecyclerView();
         setMessageListener();
         addParticipantListFragment();
@@ -171,10 +163,10 @@ public class ActiveMeetingActivity extends AppCompatActivity
         startMeetingText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (((TextView) view).getText().equals("Stop Meeting")) {
-                   stopMeeting();
-                } else if (((TextView) view).getText().equals("Start Meeting")) {
-                   startMeeting();
+                if (((TextView) view).getText().equals(getString(R.string.stop_meeting))) {
+                    stopMeeting();
+                } else if (((TextView) view).getText().equals(getString(R.string.start_meeting))) {
+                    startMeeting();
                 }
             }
         });
@@ -186,28 +178,18 @@ public class ActiveMeetingActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         Log.i(TAG, "onStart called");
+
         Participant participant = new Participant();
         participant.setName(mProfileStore.getMyProfile().getName());
         participant.setRole(mProfileStore.getMyProfile().getRole());
         participant.setEmailAddress(mProfileStore.getMyProfile().getEmailAddress());
         participant.setOrganisation(mProfileStore.getMyProfile().getOrganisation());
-        participant.setAttendance("present");
+        participant.setAttendance(Constants.PRESENT);
         participant.setIsHost(mIsHost);
         participant.setMeeting(mCurrentMeeting);
         participant.setImageBytes(mProfileStore.getMyProfile().getImageBytes());
 
         participantNameList.add(participant.getName());
-
-      /*  TODO Profile picture
-      if(uploadBitmap != null){
-            participant.setImageBytes(
-                    GeneralUtils.getProfileImageBytes(this, uploadBitmap));
-        }else{
-            uploadBitmap = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.default_user);
-            participant.setImageBytes(
-                    GeneralUtils.getProfileImageBytes(this, uploadBitmap));
-        }*/
 
         if (participantListFragment.isAdded()) {
 
@@ -231,7 +213,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
                 .addConnectionCallbacks(this)
                 .enableAutoManage(this, this)
                 .build();
-        mGoogleApiClient.connect();
+        //mGoogleApiClient.connect();
 
     }
 
@@ -245,22 +227,10 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
     @Override
     public void onConnectionSuspended(int cause) {
-        Log.i(TAG, "GoogleApiClient connection suspended: "
-                + connectionSuspendedCauseToString(cause));
-        GeneralUtils.displayCustomToast(ActiveMeetingActivity.this ,
+        Log.i(TAG, "onConnectionSuspended called");
+        GeneralUtils.displayCustomToast(ActiveMeetingActivity.this,
                 getString(R.string.nearby_connection_error));
         stopMeeting();
-    }
-
-    private static String connectionSuspendedCauseToString(int cause) {
-        switch (cause) {
-            case CAUSE_NETWORK_LOST:
-                return "CAUSE_NETWORK_LOST";
-            case CAUSE_SERVICE_DISCONNECTED:
-                return "CAUSE_SERVICE_DISCONNECTED";
-            default:
-                return "CAUSE_UNKNOWN: " + cause;
-        }
     }
 
 
@@ -268,48 +238,51 @@ public class ActiveMeetingActivity extends AppCompatActivity
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.i(TAG, "connection to GoogleApiClient failed");
 
-        GeneralUtils.displayCustomToast(ActiveMeetingActivity.this ,
+        GeneralUtils.displayCustomToast(ActiveMeetingActivity.this,
                 getString(R.string.nearby_connection_error));
 
         stopMeeting();
 
     }
 
-    private void startMeeting(){
-        if(mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+    private void startMeeting() {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
 
-            GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, "Meeting Started");
-            startMeetingText.setText("Stop Meeting");
+            GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, getString(R.string.meeting_started));
+            startMeetingText.setText(getString(R.string.stop_meeting));
             startMeetingText.setCompoundDrawablesWithIntrinsicBounds(
                     ContextCompat.getDrawable(ActiveMeetingActivity.this, R.drawable.stop_btn), null, null, null);
             startMeetingText.setCompoundDrawablePadding(5);
-            isMeetingStarted = true;
             startNearByAPI();
-        }
-        else{
+        } else {
             buildGoogleApiClient();
         }
     }
 
-    private void stopMeeting(){
+    private void stopMeeting() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.confirm_end_meeting)).setPositiveButton(getString(R.string.yes), dialogClickListener)
-                .setNegativeButton(getString(R.string.no), dialogClickListener).show();
+        if (noteList != null && noteList.size() > 0) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(getString(R.string.confirm_end_meeting)).setPositiveButton(getString(R.string.yes), dialogClickListener)
+                    .setNegativeButton(getString(R.string.no), dialogClickListener).show();
+        }
+        else{
+            finish();
+        }
 
     }
 
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            switch (which){
+            switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
-                    GeneralUtils.displayCustomToast(ActiveMeetingActivity.this , "Meeting Stopped");
-                    startMeetingText.setText("Start Meeting");
+                    GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, getString(R.string.meeting_stopped));
+                    startMeetingText.setText(getString(R.string.start_meeting));
                     startMeetingText.setCompoundDrawablesWithIntrinsicBounds(
-                            ContextCompat.getDrawable(ActiveMeetingActivity.this , R.drawable.start_btn), null, null, null);
+                            ContextCompat.getDrawable(ActiveMeetingActivity.this, R.drawable.start_btn), null, null, null);
                     startMeetingText.setCompoundDrawablePadding(5);
-                    isMeetingStarted = false;
                     stopNearByAPI();
                     generateMeetingMOM();
                     break;
@@ -321,30 +294,30 @@ public class ActiveMeetingActivity extends AppCompatActivity
         }
     };
 
-    private void generateMeetingMOM(){
-        mCurrentMeeting.setNotesList(convertToStringFromArrayList(noteList));
-        mCurrentMeeting.setParticipantNameList(convertToStringFromArrayList(participantNameList));
+    private void generateMeetingMOM() {
+        mCurrentMeeting.setMeetingNotes(convertToStringFromArrayList(noteList));
+        mCurrentMeeting.setMeetingParticipants(convertToStringFromArrayList(participantNameList));
 
-        Intent i = new Intent(ActiveMeetingActivity.this , MeetingsSaveActivity.class);
-        i.putExtra(Constants.MEETING , mCurrentMeeting);
+        Intent i = new Intent(ActiveMeetingActivity.this, MeetingsSaveActivity.class);
+        i.putExtra(Constants.MEETING, mCurrentMeeting);
         startActivity(i);
         finish();
     }
 
     //Forming the list of comma separated string
-    private String convertToStringFromArrayList(ArrayList<String> list){
+    private String convertToStringFromArrayList(ArrayList<String> list) {
         String converted_string = "";
 
-        if(list != null && list.size() > 0){
+        if (list != null && list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
-                converted_string = converted_string + list.get(i)+"||";
+                converted_string = converted_string + list.get(i) + "||";
             }
 
         }
         return converted_string;
     }
 
-    public void setMessageListener(){
+    public void setMessageListener() {
         mMessageListener = new MessageListener() {
             @Override
             public void onFound(final Message message) {
@@ -356,16 +329,15 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
                         //get message from this, use it later to get profile data and other stuff
                         Participant participant = Participant.fromNearbyMessage(message);
-                        participant.setToWhom("from_other");
+                        participant.setToWhom(Constants.FROM_OTHER);
 
-                        Toast.makeText(ActiveMeetingActivity.this, "" + participant.getName(), Toast.LENGTH_LONG).show();
-
-                        if (participantListFragment.isAdded() && (participant.getAttendance()!=null && participant.getAttendance().equals("present"))) {
+                        if (participantListFragment.isAdded() && (participant.getAttendance() != null
+                                && participant.getAttendance().equals(Constants.PRESENT))) {
                             Log.i(TAG, "participant addded");
+                            GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, participant.getName());
                             participantListFragment.addParticipant(participant);
                             participantNameList.add(participant.getName());
-                        }
-                        else{
+                        } else {
                             noteList.add(participant.getMeetingNotes());
                             adapter.updateList(participant);
                         }
@@ -395,56 +367,41 @@ public class ActiveMeetingActivity extends AppCompatActivity
         Log.d("", "@@@@ Created listener " + mMessageListener);
 
     }
+
     private void addParticipantListFragment() {
 
         participantListFragment = ParticipantsFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.mainFrame, participantListFragment ,"Participant");
+        transaction.replace(R.id.mainFrame, participantListFragment, getString(R.string.participant));
         transaction.commit();
 
     }
-    public void setUpRecyclerView(){
+
+    public void setUpRecyclerView() {
         Log.i(TAG, "setUpRecyclerView called");
 
         mRecyclerView.addItemDecoration(new DataItemDecoration(this, DataItemDecoration.VERTICAL_LIST));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         chatParticipantsList = new ArrayList<>();
-        adapter = new ChatListItemAdapter(ActiveMeetingActivity.this ,chatParticipantsList);
+        adapter = new ChatListItemAdapter(ActiveMeetingActivity.this, chatParticipantsList);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     }
 
-    private void publishNotes(){
+    private void publishNotes() {
 
         Log.i(TAG, "publishNotes called");
 
-        InputMethodManager imm = (InputMethodManager) this
-                .getSystemService(Activity.INPUT_METHOD_SERVICE);
-        if (getCurrentFocus() != null)
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
 
-        if(edtMeetingNotes.getText()!=null && edtMeetingNotes.getText().toString().length()>0){
+        if (edtMeetingNotes.getText() != null && edtMeetingNotes.getText().toString().length() > 0) {
 
             Participant participant = new Participant();
             participant.setName(mProfileStore.getMyProfile().getName());
             participant.setMeetingNotes(edtMeetingNotes.getText().toString());
             noteList.add(edtMeetingNotes.getText().toString());
-            participant.setToWhom("to_Me");
-
-           /* TODO Profile picture
-           if(uploadBitmap != null){
-                participant.setImageBytes(
-                        GeneralUtils.getProfileImageBytes(this, uploadBitmap));
-            }else{
-                uploadBitmap = BitmapFactory.decodeResource(getResources(),
-                        R.drawable.default_user);
-                participant.setImageBytes(
-                        GeneralUtils.getProfileImageBytes(this, uploadBitmap));
-            }
-*/
+            participant.setToWhom(Constants.TO_ME);
 
             myNotes = participant.newNearbyMessage();
 
@@ -477,9 +434,9 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
         Log.i(TAG, "stopNearByAPI called");
 
-        if(mGoogleApiClient !=null && mGoogleApiClient.isConnected()){
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             unsubscribe();
-           unpublishMyData();
+            unpublishMyData();
         }
 
     }
@@ -498,12 +455,12 @@ public class ActiveMeetingActivity extends AppCompatActivity
         int id = item.getItemId();
 
 
-      if (id == R.id.participants) {
+        if (id == R.id.participants) {
 
-              openParticipantsSlidingLayout();
-          return true;
-        }else{
-            finish();
+            openParticipantsSlidingLayout();
+            return true;
+        } else {
+            onBackPressed();
         }
 
         return super.onOptionsItemSelected(item);
@@ -511,17 +468,17 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
 
     private void publishMyData() {
-        if(mProfileInformation!=null)
-             publish_MyProfile();
-        if(myNotes!=null)
+        if (mProfileInformation != null)
+            publish_MyProfile();
+        if (myNotes != null)
             publish_MyNotes();
     }
 
 
     private void unpublishMyData() {
-        if(mProfileInformation!=null)
+        if (mProfileInformation != null)
             unpublish_MyProfile();
-        if(myNotes!=null)
+        if (myNotes != null)
             unpublish_MyNotes();
     }
 
@@ -579,10 +536,6 @@ public class ActiveMeetingActivity extends AppCompatActivity
                         public void onResult(Status status) {
                             if (status.isSuccess()) {
                                 Log.i(TAG, "unsubscribed successfully");
-
-
-//                                updateSharedPreference(Constants.KEY_SUBSCRIPTION_TASK,
-//                                        Constants.TASK_NONE);
                             } else {
                                 Log.i(TAG, "could not unsubscribe");
                                 handleUnsuccessfulNearbyResult(status);
@@ -622,6 +575,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
                     });
         }
     }
+
     private void publish_MyNotes() {
         Log.i(TAG, "publish called");
         // Cannot proceed without a connected GoogleApiClient. Reconnect and execute the pending
@@ -631,11 +585,10 @@ public class ActiveMeetingActivity extends AppCompatActivity
                 mGoogleApiClient.connect();
             }
         } else {
-            if(mGoogleApiClient == null){
+            if (mGoogleApiClient == null) {
 
-                GeneralUtils.displayCustomToast(ActiveMeetingActivity.this , getString(R.string.meeting_not_started));
-            }
-            else{
+                GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, getString(R.string.meeting_not_started));
+            } else {
                 Nearby.Messages.publish(mGoogleApiClient, myNotes, mPublishOptions)
                         .setResultCallback(new ResultCallback<Status>() {
 
@@ -729,10 +682,10 @@ public class ActiveMeetingActivity extends AppCompatActivity
             }
         } else {
             if (status.getStatusCode() == ConnectionResult.NETWORK_ERROR) {
-                GeneralUtils.displayCustomToast(ActiveMeetingActivity.this , getString(R.string.no_internet_connectivity));
+                GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, getString(R.string.no_internet_connectivity));
             } else {
                 // To keep things simple, pop a toast for all other error messages.
-                GeneralUtils.displayCustomToast(ActiveMeetingActivity.this , getString(R.string.unsuccessful)+ " "+status.getStatusMessage());
+                GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, getString(R.string.unsuccessful) + " " + status.getStatusMessage());
             }
 
         }
@@ -750,7 +703,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy called");
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && ! isChangingConfigurations()) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !isChangingConfigurations()) {
             // Using Nearby is battery intensive. To preserve battery, stop subscribing or
             // publishing when the fragment is inactive.
             unsubscribe();
@@ -758,62 +711,9 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
         }
     }
-    private Bitmap uploadBitmap;
-
-    private class UpdatePicTask extends AsyncTask<String, Void, Void> {
-        private ProgressDialog progDialog;
-        private boolean err = false;
-        private String errMessage = "";
-        private String imgPath;
 
 
-        @Override
-        protected Void doInBackground(String... params) {
-            // TODO Auto-generated method stub
-            try {
-                imgPath = params[0];
-                errMessage = params[1];
-
-                if (imgPath != null) {
-                    uploadBitmap = grabImage(imgPath);
-                    uploadBitmap = uploadBitmap.copy(Bitmap.Config.ARGB_8888, true);
-                }
-
-
-                if (uploadBitmap == null) {
-                    err = true;
-                }
-            } catch (Exception e) {
-                err = true;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void params) {
-
-            if (err) {
-
-                Toast.makeText(ActiveMeetingActivity.this , errMessage , Toast.LENGTH_SHORT).show();
-                //ProfileStore.saveImagePath(ActiveMeetingActivity.this, null);
-
-            } else {
-
-                //ProfileStore.saveImagePath(ActiveMeetingActivity.this , imgPath);
-
-            }
-        }
-    }
-
-    public Bitmap grabImage(String path) throws FileNotFoundException,
-            IOException {
-        Bitmap bitmap = null;
-        bitmap = GeneralUtils.decodeSampledBitmapFromPath(path, 800, 600);
-        return bitmap;
-    }
-
-
-    public void openParticipantsSlidingLayout(){
+    public void openParticipantsSlidingLayout() {
         rl_ParticipantsAttendanceSlidingView.setVisibility(rl_ParticipantsAttendanceSlidingView.VISIBLE);
         rl_ParticipantsAttendanceSlidingView.bringToFront();
         animationIn = AnimationUtils.loadAnimation(getApplicationContext(),
@@ -822,7 +722,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
         rl_ParticipantsAttendanceSlidingView.startAnimation(animationIn);
     }
 
-    public void closeParticipantsSlidingLayout(){
+    public void closeParticipantsSlidingLayout() {
         rl_ParticipantsAttendanceSlidingView.setVisibility(rl_ParticipantsAttendanceSlidingView.GONE);
         animationIn = AnimationUtils.loadAnimation(getApplicationContext(),
                 R.anim.left_to_right_out);
@@ -831,4 +731,21 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.confirm_end_meeting)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+            })
+                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).show();
+    }
 }

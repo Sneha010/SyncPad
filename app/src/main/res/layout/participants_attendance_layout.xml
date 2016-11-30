@@ -18,6 +18,7 @@
             android:layout_alignParentLeft="true"
             android:onClick="closeTrackPanel"
             android:padding="10dp"
+            android:contentDescription="@string/close_button"
             android:src="@drawable/button_close" />
 
         <TextView
@@ -26,9 +27,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/iv_imgCross"
+            android:layout_toRightOf="@+id/ivImgCross"
             android:gravity="center"
-            android:text="Participants"
+            android:text="@string/participants"
             android:textStyle="bold"
             fontPath="fonts/gothamblack.ttf"
             android:textColor="@color/colorPrimary"

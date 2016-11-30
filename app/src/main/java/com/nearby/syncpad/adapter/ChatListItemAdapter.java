@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.nearby.syncpad.R;
 import com.nearby.syncpad.models.Participant;
+import com.nearby.syncpad.util.Constants;
 import com.nearby.syncpad.util.ImageUtility;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class ChatListItemAdapter extends RecyclerView.Adapter<ChatListItemAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        if (mParticipants.get(position).getToWhom() != null && mParticipants.get(position).getToWhom().equals("to_Me")) {
+        if (mParticipants.get(position).getToWhom() != null && mParticipants.get(position).getToWhom().equals(Constants.TO_ME)) {
             holder.rlFromMyselfNotes.setVisibility(View.VISIBLE);
             holder.rlFromOthersNotes.setVisibility(View.GONE);
             holder.personNameMine.setText(mParticipants.get(position).getName());

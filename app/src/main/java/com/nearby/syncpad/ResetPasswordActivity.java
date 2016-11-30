@@ -16,6 +16,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
@@ -26,20 +29,27 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ResetPasswordActivity extends AppCompatActivity {
 
-    private EditText inputEmail;
-    private Button btnReset, btnBack;
+    @BindView(R.id.email)
+    EditText inputEmail;
+
+    @BindView(R.id.btn_reset_password)
+    Button btnReset;
+
+    @BindView(R.id.btn_back)
+    Button btnBack;
+
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+
     private FirebaseAuth auth;
-    private ProgressBar progressBar;
+    private Unbinder binder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
-        inputEmail = (EditText) findViewById(R.id.email);
-        btnReset = (Button) findViewById(R.id.btn_reset_password);
-        btnBack = (Button) findViewById(R.id.btn_back);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        binder = ButterKnife.bind(this);
 
         auth = FirebaseAuth.getInstance();
 
@@ -57,7 +67,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 String email = inputEmail.getText().toString().trim();
 
                 if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplication(), "Enter your registered email id", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplication(), R.string.enter_email_for_reset_password, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -67,9 +77,9 @@ public class ResetPasswordActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(ResetPasswordActivity.this, "We have sent you instructions to reset your password!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ResetPasswordActivity.this, R.string.instructions_sent, Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(ResetPasswordActivity.this, "Failed to send reset email!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ResetPasswordActivity.this, R.string.failed_to_reset, Toast.LENGTH_SHORT).show();
                                 }
 
                                 progressBar.setVisibility(View.GONE);
@@ -84,5 +94,10 @@ public class ResetPasswordActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
+        binder.unbind();
+    }
 }

@@ -11,6 +11,8 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:orientation="vertical"
         android:visibility="visible">
 
@@ -19,7 +21,6 @@
             android:id="@+id/personName_other"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="other"
             android:textSize="17sp"
             android:textStyle="bold"
             fontPath="fonts/gothamblack.ttf"
@@ -33,7 +34,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:textSize="16sp"
-            android:text="fnwejnfjke"
             android:textColor="@color/secondaryTextColor"
             />
 
@@ -45,6 +45,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:orientation="vertical"
         android:visibility="gone"
         >
@@ -54,7 +56,6 @@
             android:id="@+id/personName_mine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="My name"
             android:textSize="17sp"
             android:textStyle="bold"
             android:layout_gravity="right"
@@ -66,7 +67,6 @@
             android:id="@+id/meetingNotes_mine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="adbaejkbf"
             android:layout_marginTop="3dp"
             android:gravity="right"
             android:textColor="@color/secondaryTextColor"

@@ -1,23 +1,17 @@
 package com.nearby.syncpad.widget;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.os.Binder;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import com.nearby.syncpad.MainActivity;
-import com.nearby.syncpad.MeetingDetailsActivity;
 import com.nearby.syncpad.R;
 import com.nearby.syncpad.data.ItemsContract;
 import com.nearby.syncpad.data.MeetingNotesLoader;
-import com.nearby.syncpad.data.NotesProvider;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.nearby.syncpad.util.GeneralUtils;
 
 /**
  * Created by Sneha Khadatare : 587823
@@ -55,21 +49,22 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
         }
         return 0;
     }
-
+    RemoteViews remoteViews;
     @Override
     public RemoteViews getViewAt(int position) {
 
         if(mCursor != null && mCursor.moveToPosition(position) ){
-            RemoteViews remoteViews = new RemoteViews(mContext.getPackageName() , R.layout.meetings_list_item);
+            remoteViews = new RemoteViews(mContext.getPackageName() , R.layout.meetings_list_item_widget);
             remoteViews.setTextViewText(R.id.tvMeetingTitle , mCursor.getString(MeetingNotesLoader.Query.MEETING_NAME));
-            remoteViews.setTextViewText(R.id.tvNotes ,mCursor.getString(MeetingNotesLoader.Query.MEETING_NOTES));
+            remoteViews.setTextViewText(R.id.tvDate , GeneralUtils.getFormattedDate(mCursor.getString(MeetingNotesLoader.Query.MEETING_DATE)));
+            remoteViews.setTextViewText(R.id.tvTime ,mCursor.getString(MeetingNotesLoader.Query.MEETING_TIME));
 
-            Intent intent = new Intent(mContext , MeetingDetailsActivity.class);
+            Intent intent = new Intent();
             intent.putExtra("item_id" , mCursor.getString(MeetingNotesLoader.Query.MEETING_ID));
-            PendingIntent pendingIntent = PendingIntent.getActivity(mContext , 0 ,intent, 0);
-            remoteViews.setOnClickPendingIntent(R.id.rlMainContentView , pendingIntent);
+            remoteViews.setOnClickFillInIntent(R.id.rlMainContentView , intent);
             return remoteViews;
         }else{
+            Log.d("@@@", "getViewAt: null");
             return null;
         }
 

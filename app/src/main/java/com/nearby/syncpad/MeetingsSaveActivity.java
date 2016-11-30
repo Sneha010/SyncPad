@@ -5,20 +5,30 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.OperationApplicationException;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-import com.nearby.syncpad.callbacks.AddMeetingListener;
 import com.nearby.syncpad.data.ItemsContract;
 import com.nearby.syncpad.models.Meeting;
+import com.nearby.syncpad.models.User;
 import com.nearby.syncpad.util.Constants;
 import com.nearby.syncpad.util.GeneralUtils;
 
@@ -31,32 +41,49 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static com.nearby.syncpad.R.id.llContainer;
+import static com.nearby.syncpad.R.id.tvAgendaValue;
+import static com.nearby.syncpad.R.id.tvAttendeesValue;
 
 public class MeetingsSaveActivity extends AppCompatActivity {
 
     private static final String TAG = "MeetingsSaveActivity";
     public static final String ACTION_DATA_UPDATED =
             "com.nearby.syncpad.ACTION_DATA_UPDATED";
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+
+    @BindView(tvAgendaValue)
+    TextView mTvAgendaValue;
+
+    @BindView(llContainer)
+    LinearLayout mLlContainer;
+
+    @BindView(tvAttendeesValue)
+    TextView mTvAttendeesValue;
+
     private Meeting mMeeting;
-    private AddMeetingListener mAddMeetingListener;
 
     @Inject
     DatabaseReference mDatabase;
 
-    private TextView tvNotes , tvParticipants;
+    private Unbinder binder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meetings_save);
+        binder = ButterKnife.bind(this);
 
-        ((SyncPadApplication)getApplication()).getMyApplicationComponent().inject(this);
+        ((SyncPadApplication) getApplication()).getMyApplicationComponent().inject(this);
 
-        //mDatabase = FirebaseDatabase.getInstance().getReference();
-        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
-        if(getIntent()!=null){
+        if (getIntent() != null) {
             mMeeting = getIntent().getExtras().getParcelable(Constants.MEETING);
         }
 
@@ -70,7 +97,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
     }
 
 
-    public void init(){
+    public void init() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
@@ -79,19 +106,67 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        tvNotes = (TextView) findViewById(R.id.tvNotes);
-        tvParticipants = (TextView) findViewById(R.id.tvParticipant);
-
 
     }
+
     private void displayMeetingDetails() {
 
-        //TODO display meeting using bean
+        if (mMeeting != null) {
 
-            tvNotes.setText(mMeeting.getNotesList());
+            if(!GeneralUtils.isEmpty(mMeeting.getMeetingAgenda()))
+                mTvAgendaValue.setText(mMeeting.getMeetingAgenda());
+            else
+                mTvAgendaValue.setText(getString(R.string.na));
 
-            tvParticipants.setText(mMeeting.getParticipantNameList());
+            if(!GeneralUtils.isEmpty(mMeeting.getMeetingParticipants()))
+                mTvAttendeesValue.setText(mMeeting.getMeetingParticipants().replace("||","\n"));
+            else
+                mTvAttendeesValue.setText(getString(R.string.na));
+
+        } else {
+
+            mTvAgendaValue.setText(getString(R.string.na));
+            mTvAttendeesValue.setText(getString(R.string.na));
+        }
+
+        showMeetingNotes();
+
     }
+
+    private void showMeetingNotes() {
+
+        String[] noteList = mMeeting.getMeetingNotes().split("\\|\\|");
+
+        if (noteList != null && noteList.length > 0) {
+            for (int i = 0; i < noteList.length; i++) {
+                TextView textView = new TextView(this);
+                textView.setText(noteList[i]);
+                textView.setTypeface(Typeface.createFromAsset(getAssets(), Constants.GOTHAMBOOK_FONT));
+
+                if(i%2==0)
+                    textView.setBackground(ContextCompat.getDrawable(this , R.drawable.notes_bg_pink));
+                else
+                    textView.setBackground(ContextCompat.getDrawable(this , R.drawable.notes_bg_blue));
+
+
+
+                LinearLayout.LayoutParams params =
+                        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0 , 8 ,0,0);
+                textView.setPadding(17,17,17,17);
+                textView.setTextSize(16);
+                textView.setTextColor(ContextCompat.getColor(this , R.color.primaryTextColor));
+                textView.setLayoutParams(params);
+                mLlContainer.addView(textView, params);
+            }
+        } else {
+            mLlContainer.setVisibility(View.GONE);
+        }
+
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -108,33 +183,33 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         if (id == R.id.save) {
             saveAndSyncMeeting();
             // TODO finish();
-        }else{
-           buildAlertDialog();
+        } else {
+            buildAlertDialog();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void saveAndSyncMeeting(){
+    private void saveAndSyncMeeting() {
+/*
 
         syncWithFirebaseDb();
         finish();
-/*
-        mDatabase.child("user-meetings").child(GeneralUtils.getUid()).addListenerForSingleValueEvent(
+*/
+
+        mDatabase.child(Constants.USERS).child(GeneralUtils.getUid()).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // Get user value
-                        Meeting meeting = dataSnapshot.getValue(Meeting.class);
+                        User user = dataSnapshot.getValue(User.class);
 
                         // [START_EXCLUDE]
-                        if (meeting == null) {
+                        if (user == null) {
                             // User is null, error out
-                            Log.e(TAG, "User " + GeneralUtils.getUid() + " is unexpectedly null");
-                            Toast.makeText(MeetingsSaveActivity.this,
-                                    "Error: could not fetch user.",
-                                    Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "onDataChange: user is null");
                         } else {
+                            Log.d(TAG, "onDataChange: meeting is not null added meeting is");
                             // Write new post
                             syncWithFirebaseDb();
                         }
@@ -148,34 +223,40 @@ public class MeetingsSaveActivity extends AppCompatActivity {
                     public void onCancelled(DatabaseError databaseError) {
                         Log.w(TAG, "getUser:onCancelled", databaseError.toException());
                     }
-                });*/
+                });
 
 
     }
 
     private void syncWithFirebaseDb() {
         final String userId = GeneralUtils.getUid();
-        String key = mDatabase.child("user-meetings/"+userId).push().getKey();
+        String key = mDatabase.child(Constants.USER_MEETINGS + "/" + userId).push().getKey();
         mMeeting.setMeetingId(key);
+        mMeeting.setMeetingTimeStamp(GeneralUtils.getTimeInMillis(mMeeting.getMeetingDate(),
+                mMeeting.getMeetingTime()));
         Map<String, Object> postValues = mMeeting.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/user-meetings/" + userId + "/" + key, postValues);
+        childUpdates.put("/"+Constants.USER_MEETINGS +"/"+ userId + "/" + key, postValues);
         mDatabase.updateChildren(childUpdates);
 
         addMeetingToDb(mMeeting);
         updateWidgets();
     }
 
-    private void addMeetingToDb(Meeting meeting){
+    private void addMeetingToDb(Meeting meeting) {
         try {
 
-        ArrayList<ContentProviderOperation> cpo = new ArrayList<ContentProviderOperation>();
-        Uri dirUri = ItemsContract.Items.buildDirUri();
+            ArrayList<ContentProviderOperation> cpo = new ArrayList<ContentProviderOperation>();
+            Uri dirUri = ItemsContract.Items.buildDirUri();
 
-        ContentValues values = null;
-            values = GeneralUtils.getContentValues(new JSONObject(new Gson().toJson(meeting)));
+            ContentValues values = GeneralUtils.getContentValues(new JSONObject(new Gson().toJson(meeting)));
 
-        cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
+            cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
+            try {
+                getContentResolver().applyBatch(ItemsContract.CONTENT_AUTHORITY, cpo);
+            } catch (RemoteException | OperationApplicationException e) {
+                e.printStackTrace();
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -188,7 +269,8 @@ public class MeetingsSaveActivity extends AppCompatActivity {
                 .setPackage(getApplicationContext().getPackageName());
         sendBroadcast(dataUpdatedIntent);
     }
-    private void buildAlertDialog(){
+
+    private void buildAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.confirm_not_to_save)).setPositiveButton(getString(R.string.yes), dialogClickListener)
                 .setNegativeButton(getString(R.string.no), dialogClickListener).show();
@@ -197,9 +279,9 @@ public class MeetingsSaveActivity extends AppCompatActivity {
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            switch (which){
+            switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
-                   finish();
+                    finish();
                     break;
 
                 case DialogInterface.BUTTON_NEGATIVE:
@@ -215,5 +297,10 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         buildAlertDialog();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
+        binder.unbind();
+    }
 }

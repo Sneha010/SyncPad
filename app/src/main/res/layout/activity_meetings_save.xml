@@ -1,36 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_meetings_save"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.nearby.syncpad.MeetingsSaveActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/activity_meetings_save"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.nearby.syncpad.MeetingsSaveActivity">
 
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:local="http://schemas.android.com/apk/res-auto"
         android:id="@+id/toolbar"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
         android:fitsSystemWindows="true"
         android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
         local:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         local:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
     </android.support.v7.widget.Toolbar>
 
-    <TextView
-        android:id="@+id/tvNotes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
-        android:layout_margin="20dp"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tvParticipant"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvNotes"
-        android:layout_margin="20dp"/>
+        android:orientation="vertical"
+        android:padding="10dp">
 
-</RelativeLayout>
+    <LinearLayout
+        android:id="@+id/llAgenda"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/tvAgendaLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/agenda"
+            android:textColor="@color/primaryTextColor"
+            fontPath="fonts/gothamblack.ttf"
+            android:contentDescription="@string/label_for_meeting_agenda"
+            android:textSize="@dimen/medium_text_size"/>
+
+        <TextView
+            android:id="@+id/tvAgendaValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/agenda"
+            android:textColor="@color/colorPrimaryDark"
+            android:contentDescription="@string/value_for_meeting_agenda"
+            android:textSize="@dimen/medium_text_size"/>
+
+    </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvNotesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/meeting_notes"
+            android:textColor="@color/primaryTextColor"
+            android:layout_marginTop="15dp"
+            fontPath="fonts/gothamblack.ttf"
+            android:contentDescription="@string/label_for_meeting_notes"
+            android:textSize="@dimen/medium_text_size"/>
+
+
+        <LinearLayout
+        android:id="@+id/llContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+      />
+
+    <LinearLayout
+        android:id="@+id/llAttendees"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:id="@+id/tvAttendeesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/attendee"
+            android:textColor="@color/primaryTextColor"
+            fontPath="fonts/gothamblack.ttf"
+            android:contentDescription="@string/label_for_attendees"
+            android:textSize="@dimen/medium_text_size"/>
+
+        <TextView
+            android:id="@+id/tvAttendeesValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:lineSpacingMultiplier="1.3"
+            android:textSize="@dimen/medium_text_size"
+            android:contentDescription="@string/value_for_attendees"
+            android:layout_marginTop="10dp"/>
+    </LinearLayout>
+
+    </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -32,39 +31,64 @@ import com.nearby.syncpad.data.MeetingNotesLoader;
 import com.nearby.syncpad.data.UpdaterService;
 import com.nearby.syncpad.fragments.AddMeetingDialogFragment;
 import com.nearby.syncpad.fragments.ScanMeetingsDialogFragment;
+import com.nearby.syncpad.util.Constants;
+import com.nearby.syncpad.util.GeneralUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
-import static com.nearby.syncpad.R.id.tvMeetingTitle;
 
 public class MainActivity extends AppCompatActivity implements DismissScanDialogListener,
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    private LinearLayout llNoMeetingsAdded;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView mMeetingRycyclerView;
-    private FloatingActionMenu floatingActionMenu;
-    private FloatingActionButton fab_StartMeeting;
-    private FloatingActionButton fab_JoinMeeting;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
+    @BindView(R.id.meetingsListView)
+    RecyclerView meetingRycyclerView;
+
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    @BindView(R.id.ll_no_meetings)
+    LinearLayout llNoMeetingsAdded;
+
+    @BindView(R.id.menu_item1)
+    FloatingActionButton fab_StartMeeting;
+
+    @BindView(R.id.menu_item2)
+    FloatingActionButton fab_JoinMeeting;
+
+    @BindView(R.id.floatingActionMenu)
+    FloatingActionMenu floatingActionMenu;
+
+    private Unbinder binder;
+    boolean isDataAvailable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        binder = ButterKnife.bind(this);
+
         getLoaderManager().initLoader(0, null, this);
         init();
 
         if (savedInstanceState == null) {
             refresh();
         }
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refresh();
+                if(!isDataAvailable)
+                    refresh();
+                else
+                    swipeRefreshLayout.setRefreshing(false);
             }
         });
+
     }
 
     @Override
@@ -74,16 +98,9 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
 
     public void init() {
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.app_name));
-        llNoMeetingsAdded = (LinearLayout) findViewById(R.id.ll_no_meetings);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        mMeetingRycyclerView = (RecyclerView) findViewById(R.id.meetingsListView);
-        floatingActionMenu = (FloatingActionMenu) findViewById(R.id.floatingActionMenu);
-        fab_StartMeeting = (FloatingActionButton) findViewById(R.id.menu_item1);
-        fab_JoinMeeting = (FloatingActionButton) findViewById(R.id.menu_item2);
 
         llNoMeetingsAdded.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +134,13 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
     @Override
     protected void onStart() {
         super.onStart();
-        refresh();
+        Log.d("@@@", "onStart: mainActivity");
+
+        if(!isDataAvailable){
+            swipeRefreshLayout.setRefreshing(true);
+            refresh();
+        }
+
         registerReceiver(mRefreshingReceiver,
                 new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
     }
@@ -142,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
     };
 
     private void updateRefreshingUI() {
-        mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
+        swipeRefreshLayout.setRefreshing(mIsRefreshing);
     }
 
     @Override
@@ -173,14 +196,14 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
 
     private void startMeeting_Dialog() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("meeting_dialog");
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(getString(R.string.meeting_dialog));
         if (prev != null) {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
 
         addMeetingDialogFragment = AddMeetingDialogFragment.newInstance();
-        addMeetingDialogFragment.show(ft, "meeting_dialog");
+        addMeetingDialogFragment.show(ft, getString(R.string.meeting_dialog));
     }
 
     ScanMeetingsDialogFragment dFragment;
@@ -188,14 +211,14 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
     private void scanNearbyMeetings() {
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("scan_dialog");
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(getString(R.string.scan_dialog));
         if (prev != null) {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
 
         dFragment = ScanMeetingsDialogFragment.newInstance();
-        dFragment.show(ft, "scan_dialog");
+        dFragment.show(ft, getString(R.string.scan_dialog));
 
     }
 
@@ -206,29 +229,54 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
         }
     }
 
+    private void displayNoNnotes(){
+        llNoMeetingsAdded.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setVisibility(View.GONE);
+    }
+
+    private void displayMeetingList(){
+        llNoMeetingsAdded.setVisibility(View.GONE);
+        swipeRefreshLayout.setVisibility(View.VISIBLE);
+    }
+
 
     @Override
-    public android.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return MeetingNotesLoader.newAllNotesInstance(this);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         Log.d("@@@", "onLoadFinished: ");
-        Adapter adapter = new Adapter(cursor);
-        adapter.setHasStableIds(true);
-        mMeetingRycyclerView.setAdapter(adapter);
-        // int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm =
-                new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        mMeetingRycyclerView.setLayoutManager(sglm);
-        mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
+
+        if (cursor != null && cursor.getCount() > 0) {
+            Log.d("@@@", "onLoadFinished: cursor not null");
+            displayMeetingList();
+            Adapter adapter = new Adapter(cursor);
+            adapter.setHasStableIds(true);
+            meetingRycyclerView.setAdapter(adapter);
+            StaggeredGridLayoutManager sglm =
+                    new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+            meetingRycyclerView.setLayoutManager(sglm);
+            swipeRefreshLayout.setRefreshing(mIsRefreshing);
+            isDataAvailable = true;
+
+        }
+        else{
+            Log.d("@@@", "onLoadFinished: cursor ull");
+            isDataAvailable = false;
+            displayNoNnotes();
+        }
+
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        if (mMeetingRycyclerView != null)
-            mMeetingRycyclerView.setAdapter(null);
+        if (meetingRycyclerView != null){
+            isDataAvailable = false;
+            meetingRycyclerView.setAdapter(null);
+        }
+
     }
 
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
@@ -257,14 +305,9 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
 
                     mCursor.moveToPosition(vh.getAdapterPosition());
 
-                    Intent i = new Intent(MainActivity.this , MeetingDetailsActivity.class);
-                    i.putExtra("item_id" , mCursor.getString(MeetingNotesLoader.Query.MEETING_ID));
-                    ActivityOptionsCompat options = ActivityOptionsCompat.
-                            makeSceneTransitionAnimation(MainActivity.this, vh.rlMainContentView , "meetingHeader");
-                    startActivity(i , options.toBundle());
-
-                   /* startActivity(new Intent(Intent.ACTION_VIEW,
-                            ItemsContract.Items.buildItemUri(mCursor.getString(MeetingNotesLoader.Query.MEETING_ID))));*/
+                    Intent i = new Intent(MainActivity.this, MeetingDetailsActivity.class);
+                    i.putExtra(Constants.ITEM_ID, mCursor.getString(MeetingNotesLoader.Query.MEETING_ID));
+                    startActivity(i);
                 }
             });
             return vh;
@@ -273,8 +316,9 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             mCursor.moveToPosition(position);
-            holder.mTvMeetingTitle.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_NAME));
-            holder.mTvNotes.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_NOTES));
+            holder.tvMeetingTitle.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_NAME));
+            holder.tvDate.setText(GeneralUtils.getFormattedDate(mCursor.getString(MeetingNotesLoader.Query.MEETING_DATE)));
+            holder.tvTime.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_TIME));
         }
 
         @Override
@@ -284,10 +328,16 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(tvMeetingTitle)
-        TextView mTvMeetingTitle;
-        @BindView(R.id.tvNotes)
-        TextView mTvNotes;
+
+        @BindView(R.id.tvMeetingTitle)
+        TextView tvMeetingTitle;
+
+        @BindView(R.id.tvDate)
+        TextView tvDate;
+
+        @BindView(R.id.tvTime)
+        TextView tvTime;
+
         @BindView(R.id.rlMainContentView)
         RelativeLayout rlMainContentView;
 
@@ -295,5 +345,11 @@ public class MainActivity extends AppCompatActivity implements DismissScanDialog
             super(view);
             ButterKnife.bind(this, view);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binder.unbind();
     }
 }

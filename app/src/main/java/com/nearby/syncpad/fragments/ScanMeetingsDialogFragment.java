@@ -28,10 +28,15 @@ import com.nearby.syncpad.adapter.AvailableMeetingListAdapter;
 import com.nearby.syncpad.models.Participant;
 import com.nearby.syncpad.util.DataItemDecoration;
 import com.nearby.syncpad.util.GeneralUtils;
+import com.rey.material.widget.ProgressView;
 
 import java.util.ArrayList;
 
 import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 import static android.content.ContentValues.TAG;
 
@@ -42,18 +47,24 @@ import static android.content.ContentValues.TAG;
 
 public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
         implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener{
+        GoogleApiClient.OnConnectionFailedListener {
 
-    public static final String DIALOG_TITLE = "dialog_title";
+    @BindView(R.id.availableMeetingRVList)
+    RecyclerView availableMeetingRVList;
 
-    private RelativeLayout mRlProgress;
-    private TextView mNoActiveMeetingText;
-    private RecyclerView mAvailableMeetingsList;
+    @BindView(R.id.tvNoActiveMeeting)
+    TextView tvNoActiveMeeting;
+
+    @BindView(R.id.rl_progress)
+    RelativeLayout rlProgress;
+
     private ArrayList<Participant> meetingList;
     private AvailableMeetingListAdapter mAdapter;
 
     private GoogleApiClient mGoogleApiClient;
     private MessageListener mMessageListener;
+
+    private Unbinder binder;
 
     @Inject
     SubscribeOptions mSubscribeOptions;
@@ -67,7 +78,7 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((SyncPadApplication)getActivity().getApplication()).getMyApplicationComponent().inject(this);
+        ((SyncPadApplication) getActivity().getApplication()).getMyApplicationComponent().inject(this);
     }
 
     @Nullable
@@ -77,45 +88,31 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
         View rootView = inflater.inflate(R.layout.scan_meeting_dialog_layout, container,
                 false);
 
-        initialise(rootView);
+        binder = ButterKnife.bind(this, rootView);
+
         setAvailableMeetingList();
         buildGoogleApiClient();
         setMessageListener();
 
         showProgress();
 
+
         return rootView;
     }
 
-    private void initialise(View _view) {
-
-        mRlProgress = (RelativeLayout) _view.findViewById(R.id.rl_progress);
-        mNoActiveMeetingText = (TextView) _view.findViewById(R.id.tvNoActiveMeeting);
-        mAvailableMeetingsList = (RecyclerView) _view.findViewById(R.id.availableMeetingRVList);
-    }
-    public void setAvailableMeetingList(){
-        mAvailableMeetingsList.addItemDecoration(new DataItemDecoration(getActivity(), DataItemDecoration.VERTICAL_LIST));
-        mAvailableMeetingsList.setHasFixedSize(true);
-        mAvailableMeetingsList.setItemAnimator(new DefaultItemAnimator());
+    public void setAvailableMeetingList() {
+        availableMeetingRVList.addItemDecoration(new DataItemDecoration(getActivity(), DataItemDecoration.VERTICAL_LIST));
+        availableMeetingRVList.setHasFixedSize(true);
+        availableMeetingRVList.setItemAnimator(new DefaultItemAnimator());
 
         meetingList = new ArrayList<>();
-        mAdapter = new AvailableMeetingListAdapter(getActivity() ,meetingList);
+        mAdapter = new AvailableMeetingListAdapter(getActivity(), meetingList);
 
-        mAvailableMeetingsList.setAdapter(mAdapter);
+        availableMeetingRVList.setAdapter(mAdapter);
 
-        mAvailableMeetingsList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAvailableMeetingsList.setVisibility(View.GONE);
+        availableMeetingRVList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        availableMeetingRVList.setVisibility(View.GONE);
 
-    }
-    private void performTask() {
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mRlProgress.setVisibility(View.GONE);
-                mNoActiveMeetingText.setVisibility(View.VISIBLE);
-            }
-        },1000);
     }
 
     @Override
@@ -142,22 +139,13 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
 
     @Override
     public void onConnectionSuspended(int cause) {
-        Log.i(TAG, "GoogleApiClient connection suspended: "
-                + connectionSuspendedCauseToString(cause));
-        GeneralUtils.displayCustomToast(getActivity() ,
+        Log.i(TAG, "GoogleApiClient onConnectionSuspended");
+        GeneralUtils.displayCustomToast(getActivity(),
                 getString(R.string.nearby_connection_error));
 
     }
-    private static String connectionSuspendedCauseToString(int cause) {
-        switch (cause) {
-            case CAUSE_NETWORK_LOST:
-                return "CAUSE_NETWORK_LOST";
-            case CAUSE_SERVICE_DISCONNECTED:
-                return "CAUSE_SERVICE_DISCONNECTED";
-            default:
-                return "CAUSE_UNKNOWN: " + cause;
-        }
-    }
+
+
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -168,7 +156,7 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
 
     }
 
-    public void setMessageListener(){
+    public void setMessageListener() {
         mMessageListener = new MessageListener() {
             @Override
             public void onFound(final Message message) {
@@ -180,7 +168,7 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
 
                         //get message from this, use it later to get profile data and other stuff
                         Participant participant = Participant.fromNearbyMessage(message);
-                        GeneralUtils.displayCustomToast(getActivity() , participant.getMeeting().getMeetingName());
+                        GeneralUtils.displayCustomToast(getActivity(), participant.getMeeting().getMeetingName());
 
                         mAdapter.updateList(participant);
 
@@ -207,6 +195,7 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
         Log.d("", "@@@@ Created listener " + mMessageListener);
 
     }
+
     /**
      * Subscribes to messages from nearby devices. If not successful, attempts to resolve any error
      * related to Nearby permissions by displaying an opt-in dialog. Registers a callback which
@@ -233,31 +222,32 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
                                 Log.i(TAG, "subscribed successfully");
                             } else {
                                 Log.i(TAG, "could not subscribe");
-                               showError(getString(R.string.unable_to_subscribe));
+                                showError(getString(R.string.unable_to_subscribe));
                             }
                         }
                     });
         }
     }
 
-    private void showError(String errorString){
-        mNoActiveMeetingText.setVisibility(View.VISIBLE);
-        mNoActiveMeetingText.setText(errorString);
-        mRlProgress.setVisibility(View.GONE);
-        mAvailableMeetingsList.setVisibility(View.GONE);
+    private void showError(String errorString) {
+        tvNoActiveMeeting.setVisibility(View.VISIBLE);
+        tvNoActiveMeeting.setText(errorString);
+        rlProgress.setVisibility(View.GONE);
+        availableMeetingRVList.setVisibility(View.GONE);
     }
 
-    private void showList(){
-        mNoActiveMeetingText.setVisibility(View.GONE);
-        mRlProgress.setVisibility(View.GONE);
-        mAvailableMeetingsList.setVisibility(View.VISIBLE);
+    private void showList() {
+        tvNoActiveMeeting.setVisibility(View.GONE);
+        rlProgress.setVisibility(View.GONE);
+        availableMeetingRVList.setVisibility(View.VISIBLE);
     }
 
-    private void showProgress(){
-        mNoActiveMeetingText.setVisibility(View.GONE);
-        mRlProgress.setVisibility(View.VISIBLE);
-        mAvailableMeetingsList.setVisibility(View.GONE);
+    private void showProgress() {
+        tvNoActiveMeeting.setVisibility(View.GONE);
+        rlProgress.setVisibility(View.VISIBLE);
+        availableMeetingRVList.setVisibility(View.GONE);
     }
+
     /**
      * Ends the subscription to messages from nearby devices. If successful, resets state. If not
      * successful, attempts to resolve any error related to Nearby permissions by
@@ -287,9 +277,12 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
                     });
         }
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        binder.unbind();
 
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             unsubscribe();

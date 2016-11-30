@@ -29,6 +29,9 @@
     <string name="no_active_meetings">No Active meeting found</string>
     <string name="unable_to_subscribe">Unable to subscribe</string>
     <string name="meeting_not_started">Please make sure you have started the meeting</string>
+    <string name="unable_to_load">Unable to load data</string>
+    <string name="notes_not_available">Notes are not available for this meeting</string>
+    <string name="na">NA</string>
 
     <!--Hints-->
     <string name="login_password">Password</string>
@@ -48,4 +51,107 @@
     <string name="profile_org_hint">My Organisation</string>
     <string name="profile_role_hint">My Role</string>
     <string name="profile_email_hint">My Email Id</string>
+
+    <!--My Meeting Information-->
+    <string name="date">Date: </string>
+    <string name="time">Time:</string>
+    <string name="venue">Venue:</string>
+    <string name="agenda">Agenda</string>
+    <string name="attendee">Attendees</string>
+    <string name="meeting_notes">Meeting Notes</string>
+
+    <string name="stop_meeting">Stop Meeting</string>
+    <string name="start_meeting">Start Meeting</string>
+    <string name="meeting_started">Meeting Started</string>
+    <string name="meeting_stopped">Meeting Stopped</string>
+    <string name="participant">Participant</string>
+    <string name="sign_in_failed">Sign In Failed</string>
+    <string name="sign_up_falied">Sign Up Failed</string>
+    <string name="at_the_rate">\@</string>
+    <string name="required">Required</string>
+    <string name="loading">Loading...</string>
+    <string name="meeting_dialog">meeting_dialog</string>
+    <string name="scan_dialog">scan_dialog</string>
+    <string name="my_profile">My Profile</string>
+    <string name="cannot_be_empty">Cannot be empty</string>
+    <string name="photo_permission">Application wants to read your image for profile picture</string>
+    <string name="image_path">image/*</string>
+    <string name="jpeg_ext">.jpg</string>
+    <string name="enter_email_for_reset_password">Enter your registered email id</string>
+    <string name="instructions_sent">We have sent you instructions to reset your password!</string>
+    <string name="failed_to_reset">Failed to send reset email!</string>
+    <string name="enter_meeting_title">Please enter meeting title</string>
+    <string name="initiated_by">"Initiated by "</string>
+    <string name="add_title_hint">Add meeting title</string>
+    <string name="add_date_hint">Add meeting date</string>
+    <string name="select_date">Select Date</string>
+    <string name="add_time_hint">Add meeting time</string>
+    <string name="select_time">Select Time</string>
+    <string name="add_venue_hint">Add meeting venue</string>
+    <string name="add_agenda_hint">Add meeting agenda</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
+    <string name="add_your_notes_here">Add your notes here..</string>
+    <string name="save">Save</string>
+    <string name="logout">Logout</string>
+    <string name="participants">Participants</string>
+    <string name="share_via">"Share via : "</string>
+
+    <!--Content Descriptions-->
+    <string name="app_name_on_login_screen">App name on login screen</string>
+    <string name="input_field_for_email">Input field for email</string>
+    <string name="input_field_for_password">Input field for password</string>
+    <string name="app_icon_on_login_screen">App icon on login screen</string>
+    <string name="sign_in_button">Sign in button</string>
+    <string name="sign_up_button">Sign up button</string>
+    <string name="forgot_password_option">Forgot password option</string>
+    <string name="meeting_list_view">Meeting list view</string>
+    <string name="swipe_to_refresh">Swipe to refresh</string>
+    <string name="no_meetings_has_been_added">No meetings has been added</string>
+    <string name="floating_action_menu">Floating action menu</string>
+    <string name="floating_action_button_for_starting_new_meeting">Floating action button for starting new meeting</string>
+    <string name="floating_action_button_for_joining_existing_meeting">Floating action button for joining existing meeting</string>
+    <string name="label_for_meeting_agenda">Label for meeting agenda</string>
+    <string name="value_for_meeting_agenda">Value for meeting agenda</string>
+    <string name="label_for_meeting_notes">label for meeting notes</string>
+    <string name="label_for_attendees">Label for attendees</string>
+    <string name="value_for_attendees">Value for attendees</string>
+    <string name="forgot_password_text">Forgot password text</string>
+    <string name="forgot_password_instructions">forgot password instructions</string>
+    <string name="button_for_reset_email">Button for reset email</string>
+    <string name="back_button">Back button</string>
+    <string name="add_meeting_title">Add meeting title</string>
+    <string name="add_meeting_name_label">Add meeting name label</string>
+    <string name="input_field_for_adding_meeting_name">Input field for adding meeting name</string>
+    <string name="add_date_label">Add date label</string>
+    <string name="input_field_for_adding_date">Input field for adding date</string>
+    <string name="select_date_button">Select date button</string>
+    <string name="add_meeting_time_label">Add meeting time label</string>
+    <string name="input_field_for_adding_time">Input field for adding time</string>
+    <string name="select_button_for_time">select button for time</string>
+    <string name="add_meeting_venue_label">Add meeting venue label</string>
+    <string name="input_field_for_adding_meeting_venue">Input field for adding meeting venue</string>
+    <string name="add_meeting_agenda_label">Add meeting agenda label</string>
+    <string name="input_field_for_adding_meeting_agenda">Input field for adding meeting agenda</string>
+    <string name="cancel_button">cancel button</string>
+    <string name="add_button_for_adding_meeting">Add button for adding meeting</string>
+    <string name="meeting_title">Meeting title</string>
+    <string name="initiated_by_description">initiated by description</string>
+    <string name="button_to_start_or_stop_the_meeting">button to start or stop the meeting</string>
+    <string name="active_note_list">active note list</string>
+    <string name="input_field_for_adding_notes">Input field for adding notes</string>
+    <string name="send_button">send button</string>
+    <string name="input_field_for_adding_user_name">Input field for adding user name</string>
+    <string name="input_field_for_adding_organisation_name">Input field for adding organisation name</string>
+    <string name="input_field_for_adding_role">Input field for adding role</string>
+    <string name="save_button">Save button</string>
+    <string name="logout_button">Logout button</string>
+    <string name="participants_list">participants list</string>
+    <string name="loading_the_content">Loading the content</string>
+    <string name="my_profile_photo">My profile photo</string>
+    <string name="close_button">Close button</string>
+
+
+
+
 </resources>
