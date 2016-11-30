@@ -133,7 +133,7 @@ public class MyProfileActivity extends BaseActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                launchMainActivity();
             }
         });
 
@@ -232,8 +232,17 @@ public class MyProfileActivity extends BaseActivity {
 
         mProfileStore.saveProfile(participant);
 
-        finish();
+        launchMainActivity();
 
+    }
+
+    private void launchMainActivity(){
+
+        if(!mProfileStore.isFirstLaunchDone()){
+            mProfileStore.firstLaunchDone(true);
+            startActivity(new Intent(MyProfileActivity.this, MainActivity.class));
+        }
+        finish();
     }
 
     final static int CAMERA_RESULT = 0;

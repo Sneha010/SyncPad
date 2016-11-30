@@ -173,8 +173,12 @@ public class LoginActivity extends BaseActivity{
         // Write new user
         writeNewUser(user.getUid(), username, user.getEmail());
 
-        // Go to MainActivity
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        if(!mProfileStore.isFirstLaunchDone()){
+            startActivity(new Intent(LoginActivity.this, MyProfileActivity.class));
+        }else{
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        }
+
         finish();
     }
 

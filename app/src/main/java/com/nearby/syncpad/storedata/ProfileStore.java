@@ -15,6 +15,8 @@ public class ProfileStore {
 
 
     private Application mContext;
+    public static final String MY_PROFILE = "MY_PROFILE";
+    public static final String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH";
 
     @Inject
     public ProfileStore(Application context) {
@@ -29,7 +31,7 @@ public class ProfileStore {
 
         String profile = gson.toJson(participant, Participant.class);
 
-        getSharedPreference().edit().putString("MY_PROFILE", profile).commit();
+        getSharedPreference().edit().putString(MY_PROFILE, profile).commit();
 
 
     }
@@ -39,7 +41,7 @@ public class ProfileStore {
 
         Gson gson = new Gson();
 
-        String profileString = getSharedPreference().getString("MY_PROFILE", "");
+        String profileString = getSharedPreference().getString(MY_PROFILE, "");
 
         if (!TextUtils.isEmpty(profileString)) {
 
@@ -52,12 +54,22 @@ public class ProfileStore {
 
     public void clearProfileData(){
 
-        getSharedPreference().edit().putString("MY_PROFILE", null).commit();
+        getSharedPreference().edit().putString(MY_PROFILE, null).commit();
     }
+
+    public void firstLaunchDone(boolean data){
+
+        getSharedPreference().edit().putBoolean(IS_FIRST_LAUNCH, data).commit();
+    }
+
+    public boolean isFirstLaunchDone(){
+        return getSharedPreference().getBoolean(IS_FIRST_LAUNCH, false);
+    }
+
 
     private SharedPreferences getSharedPreference() {
 
-        return mContext.getSharedPreferences("ProfileData", Context.MODE_PRIVATE);
+        return mContext.getSharedPreferences(mContext.getPackageName(), Context.MODE_PRIVATE);
     }
 
 }
