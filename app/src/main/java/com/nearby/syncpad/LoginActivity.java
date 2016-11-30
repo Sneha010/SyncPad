@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -29,9 +28,10 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends BaseActivity{
 
     private static final String TAG = "LoginActivity";
 
@@ -68,11 +68,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
+        mUnbinder = ButterKnife.bind(this);
 
         ((SyncPadApplication) getApplication()).getMyApplicationComponent().inject(this);
 
-        setClickListeners();
     }
 
     @Override
@@ -80,12 +79,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    private void setClickListeners() {
-        // Click listeners
-        buttonSignIn.setOnClickListener(this);
-        buttonSignUp.setOnClickListener(this);
-        forgotPassword.setOnClickListener(this);
-    }
 
     @Override
     public void onStart() {
@@ -101,7 +94,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    @Override
+    @OnClick({R.id.button_sign_in, R.id.button_sign_up, R.id.forgot_password})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_sign_in:

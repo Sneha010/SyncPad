@@ -9,7 +9,6 @@ import android.os.PowerManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +20,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -52,9 +50,10 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class ActiveMeetingActivity extends AppCompatActivity
+public class ActiveMeetingActivity extends BaseActivity
         implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -75,12 +74,6 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
     @BindView(R.id.rl_ParticipantsAttendance)
     RelativeLayout rl_ParticipantsAttendanceSlidingView;
-
-    @BindView(R.id.send_button)
-    ImageView btnSend;
-
-    @BindView(R.id.ivImgCross)
-    ImageView ivImgCross;
 
     @Inject
     ImageUtility mImageUtility;
@@ -117,7 +110,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.broadcast_activity_layout);
-        ButterKnife.bind(this);
+        mUnbinder = ButterKnife.bind(this);
 
         ((SyncPadApplication) getApplication()).getMyApplicationComponent().inject(this);
 
@@ -126,7 +119,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
             mIsHost = getIntent().getBooleanExtra(Constants.IS_HOST, false);
         }
 
-        init();
+        setToolbar();
         setUpUI();
     }
 
@@ -135,27 +128,12 @@ public class ActiveMeetingActivity extends AppCompatActivity
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    private void init() {
 
+    private void setToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(mCurrentMeeting.getMeetingName());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                publishNotes();
-            }
-        });
-
-        ivImgCross.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                closeParticipantsSlidingLayout();
-            }
-        });
-
     }
 
     public void setUpUI() {
@@ -164,19 +142,18 @@ public class ActiveMeetingActivity extends AppCompatActivity
         setMessageListener();
         addParticipantListFragment();
 
-        startMeetingText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (((TextView) view).getText().equals(getString(R.string.stop_meeting))) {
-                    mWakeLock.release();
-                    stopMeeting();
-                } else if (((TextView) view).getText().equals(getString(R.string.start_meeting))) {
-                    mWakeLock.acquire();
-                    startMeeting();
-                }
-            }
-        });
 
+    }
+
+    @OnClick(R.id.startMeetingText)
+    public void startOrStopMeeting(View view){
+        if (((TextView) view).getText().equals(getString(R.string.stop_meeting))) {
+            mWakeLock.release();
+            stopMeeting();
+        } else if (((TextView) view).getText().equals(getString(R.string.start_meeting))) {
+            mWakeLock.acquire();
+            startMeeting();
+        }
     }
 
 
@@ -397,7 +374,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
     }
 
-    private void publishNotes() {
+    @OnClick(R.id.send_button)
+    public void publishNotes(View view) {
 
         Log.i(TAG, "publishNotes called");
 
@@ -717,7 +695,12 @@ public class ActiveMeetingActivity extends AppCompatActivity
             unpublishMyData();
 
         }
-        mWakeLock.release();
+        try {
+            if (mWakeLock!=null && mWakeLock.isHeld())
+                mWakeLock.release();
+        } catch (Throwable th) {
+            th.printStackTrace();
+        }
     }
 
 
@@ -730,6 +713,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
         rl_ParticipantsAttendanceSlidingView.startAnimation(animationIn);
     }
 
+    @OnClick(R.id.ivImgCross)
     public void closeParticipantsSlidingLayout() {
         rl_ParticipantsAttendanceSlidingView.setVisibility(rl_ParticipantsAttendanceSlidingView.GONE);
         animationIn = AnimationUtils.loadAnimation(getApplicationContext(),

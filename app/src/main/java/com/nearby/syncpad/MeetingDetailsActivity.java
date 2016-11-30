@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -33,14 +32,13 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * Created by Sneha Khadatare on 11/20/2016.
  */
 
-public class MeetingDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MeetingDetailsActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "MeetingDetailsActivity";
 
@@ -63,7 +61,6 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
     TextView tvError;
 
 
-    private Unbinder mUnbinder;
     private Cursor mCursor;
     private String mItemId;
     private MyPagerAdapter mAdapter;
@@ -202,11 +199,6 @@ public class MeetingDetailsActivity extends AppCompatActivity implements LoaderM
         mCursor = null;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mUnbinder.unbind();
-    }
 
     private void showProgress() {
         rlProgress.setVisibility(View.VISIBLE);

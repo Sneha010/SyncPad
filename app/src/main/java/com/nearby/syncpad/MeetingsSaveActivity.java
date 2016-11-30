@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -43,14 +42,13 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.nearby.syncpad.R.id.llContainer;
 import static com.nearby.syncpad.R.id.tvAgendaValue;
 import static com.nearby.syncpad.R.id.tvAttendeesValue;
 
-public class MeetingsSaveActivity extends AppCompatActivity {
+public class MeetingsSaveActivity extends BaseActivity {
 
     private static final String TAG = "MeetingsSaveActivity";
     public static final String ACTION_DATA_UPDATED =
@@ -72,14 +70,11 @@ public class MeetingsSaveActivity extends AppCompatActivity {
     @Inject
     DatabaseReference mDatabase;
 
-    private Unbinder binder;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meetings_save);
-        binder = ButterKnife.bind(this);
+        mUnbinder = ButterKnife.bind(this);
 
         ((SyncPadApplication) getApplication()).getMyApplicationComponent().inject(this);
 
@@ -87,7 +82,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
             mMeeting = getIntent().getExtras().getParcelable(Constants.MEETING);
         }
 
-        init();
+        setToolbar();
         displayMeetingDetails();
     }
 
@@ -97,7 +92,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
     }
 
 
-    public void init() {
+    public void setToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
@@ -191,11 +186,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
     }
 
     private void saveAndSyncMeeting() {
-/*
 
-        syncWithFirebaseDb();
-        finish();
-*/
 
         mDatabase.child(Constants.USERS).child(GeneralUtils.getUid()).addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -297,10 +288,4 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         buildAlertDialog();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        binder.unbind();
-    }
 }

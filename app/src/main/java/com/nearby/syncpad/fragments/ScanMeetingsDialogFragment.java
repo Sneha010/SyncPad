@@ -101,14 +101,19 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
 
         binder = ButterKnife.bind(this, rootView);
 
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
         setAvailableMeetingList();
         buildGoogleApiClient();
         setMessageListener();
 
         showProgress();
-
-
-        return rootView;
     }
 
     public void setAvailableMeetingList() {

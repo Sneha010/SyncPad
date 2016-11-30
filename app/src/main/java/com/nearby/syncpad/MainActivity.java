@@ -23,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.nearby.syncpad.data.MeetingNotesLoader;
 import com.nearby.syncpad.data.UpdaterService;
@@ -34,6 +33,7 @@ import com.nearby.syncpad.util.GeneralUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends BaseActivity implements
@@ -50,12 +50,6 @@ public class MainActivity extends BaseActivity implements
 
     @BindView(R.id.ll_no_meetings)
     LinearLayout llNoMeetingsAdded;
-
-    @BindView(R.id.menu_item1)
-    FloatingActionButton fab_StartMeeting;
-
-    @BindView(R.id.menu_item2)
-    FloatingActionButton fab_JoinMeeting;
 
     @BindView(R.id.floatingActionMenu)
     FloatingActionMenu floatingActionMenu;
@@ -76,8 +70,6 @@ public class MainActivity extends BaseActivity implements
 
         getLoaderManager().initLoader(0, null, this);
 
-        init();
-
         if (savedInstanceState == null) {
             refresh();
         }
@@ -96,32 +88,6 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
-    public void init() {
-
-        llNoMeetingsAdded.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startMeeting_Dialog();
-            }
-        });
-
-        fab_StartMeeting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startMeeting_Dialog();
-                floatingActionMenu.close(true);
-            }
-        });
-
-        fab_JoinMeeting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                scanNearbyMeetings();
-                floatingActionMenu.close(true);
-            }
-        });
     }
 
 
@@ -191,8 +157,9 @@ public class MainActivity extends BaseActivity implements
     }
 
 
-
-    private void startMeeting_Dialog() {
+    @OnClick({R.id.ll_no_meetings, R.id.menu_item1})
+    public void startMeeting_Dialog() {
+        closeFabMenu();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag(getString(R.string.meeting_dialog));
         if (prev != null) {
@@ -204,8 +171,14 @@ public class MainActivity extends BaseActivity implements
         addMeetingDialogFragment.show(ft, getString(R.string.meeting_dialog));
     }
 
+    private void closeFabMenu(){
+       floatingActionMenu.close(true);
+    }
 
-    private void scanNearbyMeetings() {
+    @OnClick(R.id.menu_item2)
+    public void scanNearbyMeetings() {
+
+        closeFabMenu();
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag(getString(R.string.scan_dialog));

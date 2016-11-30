@@ -1,6 +1,5 @@
 package com.nearby.syncpad.fragments;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -29,12 +28,6 @@ public class ParticipantsFragment extends Fragment {
 
     private ParticipantListItemAdapter adapter;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ParticipantsFragment.
-     */
 
     public static ParticipantsFragment newInstance() {
         ParticipantsFragment fragment = new ParticipantsFragment();
@@ -44,16 +37,6 @@ public class ParticipantsFragment extends Fragment {
         return fragment;
     }
 
-    public ParticipantsFragment() {
-        // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

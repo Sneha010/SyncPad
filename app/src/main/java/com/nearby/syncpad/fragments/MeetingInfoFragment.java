@@ -1,6 +1,7 @@
 package com.nearby.syncpad.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,17 +50,29 @@ public class MeetingInfoFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            mMeeting = getArguments().getParcelable(Constants.MEETING);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.meeting_info_frag_layout, container, false);
 
         binder = ButterKnife.bind(this, view);
 
-        mMeeting = getArguments().getParcelable(Constants.MEETING);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         showMeetingInfo();
-
-        return view;
     }
 
     private void showMeetingInfo() {
