@@ -256,6 +256,7 @@ public class ActiveMeetingActivity extends BaseActivity
                     .setNegativeButton(getString(R.string.no), dialogClickListener).show();
         }
         else{
+            isMeetingActive = false;
             finish();
         }
 
