@@ -66,11 +66,12 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
     private MessageListener mMessageListener;
 
     private Unbinder binder;
+
     private AvailableMeetingListAdapter.OnMeetingItemSelectedListener mOnMeetingItemSelectedListener = new AvailableMeetingListAdapter.OnMeetingItemSelectedListener() {
         @Override
-        public void onMeetingItemSelected(Participant meeting) {
+        public void onMeetingItemSelected(Participant meetingHost) {
             Intent i = new Intent(getActivity(), ActiveMeetingActivity.class);
-            i.putExtra(Constants.MEETING, meeting.getMeeting());
+            i.putExtra(Constants.MEETING, meetingHost.getMeeting());
             i.putExtra(Constants.IS_HOST, false);
             getActivity().startActivity(i);
             dismiss();

@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.os.PowerManager;
 
+import com.nearby.syncpad.util.NotificationHelper;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -43,5 +45,12 @@ public class MyApplicationModule {
 
         return powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Tag");
 
+    }
+
+    @Singleton
+    @Provides
+    NotificationHelper provideNotificationHelper(Application application) {
+
+        return new NotificationHelper(application);
     }
 }

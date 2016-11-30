@@ -151,6 +151,7 @@ public class MeetingsSaveActivity extends BaseActivity {
                 params.setMargins(0 , 8 ,0,0);
                 textView.setPadding(17,17,17,17);
                 textView.setTextSize(16);
+                textView.setLineSpacing(0,1.2f);
                 textView.setTextColor(ContextCompat.getColor(this , R.color.primaryTextColor));
                 textView.setLayoutParams(params);
                 mLlContainer.addView(textView, params);

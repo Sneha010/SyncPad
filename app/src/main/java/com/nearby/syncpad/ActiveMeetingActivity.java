@@ -42,6 +42,7 @@ import com.nearby.syncpad.util.Constants;
 import com.nearby.syncpad.util.DataItemDecoration;
 import com.nearby.syncpad.util.GeneralUtils;
 import com.nearby.syncpad.util.ImageUtility;
+import com.nearby.syncpad.util.NotificationHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,6 +91,9 @@ public class ActiveMeetingActivity extends BaseActivity
     @Inject
     PowerManager.WakeLock mWakeLock;
 
+    @Inject
+    NotificationHelper mNotificationHelper;
+
     private ArrayList<Participant> chatParticipantsList;
     private ChatListItemAdapter adapter;
     private GoogleApiClient mGoogleApiClient;
@@ -103,6 +107,7 @@ public class ActiveMeetingActivity extends BaseActivity
     private ArrayList<String> participantNameList = new ArrayList<>();
     private MessageListener mMessageListener;
     private HashMap<String,String> mLatestMessages = new HashMap<>();
+    private boolean isMeetingActive;
 
 
     @Override
@@ -230,7 +235,7 @@ public class ActiveMeetingActivity extends BaseActivity
 
     private void startMeeting() {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-
+            isMeetingActive = true;
             GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, getString(R.string.meeting_started));
             startMeetingText.setText(getString(R.string.stop_meeting));
             startMeetingText.setCompoundDrawablesWithIntrinsicBounds(
@@ -261,6 +266,7 @@ public class ActiveMeetingActivity extends BaseActivity
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
+                    isMeetingActive = false;
                     GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, getString(R.string.meeting_stopped));
                     startMeetingText.setText(getString(R.string.start_meeting));
                     startMeetingText.setCompoundDrawablesWithIntrinsicBounds(
@@ -271,6 +277,7 @@ public class ActiveMeetingActivity extends BaseActivity
                     break;
 
                 case DialogInterface.BUTTON_NEGATIVE:
+
                     dialog.dismiss();
                     break;
             }
@@ -410,7 +417,7 @@ public class ActiveMeetingActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
-
+        mNotificationHelper.cancelMeetingOngingNotification();
     }
 
 
@@ -681,6 +688,10 @@ public class ActiveMeetingActivity extends BaseActivity
     protected void onStop() {
 
         super.onStop();
+
+        if(isMeetingActive)
+            mNotificationHelper.showOnGoingNotification(getString(R.string.app_name),
+                    "Your meeting "+mCurrentMeeting.getMeetingName()+" is active. Tap to resume");
     }
 
 
@@ -726,18 +737,25 @@ public class ActiveMeetingActivity extends BaseActivity
     @Override
     public void onBackPressed() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.confirm_end_meeting)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                finish();
-            }
+        if(isMeetingActive){
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(getString(R.string.confirm_end_meeting)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    isMeetingActive = false;
+                    finish();
+                }
             })
-                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                }).show();
+                    .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).show();
+        }else{
+            finish();
+        }
+
     }
 }

@@ -18,12 +18,12 @@ import butterknife.ButterKnife;
 
 public class AvailableMeetingListAdapter extends RecyclerView.Adapter<AvailableMeetingListAdapter.ViewHolder> {
 
-    private ArrayList<Participant> meetingList;
+    private ArrayList<Participant> meetingHosts;
     private OnMeetingItemSelectedListener mOnMeetingItemSelectedListener;
 
-    public AvailableMeetingListAdapter(OnMeetingItemSelectedListener mOnMeetingItemSelectedListener, ArrayList<Participant> meetings) {
+    public AvailableMeetingListAdapter(OnMeetingItemSelectedListener mOnMeetingItemSelectedListener, ArrayList<Participant> meetingHost) {
         this.mOnMeetingItemSelectedListener = mOnMeetingItemSelectedListener;
-        this.meetingList = meetings;
+        this.meetingHosts = meetingHost;
     }
 
     @Override
@@ -39,13 +39,13 @@ public class AvailableMeetingListAdapter extends RecyclerView.Adapter<AvailableM
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        if (meetingList.get(position).isIsHost()) {
+        if (meetingHosts.get(position).isIsHost()) {
 
-            holder.tvMeetingTitle.setText(meetingList.get(position).getMeeting().getMeetingName());
+            holder.tvMeetingTitle.setText(meetingHosts.get(position).getMeeting().getMeetingName());
 
-            if (!meetingList.get(position).getName().isEmpty()) {
+            if (!meetingHosts.get(position).getName().isEmpty()) {
                 holder.tvInitiatedBy.setVisibility(View.VISIBLE);
-                holder.tvInitiatedBy.append(meetingList.get(position).getName());
+                holder.tvInitiatedBy.append(meetingHosts.get(position).getName());
             } else {
                 holder.tvInitiatedBy.setVisibility(View.GONE);
             }
@@ -54,7 +54,7 @@ public class AvailableMeetingListAdapter extends RecyclerView.Adapter<AvailableM
                 @Override
                 public void onClick(View view) {
 
-                    mOnMeetingItemSelectedListener.onMeetingItemSelected(meetingList.get(position));
+                    mOnMeetingItemSelectedListener.onMeetingItemSelected(meetingHosts.get(position));
                 }
             });
 
@@ -69,13 +69,13 @@ public class AvailableMeetingListAdapter extends RecyclerView.Adapter<AvailableM
 
     @Override
     public int getItemCount() {
-        return meetingList.size();
+        return meetingHosts.size();
     }
 
     public void updateList(Participant meeting) {
 
-        meetingList.add(meeting);
-        notifyItemChanged(meetingList.size()-1);
+        meetingHosts.add(meeting);
+        notifyItemChanged(meetingHosts.size()-1);
 
     }
 
