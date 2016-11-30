@@ -27,6 +27,7 @@
             android:layout_marginTop="3dp"
             android:textColor="@color/colorPrimary"
             android:layout_below="@+id/tvMeetingTitle"
+            android:text="@string/initiated_by"
             android:contentDescription="@string/initiated_by_description"
             />
 

@@ -1,11 +1,11 @@
 package com.nearby.syncpad;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -47,6 +46,7 @@ import com.nearby.syncpad.util.GeneralUtils;
 import com.nearby.syncpad.util.ImageUtility;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.inject.Inject;
 
@@ -94,6 +94,9 @@ public class ActiveMeetingActivity extends AppCompatActivity
     @Inject
     ProfileStore mProfileStore;
 
+    @Inject
+    PowerManager.WakeLock mWakeLock;
+
     private ArrayList<Participant> chatParticipantsList;
     private ChatListItemAdapter adapter;
     private GoogleApiClient mGoogleApiClient;
@@ -101,11 +104,12 @@ public class ActiveMeetingActivity extends AppCompatActivity
     private boolean mIsHost;
     private Meeting mCurrentMeeting;
     private boolean mResolvingNearbyPermissionError = false;
-    Animation animationIn;
+    private Animation animationIn;
     private ParticipantsFragment participantListFragment;
     private ArrayList<String> noteList = new ArrayList<>();
     private ArrayList<String> participantNameList = new ArrayList<>();
     private MessageListener mMessageListener;
+    private HashMap<String,String> mLatestMessages = new HashMap<>();
 
 
     @Override
@@ -164,8 +168,10 @@ public class ActiveMeetingActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if (((TextView) view).getText().equals(getString(R.string.stop_meeting))) {
+                    mWakeLock.release();
                     stopMeeting();
                 } else if (((TextView) view).getText().equals(getString(R.string.start_meeting))) {
+                    mWakeLock.acquire();
                     startMeeting();
                 }
             }
@@ -213,8 +219,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
                 .addConnectionCallbacks(this)
                 .enableAutoManage(this, this)
                 .build();
-        //mGoogleApiClient.connect();
 
+        //Auto Manage client will automatically connect on onStart()
     }
 
     //All related to NearBy Message API
@@ -321,9 +327,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
         mMessageListener = new MessageListener() {
             @Override
             public void onFound(final Message message) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+
 
                         Log.i(TAG, "setMessageListener called");
 
@@ -338,15 +342,18 @@ public class ActiveMeetingActivity extends AppCompatActivity
                             participantListFragment.addParticipant(participant);
                             participantNameList.add(participant.getName());
                         } else {
-                            noteList.add(participant.getMeetingNotes());
-                            adapter.updateList(participant);
+                            if(mLatestMessages.get(participant.getName()) == null || !mLatestMessages.get(participant.getName()).equals(participant.getMeetingNotes())){
+                                mLatestMessages.put(participant.getName() , participant.getMeetingNotes());
+                                noteList.add(participant.getMeetingNotes());
+                                mRecyclerView.scrollToPosition(noteList.size()-1);
+                                adapter.updateList(participant);
+                            }else{
+                                Log.d(TAG, "Repeated message ");
+                            }
                         }
 
                         publish_MyProfile();
 
-
-                    }
-                });
             }
 
             @Override
@@ -386,7 +393,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
         chatParticipantsList = new ArrayList<>();
         adapter = new ChatListItemAdapter(ActiveMeetingActivity.this, chatParticipantsList);
         mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+       mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     }
 
@@ -404,7 +411,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
             participant.setToWhom(Constants.TO_ME);
 
             myNotes = participant.newNearbyMessage();
-
+            mRecyclerView.scrollToPosition(noteList.size()-1);
             adapter.updateList(participant);
 
             edtMeetingNotes.setText("");
@@ -710,6 +717,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
             unpublishMyData();
 
         }
+        mWakeLock.release();
     }
 
 

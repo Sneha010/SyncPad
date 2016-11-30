@@ -1,7 +1,7 @@
 package com.nearby.syncpad.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -22,13 +22,14 @@ import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
+import com.nearby.syncpad.ActiveMeetingActivity;
 import com.nearby.syncpad.R;
 import com.nearby.syncpad.SyncPadApplication;
 import com.nearby.syncpad.adapter.AvailableMeetingListAdapter;
 import com.nearby.syncpad.models.Participant;
+import com.nearby.syncpad.util.Constants;
 import com.nearby.syncpad.util.DataItemDecoration;
 import com.nearby.syncpad.util.GeneralUtils;
-import com.rey.material.widget.ProgressView;
 
 import java.util.ArrayList;
 
@@ -65,6 +66,16 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
     private MessageListener mMessageListener;
 
     private Unbinder binder;
+    private AvailableMeetingListAdapter.OnMeetingItemSelectedListener mOnMeetingItemSelectedListener = new AvailableMeetingListAdapter.OnMeetingItemSelectedListener() {
+        @Override
+        public void onMeetingItemSelected(Participant meeting) {
+            Intent i = new Intent(getActivity(), ActiveMeetingActivity.class);
+            i.putExtra(Constants.MEETING, meeting.getMeeting());
+            i.putExtra(Constants.IS_HOST, false);
+            getActivity().startActivity(i);
+            dismiss();
+        }
+    };
 
     @Inject
     SubscribeOptions mSubscribeOptions;
@@ -106,7 +117,7 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
         availableMeetingRVList.setItemAnimator(new DefaultItemAnimator());
 
         meetingList = new ArrayList<>();
-        mAdapter = new AvailableMeetingListAdapter(getActivity(), meetingList);
+        mAdapter = new AvailableMeetingListAdapter(mOnMeetingItemSelectedListener, meetingList);
 
         availableMeetingRVList.setAdapter(mAdapter);
 
@@ -134,7 +145,6 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
                 .addConnectionCallbacks(this)
                 .enableAutoManage(getActivity(), this)
                 .build();
-        mGoogleApiClient.connect();
     }
 
     @Override
@@ -279,15 +289,21 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        unsubscribe();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
 
         binder.unbind();
 
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            unsubscribe();
+
             mGoogleApiClient.stopAutoManage(getActivity());
-            mGoogleApiClient.disconnect();
+
         }
     }
 }

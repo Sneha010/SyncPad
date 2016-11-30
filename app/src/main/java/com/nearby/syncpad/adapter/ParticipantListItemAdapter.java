@@ -92,7 +92,7 @@ public class ParticipantListItemAdapter extends RecyclerView.Adapter<Participant
         }
         if (!gotSameProfile) {
             mParticipants.add(participant);
-            notifyDataSetChanged();
+            notifyItemChanged(mParticipants.size()-1);
         }
     }
 
