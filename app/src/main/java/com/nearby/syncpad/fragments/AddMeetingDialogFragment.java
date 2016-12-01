@@ -19,6 +19,8 @@ import com.nearby.syncpad.ActiveMeetingActivity;
 import com.nearby.syncpad.R;
 import com.nearby.syncpad.models.Meeting;
 import com.nearby.syncpad.util.Constants;
+import com.nearby.syncpad.util.DateTimeUtils;
+import com.nearby.syncpad.util.GeneralUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -82,15 +84,23 @@ public class AddMeetingDialogFragment extends AppCompatDialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setDateAndTime();
+        setDefaultDateAndTime();
+    }
+
+    private void setDefaultDateAndTime() {
+
+        edtMeetingDate.setText(DateTimeUtils.getCurrentDate());
+        edtMeetingTime.setText(DateTimeUtils.getCurrentTime());
+
+
     }
 
     @OnClick(R.id.tvAdd)
     public void addMeetingBtnClicked(View view) {
 
-
+        //validation for form data entered
         if (edtMeetingName.getText() == null || (edtMeetingName.getText() != null && edtMeetingName.getText().toString().length() == 0)) {
-            Toast.makeText(getActivity(), R.string.enter_meeting_title, Toast.LENGTH_SHORT).show();
+            GeneralUtils.displayCustomToast(getActivity(), getString(R.string.enter_meeting_title));
         } else {
             Meeting meetingBean = new Meeting();
             if (edtMeetingName.getText() != null && edtMeetingName.getText().toString().length() > 0) {
@@ -125,68 +135,46 @@ public class AddMeetingDialogFragment extends AppCompatDialogFragment {
     }
 
 
-    private void setDateAndTime() {
-        // Use the current date as the default date in the picker
-        final Calendar c = Calendar.getInstance();
-        final int year = c.get(Calendar.YEAR);
-        final int month = c.get(Calendar.MONTH);
-        final int day = c.get(Calendar.DAY_OF_MONTH);
+    @OnClick(R.id.select_date_button)
+    public void selectDate() {
 
-        edtMeetingDate.setText(day + "/" + (month + 1) + "/" + year);
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DATE);
 
-        selectDateButton.setOnClickListener(new View.OnClickListener() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onClick(View view) {
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        edtMeetingDate.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
-                    }
-                }, year, month, day);
-                datePickerDialog.show();
+                edtMeetingDate.setText(DateTimeUtils.getDateUsingData(dayOfMonth, month, year));
 
             }
-        });
+        }, year, month, day);
 
-        final int hour = c.get(Calendar.HOUR_OF_DAY);
-        final int minute = c.get(Calendar.MINUTE);
+        datePickerDialog.show();
 
-        edtMeetingTime.setText(getTimeString(hour, minute));
+    }
 
-        selectTimeButton.setOnClickListener(new View.OnClickListener() {
+    @OnClick(R.id.select_time_button)
+    public void selectTime() {
+
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
             @Override
-            public void onClick(View view) {
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                getTimeString(hour, minute);
-
-                TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-                        edtMeetingTime.setText(getTimeString(hourOfDay, minute));
-                    }
-                }, hour, minute, false);
-                timePickerDialog.show();
+                edtMeetingTime.setText(DateTimeUtils.getTimeUsingData(hourOfDay,minute));
             }
-        });
+        }, hour, minute, false);
+        timePickerDialog.show();
+
+
     }
 
-
-    private String getTimeString(int hourOfDay, int min) {
-
-        String timeString = null;
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-        try {
-            Date date = format.parse("" + hourOfDay + ":" + min);
-            timeString = new SimpleDateFormat("hh:mm aa").format(date);
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-        }
-
-        return timeString;
-    }
 
     @Override
     public void onDestroy() {
