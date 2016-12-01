@@ -325,7 +325,7 @@ public class ActiveMeetingActivity extends BaseActivity
                             Log.i(TAG, "participant addded");
                             GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, participant.getName());
                             participantListFragment.addParticipant(participant);
-                            participantNameList.add(participant.getName());
+                            updateParticipantlist(participant);
                         } else {
                             if(mLatestMessages.get(participant.getName()) == null || !mLatestMessages.get(participant.getName()).equals(participant.getMeetingNotes())){
                                 mLatestMessages.put(participant.getName() , participant.getMeetingNotes());
@@ -360,6 +360,26 @@ public class ActiveMeetingActivity extends BaseActivity
 
     }
 
+    public void updateParticipantlist(Participant participant) {
+
+        boolean gotSameProfile = false;
+        if (participantNameList.size() > 0) {
+            for (int i = 0; i < participantNameList.size(); i++) {
+                if (participantNameList.get(i) != null && participant.getName() != null
+                        && participantNameList.get(i).equals(participant.getName())) {
+                    gotSameProfile = true;
+                    break;
+                }
+            }
+
+            if (!gotSameProfile) {
+                participantNameList.add(participant.getName());
+            }
+        }else{
+            participantNameList.add(participant.getName());
+        }
+
+    }
     private void addParticipantListFragment() {
 
         participantListFragment = ParticipantsFragment.newInstance();
@@ -692,7 +712,7 @@ public class ActiveMeetingActivity extends BaseActivity
 
         if(isMeetingActive)
             mNotificationHelper.showOnGoingNotification(getString(R.string.app_name),
-                    "Your meeting "+mCurrentMeeting.getMeetingName()+" is active. Tap to resume");
+                    getString(R.string.notification_line1) +" "+mCurrentMeeting.getMeetingName()+" "+getString(R.string.notification_line2));
     }
 
 
