@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.nearby.syncpad.R;
 import com.nearby.syncpad.data.ItemsContract;
+import com.nearby.syncpad.models.Meeting;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,7 +74,7 @@ public abstract class GeneralUtils {
     }
 
     public static Bitmap decodeSampledBitmapFromPath(String path, int reqWidth,
-                                              int reqHeight) {
+                                                     int reqHeight) {
         try {
             final BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
@@ -113,7 +114,7 @@ public abstract class GeneralUtils {
         }
     }
     public static int calculateInSampleSize(BitmapFactory.Options options,
-                                     int reqWidth, int reqHeight) {
+                                            int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
@@ -143,14 +144,6 @@ public abstract class GeneralUtils {
         toast.show();
     }
 
-    public static void showSnackbar(View view ,String message){
-
-        Snackbar snackbar = Snackbar
-                .make(view, message, Snackbar.LENGTH_LONG);
-
-        snackbar.show();
-    }
-
     public static boolean isEmpty(Object obj) {
         boolean result = true;
         if (obj != null) {
@@ -176,14 +169,14 @@ public abstract class GeneralUtils {
         JSONArray convertedArray = new JSONArray();
         try {
 
-        Iterator it = jsonObject.keys();
+            Iterator it = jsonObject.keys();
 
-        while (it.hasNext()) {
+            while (it.hasNext()) {
 
-            String key = (String) it.next();
-            convertedArray.put(jsonObject.get(key));
+                String key = (String) it.next();
+                convertedArray.put(jsonObject.get(key));
 
-        }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -202,53 +195,21 @@ public abstract class GeneralUtils {
             return false;
     }
 
-    public static ContentValues getContentValues(JSONObject jsonObject ) throws JSONException {
+    public static ContentValues getContentValues(Meeting meeting){
 
         ContentValues values = new ContentValues();
-        values.put(ItemsContract.Items.MEETING_ID, jsonObject.getString("meetingId" ));
-        values.put(ItemsContract.Items.MEETING_NAME, jsonObject.getString("meetingName" ));
-        values.put(ItemsContract.Items.MEETING_DATE, jsonObject.getString("meetingDate" ));
-        values.put(ItemsContract.Items.MEETING_TIME, jsonObject.getString("meetingTime" ));
-        values.put(ItemsContract.Items.MEETING_VENUE, jsonObject.getString("meetingVenue" ));
-        values.put(ItemsContract.Items.MEETING_AGENDA, jsonObject.getString("meetingAgenda" ));
-        values.put(ItemsContract.Items.MEETING_NOTES, jsonObject.getString("meetingNotes" ));
-        values.put(ItemsContract.Items.MEETING_PARTICIPANTS, jsonObject.getString("meetingParticipants" ));
-        values.put(ItemsContract.Items.MEETING_TIMESTAMP, jsonObject.getString("meetingTimeStamp" ));
+        values.put(ItemsContract.Items.MEETING_ID, meeting.getMeetingId());
+        values.put(ItemsContract.Items.MEETING_NAME, meeting.getMeetingName());
+        values.put(ItemsContract.Items.MEETING_DATE, meeting.getMeetingDate());
+        values.put(ItemsContract.Items.MEETING_TIME, meeting.getMeetingTime());
+        values.put(ItemsContract.Items.MEETING_VENUE, meeting.getMeetingVenue());
+        values.put(ItemsContract.Items.MEETING_AGENDA, meeting.getMeetingAgenda());
+        values.put(ItemsContract.Items.MEETING_NOTES, meeting.getMeetingNotes());
+        values.put(ItemsContract.Items.MEETING_PARTICIPANTS, meeting.getMeetingParticipants());
+        values.put(ItemsContract.Items.MEETING_TIMESTAMP, meeting.getMeetingTimeStamp());
 
         return values;
 
-    }
-
-    public static long getTimeInMillis(String date, String time) {
-
-        Date actualDateTime ;
-
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm aa");
-        try {
-            actualDateTime = format.parse(date + " " + time);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(actualDateTime);
-            return calendar.getTimeInMillis();
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return 1;
-        }
-    }
-
-    public static String getFormattedDate(String date) {
-
-        Date actualDateFormat ;
-        String dateString = null;
-
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-            actualDateFormat = format.parse(date);
-            dateString = new SimpleDateFormat("dd MMMM, yyyy").format(actualDateFormat);
-            return dateString;
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return date;
-        }
     }
 
     public static String getUid() {

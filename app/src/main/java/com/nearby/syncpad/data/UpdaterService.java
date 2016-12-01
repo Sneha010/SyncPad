@@ -10,7 +10,9 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.nearby.syncpad.R;
+import com.nearby.syncpad.models.Meeting;
 import com.nearby.syncpad.remote.RemoteEndpointUtil;
 import com.nearby.syncpad.util.GeneralUtils;
 
@@ -43,11 +45,11 @@ public class UpdaterService extends IntentService {
 
         if (!GeneralUtils.isOnline(this)) {
             Toast.makeText(this, getString(R.string.no_internet_connectivity), Toast.LENGTH_SHORT).show();
-            sendStickyBroadcast(
+            sendBroadcast(
                     new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, false));
             return;
         }
-        sendStickyBroadcast(
+        sendBroadcast(
                 new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, true));
 
 
@@ -64,7 +66,11 @@ public class UpdaterService extends IntentService {
 
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject object = array.getJSONObject(i);
-                    ContentValues values = GeneralUtils.getContentValues(object);
+
+                    Meeting meeting = new Gson().fromJson(object.toString(), Meeting.class);
+
+                    ContentValues values = GeneralUtils.getContentValues(meeting);
+
                     cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
 
                     getContentResolver().applyBatch(ItemsContract.CONTENT_AUTHORITY, cpo);
@@ -75,7 +81,7 @@ public class UpdaterService extends IntentService {
             Log.e(TAG, "Error updating content.", e);
         }
 
-        sendStickyBroadcast(
+        sendBroadcast(
                 new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, false));
     }
 }

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -24,7 +25,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,7 +33,7 @@ import com.instant.runtimepermission.PermissionRequest;
 import com.nearby.syncpad.models.Participant;
 import com.nearby.syncpad.storedata.ProfileStore;
 import com.nearby.syncpad.util.GeneralUtils;
-import com.nearby.syncpad.util.ImageUtility;
+import com.nearby.syncpad.util.ImageUtils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -99,7 +99,7 @@ public class MyProfileActivity extends BaseActivity {
     ProfileStore mProfileStore;
 
     @Inject
-    ImageUtility mImageUtility;
+    ImageUtils mImageUtility;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -221,6 +221,13 @@ public class MyProfileActivity extends BaseActivity {
 
             mProfileBitmap.recycle();
 
+        }else{
+
+            mProfileBitmap = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.default_user);
+            profileImageBytes = mImageUtility.getProfileImageBytes(mProfileBitmap );
+
+            mProfileBitmap.recycle();
         }
 
         Participant participant = new Participant();
@@ -292,9 +299,9 @@ public class MyProfileActivity extends BaseActivity {
 
                     break;
             }
-            if (!(isFinishing())) {
+            if (!(isFinishing()) && !GeneralUtils.isEmpty(alertMsg)) {
 
-                Toast.makeText(this, alertMsg, Toast.LENGTH_SHORT).show();
+               GeneralUtils.displayCustomToast(this, alertMsg);
             }
 
         } catch (OutOfMemoryError e) {
@@ -339,7 +346,8 @@ public class MyProfileActivity extends BaseActivity {
 
                 if (err) {
 
-                    Toast.makeText(MyProfileActivity.this, errMessage, Toast.LENGTH_SHORT).show();
+                    if(!GeneralUtils.isEmpty(MyProfileActivity.this))
+                        GeneralUtils.displayCustomToast(MyProfileActivity.this, errMessage);
 
                 } else {
 
@@ -385,9 +393,7 @@ public class MyProfileActivity extends BaseActivity {
 
     }
 
-    private void performAction(int via) {
-        switch (via) {
-            case 0: {
+    private void performAction(final int via) {
 
                 PermissionRequest.inside(this)
                         .withRequestId(getString(R.string.gallery))
@@ -397,7 +403,17 @@ public class MyProfileActivity extends BaseActivity {
                             @Override
                             public void grantedPermission(List<String> permissions) {
 
-                                startGallery();
+                                switch (via) {
+                                    case 0: {
+
+
+                                        startGallery();
+                                        break;
+                                    }
+
+                                    case 1:
+                                        startCamera();
+                                }
                             }
 
                             @Override
@@ -408,13 +424,6 @@ public class MyProfileActivity extends BaseActivity {
                             }
                         });
 
-
-                break;
-            }
-
-            case 1:
-                startCamera();
-        }
     }
 
     private void startGallery() {
@@ -450,8 +459,8 @@ public class MyProfileActivity extends BaseActivity {
             startActivityForResult(cameraintent, CAMERA_RESULT);
         } else {
 
-            Toast.makeText(this,
-                    this.getResources().getString(R.string.no_storage), Toast.LENGTH_SHORT).show();
+            GeneralUtils.displayCustomToast(this,
+                    this.getResources().getString(R.string.no_storage));
         }
     }
 

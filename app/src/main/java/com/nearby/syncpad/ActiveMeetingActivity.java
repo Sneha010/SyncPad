@@ -41,7 +41,7 @@ import com.nearby.syncpad.storedata.ProfileStore;
 import com.nearby.syncpad.util.Constants;
 import com.nearby.syncpad.util.DataItemDecoration;
 import com.nearby.syncpad.util.GeneralUtils;
-import com.nearby.syncpad.util.ImageUtility;
+import com.nearby.syncpad.util.ImageUtils;
 import com.nearby.syncpad.util.NotificationHelper;
 
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class ActiveMeetingActivity extends BaseActivity
     RelativeLayout rl_ParticipantsAttendanceSlidingView;
 
     @Inject
-    ImageUtility mImageUtility;
+    ImageUtils mImageUtility;
 
     @Inject
     PublishOptions mPublishOptions;

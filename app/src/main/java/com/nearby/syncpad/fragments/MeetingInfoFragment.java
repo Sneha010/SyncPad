@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.nearby.syncpad.R;
 import com.nearby.syncpad.models.Meeting;
 import com.nearby.syncpad.util.Constants;
+import com.nearby.syncpad.util.DateTimeUtils;
 import com.nearby.syncpad.util.GeneralUtils;
 
 import butterknife.BindView;
@@ -79,7 +80,7 @@ public class MeetingInfoFragment extends Fragment {
 
         if (mMeeting != null) {
             if(!GeneralUtils.isEmpty(mMeeting.getMeetingDate()))
-                tvDateValue.setText(GeneralUtils.getFormattedDate(mMeeting.getMeetingDate()));
+                tvDateValue.setText(DateTimeUtils.getFormattedDate(mMeeting.getMeetingDate()));
             else
                 tvDateValue.setText(getString(R.string.na));
 

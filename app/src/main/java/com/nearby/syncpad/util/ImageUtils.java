@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import static com.google.android.gms.internal.zzs.TAG;
 
 
-public class ImageUtility {
+public class ImageUtils {
 
     private static final int maxHeight = 700;
     private static final int maxWidth = 600;
@@ -33,7 +33,7 @@ public class ImageUtility {
     private Application mContext;
 
     @Inject
-    public ImageUtility(Application context) {
+    public ImageUtils(Application context) {
 
         this.mContext =  context;
     }

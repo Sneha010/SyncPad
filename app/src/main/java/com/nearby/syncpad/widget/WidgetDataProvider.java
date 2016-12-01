@@ -11,6 +11,7 @@ import android.widget.RemoteViewsService;
 import com.nearby.syncpad.R;
 import com.nearby.syncpad.data.ItemsContract;
 import com.nearby.syncpad.data.MeetingNotesLoader;
+import com.nearby.syncpad.util.DateTimeUtils;
 import com.nearby.syncpad.util.GeneralUtils;
 
 /**
@@ -56,7 +57,7 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
         if(mCursor != null && mCursor.moveToPosition(position) ){
             remoteViews = new RemoteViews(mContext.getPackageName() , R.layout.meetings_list_item_widget);
             remoteViews.setTextViewText(R.id.tvMeetingTitle , mCursor.getString(MeetingNotesLoader.Query.MEETING_NAME));
-            remoteViews.setTextViewText(R.id.tvDate , GeneralUtils.getFormattedDate(mCursor.getString(MeetingNotesLoader.Query.MEETING_DATE)));
+            remoteViews.setTextViewText(R.id.tvDate , DateTimeUtils.getFormattedDate(mCursor.getString(MeetingNotesLoader.Query.MEETING_DATE)));
             remoteViews.setTextViewText(R.id.tvTime ,mCursor.getString(MeetingNotesLoader.Query.MEETING_TIME));
 
             Intent intent = new Intent();

@@ -29,6 +29,7 @@ import com.nearby.syncpad.data.ItemsContract;
 import com.nearby.syncpad.models.Meeting;
 import com.nearby.syncpad.models.User;
 import com.nearby.syncpad.util.Constants;
+import com.nearby.syncpad.util.DateTimeUtils;
 import com.nearby.syncpad.util.GeneralUtils;
 
 import org.json.JSONException;
@@ -224,7 +225,7 @@ public class MeetingsSaveActivity extends BaseActivity {
         final String userId = GeneralUtils.getUid();
         String key = mDatabase.child(Constants.USER_MEETINGS + "/" + userId).push().getKey();
         mMeeting.setMeetingId(key);
-        mMeeting.setMeetingTimeStamp(GeneralUtils.getTimeInMillis(mMeeting.getMeetingDate(),
+        mMeeting.setMeetingTimeStamp(DateTimeUtils.getTimeInMillis(mMeeting.getMeetingDate(),
                 mMeeting.getMeetingTime()));
         Map<String, Object> postValues = mMeeting.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
@@ -236,12 +237,11 @@ public class MeetingsSaveActivity extends BaseActivity {
     }
 
     private void addMeetingToDb(Meeting meeting) {
-        try {
-
             ArrayList<ContentProviderOperation> cpo = new ArrayList<ContentProviderOperation>();
+
             Uri dirUri = ItemsContract.Items.buildDirUri();
 
-            ContentValues values = GeneralUtils.getContentValues(new JSONObject(new Gson().toJson(meeting)));
+            ContentValues values = GeneralUtils.getContentValues(meeting);
 
             cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
             try {
@@ -250,9 +250,7 @@ public class MeetingsSaveActivity extends BaseActivity {
                 e.printStackTrace();
             }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
     }
 
     private void updateWidgets() {

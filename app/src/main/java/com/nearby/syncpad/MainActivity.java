@@ -29,6 +29,7 @@ import com.nearby.syncpad.data.UpdaterService;
 import com.nearby.syncpad.fragments.AddMeetingDialogFragment;
 import com.nearby.syncpad.fragments.ScanMeetingsDialogFragment;
 import com.nearby.syncpad.util.Constants;
+import com.nearby.syncpad.util.DateTimeUtils;
 import com.nearby.syncpad.util.GeneralUtils;
 
 import butterknife.BindView;
@@ -282,7 +283,7 @@ public class MainActivity extends BaseActivity implements
         public void onBindViewHolder(ViewHolder holder, int position) {
             mCursor.moveToPosition(position);
             holder.tvMeetingTitle.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_NAME));
-            holder.tvDate.setText(GeneralUtils.getFormattedDate(mCursor.getString(MeetingNotesLoader.Query.MEETING_DATE)));
+            holder.tvDate.setText(DateTimeUtils.getFormattedDate(mCursor.getString(MeetingNotesLoader.Query.MEETING_DATE)));
             holder.tvTime.setText(mCursor.getString(MeetingNotesLoader.Query.MEETING_TIME));
         }
 

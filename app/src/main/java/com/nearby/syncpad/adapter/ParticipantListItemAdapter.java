@@ -1,6 +1,8 @@
 package com.nearby.syncpad.adapter;
 
 import android.app.Activity;
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +13,7 @@ import com.nearby.syncpad.R;
 import com.nearby.syncpad.SyncPadApplication;
 import com.nearby.syncpad.models.Participant;
 import com.nearby.syncpad.util.GeneralUtils;
-import com.nearby.syncpad.util.ImageUtility;
+import com.nearby.syncpad.util.ImageUtils;
 
 import java.util.ArrayList;
 
@@ -27,11 +29,14 @@ public class ParticipantListItemAdapter extends RecyclerView.Adapter<Participant
     private ArrayList<Participant> mParticipants;
 
     @Inject
-    ImageUtility mImageUtility;
+    ImageUtils mImageUtility;
+
+    private Context mContext;
 
 
     public ParticipantListItemAdapter(Activity context, ArrayList<Participant> participants) {
         this.mParticipants = participants;
+        this.mContext = context;
     }
 
     @Override
@@ -53,6 +58,8 @@ public class ParticipantListItemAdapter extends RecyclerView.Adapter<Participant
 
         if (mParticipants.get(position).getImageBytes() != null)
             holder.profileImage.setImageDrawable(GeneralUtils.getImageFromByteArray(mParticipants.get(position).getImageBytes()));
+        else
+            holder.profileImage.setImageDrawable(ContextCompat.getDrawable(mContext , R.drawable.default_user));
 
         String role = "", org = "";
         if (mParticipants.get(position).getRole() != null) {

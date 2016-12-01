@@ -176,21 +176,22 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
         mMessageListener = new MessageListener() {
             @Override
             public void onFound(final Message message) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+
 
                         Log.i(TAG, "setMessageListener called");
 
                         //get message from this, use it later to get profile data and other stuff
                         Participant participant = Participant.fromNearbyMessage(message);
-                        GeneralUtils.displayCustomToast(getActivity(), participant.getMeeting().getMeetingName());
 
-                        mAdapter.updateList(participant);
+                        if (participant.getMeeting() != null && participant.isIsHost()) {
 
-                        showList();
-                    }
-                });
+                            GeneralUtils.displayCustomToast(getActivity(), participant.getMeeting().getMeetingName());
+
+                            mAdapter.updateList(participant);
+
+                            showList();
+                        }
+
             }
 
             @Override
