@@ -11,10 +11,21 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    signingConfigs {
+        myConfig {
+            keyAlias 'syncpad_alias'
+            keyPassword 'Udacity@123'
+            storeFile file('../syncpad.jks')
+            storePassword 'Syncpad123$'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.myConfig
         }
     }
 }
