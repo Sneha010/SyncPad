@@ -12,6 +12,9 @@ Save paper, Go digital with SyncPad!
 ![Login Screen](/screenshots/LoginScreen.png?raw=true "Login Screen")
 ![Profile Screen](/screenshots/ProfileScreen.png?raw=true "Profile Screen")
 ![Landing Screen](/screenshots/LandingScreen.png?raw=true "Landing Screen")
+![Add Meeting Dialog](/screenshots/AddMeetingDialog.png?raw=true "Add Meeting Dialog")
+![Active Participants Screen](/screenshots/ActiveParticipantsScreen.png?raw=true "Active Participants Screen")
+![Meeting Save](/screenshots/MeetingSave.png?raw=true "Meeting Save")
 
 
 #### Tech
