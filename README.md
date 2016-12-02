@@ -1,6 +1,6 @@
 ## Capstone project : SyncPad
 
-It's a smart digital alternative that lets you write your notes and share across the all meeting participants.
+It's a smart digital alternative that lets you write your notes and share across all meeting participants.
 It uses Google's Nearby Message solution that combines meeting notes captured by all the members in the meeting.
 Easy to use and allows cloud syncing that lets you access your meeting notes anytime anywhere.
 With SyncPad, help your meetings to become more productive and effective.
