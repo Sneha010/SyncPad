@@ -30,13 +30,27 @@ This App uses following open source libraries to make it work and also makes lif
 * [InstantRuntimePermission] - My library to add run-time Marshmallow permissions with a single line of code.
 * Delightful Material Design Support, FAB, RecyclerView Cards and CoordinatorLayout.
 
+### Features
+
+1. Sign-up with SyncPad
+  User can login and write the notes, all meeting notes will be saved safely in the his SyncPad account.
+
+2. Write and Exchange
+  User can write his notes and also can exchange among the members participated in the meeting or
+  discussion having this app. Also, at the end of the meeting, SyncPad combines the notes from
+  all participants and forms the single note/MoM which will be available to all participants.
+
+3. View meeting info and notes anytime, anywhere
+  User can access his notes and meeting agenda information anytime offline.
+
+4. Seemless UI and Material Design overloaded
+  App has bunch of material design elements with attractive UI.
 
 
 
 ### Build and Run Requirements
 
-* Oracle JDK 1.7
-* Gradle 2.8
+* Oracle JDK 1.8
 * Support Android 4.1 and Above (API 16)
 
 
