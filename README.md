@@ -7,7 +7,7 @@ With SyncPad, help your meetings to become more productive and effective.
 
 Save paper, Go Digital with SyncPad!
 
-#### ScreenShots
+### ScreenShots
 
 ![Login Screen](/screenshots/LoginScreen.png?raw=true "Login Screen")
 ![Profile Screen](/screenshots/ProfileScreen.png?raw=true "Profile Screen")
