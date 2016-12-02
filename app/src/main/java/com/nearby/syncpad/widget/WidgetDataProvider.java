@@ -98,7 +98,7 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
                 MeetingNotesLoader.Query.PROJECTION,
                null,
                 null,
-                null);
+                ItemsContract.Items.DEFAULT_SORT);
         Binder.restoreCallingIdentity(identityToken);
     }
 }
