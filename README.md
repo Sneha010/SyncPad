@@ -5,7 +5,7 @@ It uses Google's Nearby Message solution that combines meeting notes captured by
 Easy to use and allows cloud syncing that lets you access your meeting notes anytime anywhere.
 With SyncPad, help your meetings to become more productive and effective.
 
-Save paper, Go digital with SyncPad!
+Save paper, Go Digital with SyncPad!
 
 #### ScreenShots
 
@@ -17,14 +17,14 @@ Save paper, Go digital with SyncPad!
 ![Meeting Save](/screenshots/MeetingSave.png?raw=true "Meeting Save")
 
 
-#### Tech
+### Tech
 
 This App uses following open source libraries to make it work and also makes life easy:
 
 * [Butterknife] - To bind the views with annotations. Forget findViewById lines with this!
 * [Calligraphy] - Helps to decorate the entire app with custom font in a just few lines of code.
 * [Clans FAB] - To display animated Floating Action Menu.
-* [Google GSON] - To convert Json to java POJO's or vice versa.
+* [Google GSON] - To convert JSON to java POJO's or vice versa.
 * [Dependency Injection with Dagger 2] - Manages dependencies and removes boilerplate.
 * [Firebase Auth and Database] - To authenticate user and to saves their meeting notes.
 * [InstantRuntimePermission] - My library to add run-time Marshmallow permissions with a single line of code.
