@@ -17,6 +17,7 @@ public class ProfileStore {
     private Application mContext;
     public static final String MY_PROFILE = "MY_PROFILE";
     public static final String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH";
+    public static final String IS_MEETINGDATA_AVAILABLE = "IS_MEETINGDATA_AVAILABLE";
 
     @Inject
     public ProfileStore(Application context) {
@@ -62,8 +63,19 @@ public class ProfileStore {
         getSharedPreference().edit().putBoolean(IS_FIRST_LAUNCH, data).commit();
     }
 
+
     public boolean isFirstLaunchDone(){
         return getSharedPreference().getBoolean(IS_FIRST_LAUNCH, false);
+    }
+
+    public void setMeetingDataAvailable(boolean data){
+
+        getSharedPreference().edit().putBoolean(IS_MEETINGDATA_AVAILABLE, data).commit();
+    }
+
+    public boolean isMeetingDataAvailable(){
+
+        return getSharedPreference().getBoolean(IS_MEETINGDATA_AVAILABLE, false);
     }
 
 

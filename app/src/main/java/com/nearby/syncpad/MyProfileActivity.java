@@ -152,6 +152,7 @@ public class MyProfileActivity extends BaseActivity {
                     // user auth state is changed - user is null
                     // launch login activity
                     mProfileStore.clearProfileData();
+                    mProfileStore.firstLaunchDone(false);
                     startActivity(new Intent(MyProfileActivity.this, LoginActivity.class));
                     finish();
                 }

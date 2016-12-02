@@ -2,6 +2,7 @@ package com.nearby.syncpad.components;
 
 import com.nearby.syncpad.ActiveMeetingActivity;
 import com.nearby.syncpad.LoginActivity;
+import com.nearby.syncpad.MainActivity;
 import com.nearby.syncpad.MeetingsSaveActivity;
 import com.nearby.syncpad.MyProfileActivity;
 import com.nearby.syncpad.adapter.ParticipantListItemAdapter;
@@ -33,4 +34,6 @@ public interface MyApplicationComponent {
     void inject(ScanMeetingsDialogFragment scanMeetingsDialogFragment);
 
     void inject(ParticipantListItemAdapter participantListItemAdapter);
+
+    void inject(MainActivity mainActivity);
 }

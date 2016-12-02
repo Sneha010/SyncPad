@@ -28,9 +28,12 @@ import com.nearby.syncpad.data.MeetingNotesLoader;
 import com.nearby.syncpad.data.UpdaterService;
 import com.nearby.syncpad.fragments.AddMeetingDialogFragment;
 import com.nearby.syncpad.fragments.ScanMeetingsDialogFragment;
+import com.nearby.syncpad.storedata.ProfileStore;
 import com.nearby.syncpad.util.Constants;
 import com.nearby.syncpad.util.DateTimeUtils;
 import com.nearby.syncpad.util.GeneralUtils;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,7 +58,8 @@ public class MainActivity extends BaseActivity implements
     @BindView(R.id.floatingActionMenu)
     FloatingActionMenu floatingActionMenu;
 
-    private boolean isDataAvailable;
+    @Inject
+    ProfileStore mProfileStore;
 
     private boolean mIsRefreshing = false;
 
@@ -65,6 +69,9 @@ public class MainActivity extends BaseActivity implements
         setContentView(R.layout.activity_main);
 
         mUnbinder = ButterKnife.bind(this);
+
+        ((SyncPadApplication) getApplication()).getMyApplicationComponent().inject(this);
+
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.app_name));
@@ -77,7 +84,7 @@ public class MainActivity extends BaseActivity implements
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(!isDataAvailable)
+                if(!mProfileStore.isMeetingDataAvailable())
                     refresh();
                 else
                     swipeRefreshLayout.setRefreshing(false);
@@ -101,7 +108,7 @@ public class MainActivity extends BaseActivity implements
         super.onStart();
         Log.d("@@@", "onStart: mainActivity");
 
-        if(!isDataAvailable){
+        if(!mProfileStore.isMeetingDataAvailable()){
             swipeRefreshLayout.setRefreshing(true);
             refresh();
         }
@@ -225,12 +232,12 @@ public class MainActivity extends BaseActivity implements
                     new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
             meetingRycyclerView.setLayoutManager(sglm);
             swipeRefreshLayout.setRefreshing(mIsRefreshing);
-            isDataAvailable = true;
+            mProfileStore.setMeetingDataAvailable(true);
 
         }
         else{
             Log.d("@@@", "onLoadFinished: cursor null");
-            isDataAvailable = false;
+           mProfileStore.setMeetingDataAvailable(false);
             displayNoNnotes();
         }
 
@@ -239,7 +246,7 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         if (meetingRycyclerView != null){
-            isDataAvailable = false;
+            mProfileStore.setMeetingDataAvailable(false);
             meetingRycyclerView.setAdapter(null);
         }
 
