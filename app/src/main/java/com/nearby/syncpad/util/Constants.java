@@ -7,6 +7,7 @@ public class Constants {
     public static final int REQUEST_RESOLVE_ERROR = 1001;
 
 
+    public static final String MEETINGS_BASE_URL = "https://syncpad-149206.firebaseio.com/user-meetings/";
     public static final String MEETING = "meeting";
     public static final String IS_HOST = "is_host";
 
