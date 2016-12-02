@@ -150,8 +150,8 @@
     <string name="loading_the_content">Loading the content</string>
     <string name="my_profile_photo">My profile photo</string>
     <string name="close_button">Close button</string>
-
-
+    <string name="notification_line1">"Your meeting "</string>
+    <string name="notification_line2">" is active. Tap to resume"</string>
 
 
 </resources>

@@ -1,14 +1,13 @@
 package com.nearby.syncpad;
 
-import android.*;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -19,18 +18,13 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,12 +33,9 @@ import com.instant.runtimepermission.PermissionRequest;
 import com.nearby.syncpad.models.Participant;
 import com.nearby.syncpad.storedata.ProfileStore;
 import com.nearby.syncpad.util.GeneralUtils;
-import com.nearby.syncpad.util.ImageUtility;
-import com.rey.material.widget.Button;
+import com.nearby.syncpad.util.ImageUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -53,11 +44,11 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
-public class MyProfileActivity extends AppCompatActivity {
+public class MyProfileActivity extends BaseActivity {
 
 
     @BindView(R.id.ivPhoto)
@@ -99,12 +90,6 @@ public class MyProfileActivity extends AppCompatActivity {
     @BindView(R.id.myEmailTIL)
     TextInputLayout myEmailTIL;
 
-    @BindView(R.id.buttonSave)
-    Button buttonSave;
-
-    @BindView(R.id.tvLogout)
-    TextView tvLogout;
-
     private Bitmap mProfileBitmap;
 
     @Inject
@@ -114,23 +99,21 @@ public class MyProfileActivity extends AppCompatActivity {
     ProfileStore mProfileStore;
 
     @Inject
-    ImageUtility mImageUtility;
+    ImageUtils mImageUtility;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
-
-    Unbinder binder;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myprofile_layout);
-        binder =  ButterKnife.bind(this);
+        mUnbinder =  ButterKnife.bind(this);
 
         ((SyncPadApplication) getApplication()).getMyApplicationComponent().inject(this);
 
         setUpFirebaseLogout();
-        init();
+        setToolbar();
         initializeFieldsWithSavedData();
     }
 
@@ -140,7 +123,7 @@ public class MyProfileActivity extends AppCompatActivity {
     }
 
 
-    private void init() {
+    private void setToolbar() {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.my_profile);
@@ -150,24 +133,11 @@ public class MyProfileActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                launchMainActivity();
             }
         });
 
 
-        buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveProfileData();
-            }
-        });
-
-        tvLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut();
-            }
-        });
     }
 
     private void setUpFirebaseLogout() {
@@ -213,8 +183,14 @@ public class MyProfileActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R.id.tvLogout)
+    public void logOut(View view){
+        mAuth.signOut();
+    }
+
     //Click on save button on profile
-    public void saveProfileData() {
+    @OnClick(R.id.buttonSave)
+    public void saveProfileData(View view) {
 
         if (TextUtils.isEmpty(myName.getText().toString())) {
             myNameTIL.setErrorEnabled(true);
@@ -245,6 +221,13 @@ public class MyProfileActivity extends AppCompatActivity {
 
             mProfileBitmap.recycle();
 
+        }else{
+
+            mProfileBitmap = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.default_user);
+            profileImageBytes = mImageUtility.getProfileImageBytes(mProfileBitmap );
+
+            mProfileBitmap.recycle();
         }
 
         Participant participant = new Participant();
@@ -256,8 +239,17 @@ public class MyProfileActivity extends AppCompatActivity {
 
         mProfileStore.saveProfile(participant);
 
-        finish();
+        launchMainActivity();
 
+    }
+
+    private void launchMainActivity(){
+
+        if(!mProfileStore.isFirstLaunchDone()){
+            mProfileStore.firstLaunchDone(true);
+            startActivity(new Intent(MyProfileActivity.this, MainActivity.class));
+        }
+        finish();
     }
 
     final static int CAMERA_RESULT = 0;
@@ -307,9 +299,9 @@ public class MyProfileActivity extends AppCompatActivity {
 
                     break;
             }
-            if (!(isFinishing())) {
+            if (!(isFinishing()) && !GeneralUtils.isEmpty(alertMsg)) {
 
-                Toast.makeText(this, alertMsg, Toast.LENGTH_SHORT).show();
+               GeneralUtils.displayCustomToast(this, alertMsg);
             }
 
         } catch (OutOfMemoryError e) {
@@ -354,7 +346,8 @@ public class MyProfileActivity extends AppCompatActivity {
 
                 if (err) {
 
-                    Toast.makeText(MyProfileActivity.this, errMessage, Toast.LENGTH_SHORT).show();
+                    if(!GeneralUtils.isEmpty(MyProfileActivity.this))
+                        GeneralUtils.displayCustomToast(MyProfileActivity.this, errMessage);
 
                 } else {
 
@@ -400,9 +393,7 @@ public class MyProfileActivity extends AppCompatActivity {
 
     }
 
-    private void performAction(int via) {
-        switch (via) {
-            case 0: {
+    private void performAction(final int via) {
 
                 PermissionRequest.inside(this)
                         .withRequestId(getString(R.string.gallery))
@@ -412,7 +403,17 @@ public class MyProfileActivity extends AppCompatActivity {
                             @Override
                             public void grantedPermission(List<String> permissions) {
 
-                                startGallery();
+                                switch (via) {
+                                    case 0: {
+
+
+                                        startGallery();
+                                        break;
+                                    }
+
+                                    case 1:
+                                        startCamera();
+                                }
                             }
 
                             @Override
@@ -423,13 +424,6 @@ public class MyProfileActivity extends AppCompatActivity {
                             }
                         });
 
-
-                break;
-            }
-
-            case 1:
-                startCamera();
-        }
     }
 
     private void startGallery() {
@@ -465,8 +459,8 @@ public class MyProfileActivity extends AppCompatActivity {
             startActivityForResult(cameraintent, CAMERA_RESULT);
         } else {
 
-            Toast.makeText(this,
-                    this.getResources().getString(R.string.no_storage), Toast.LENGTH_SHORT).show();
+            GeneralUtils.displayCustomToast(this,
+                    this.getResources().getString(R.string.no_storage));
         }
     }
 
@@ -484,10 +478,4 @@ public class MyProfileActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        binder.unbind();
-    }
 }

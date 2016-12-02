@@ -36,6 +36,7 @@
         android:layout_width="match_parent"
         android:visibility="visible"
         android:contentDescription="@string/meeting_list_view"
+        tools:listitem = "@layout/meetings_list_item"
         android:padding="5dp"
         />
     </android.support.v4.widget.SwipeRefreshLayout>

@@ -6,17 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nearby.syncpad.R;
 import com.nearby.syncpad.models.Participant;
 import com.nearby.syncpad.util.Constants;
-import com.nearby.syncpad.util.ImageUtility;
 
 import java.util.ArrayList;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -81,17 +77,19 @@ public class ChatListItemAdapter extends RecyclerView.Adapter<ChatListItemAdapte
     public void updateList(Participant participant) {
 
         boolean gotSameProfile = false;
+
         if (mParticipants.size() > 0) {
             for (int i = 0; i < mParticipants.size(); i++) {
                 if (mParticipants.get(i).getEmailAddress() != null && participant.getEmailAddress() != null
                         && mParticipants.get(i).getEmailAddress().equals(participant.getEmailAddress())) {
                     gotSameProfile = true;
+                    break;
                 }
             }
         }
         if (!gotSameProfile) {
             mParticipants.add(participant);
-            notifyDataSetChanged();
+           notifyItemChanged(mParticipants.size()-1);
         }
     }
 

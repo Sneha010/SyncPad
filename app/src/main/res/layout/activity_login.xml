@@ -8,35 +8,17 @@
     tools:context="com.nearby.syncpad.LoginActivity">
 
 
-    <LinearLayout
-        android:id="@+id/rlHeader"
+
+    <ImageView
+        android:id="@+id/ivMeetingImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="90dp">
-
-        <ImageView
-            android:id="@+id/ivImageIcon"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:contentDescription="@string/app_icon_on_login_screen"
-            android:src="@drawable/app_icon"/>
-
-        <TextView
-            android:id="@+id/tvAppName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textSize="40sp"
-            android:layout_marginTop="10dp"
-            android:contentDescription="@string/app_name_on_login_screen"
-            android:textColor="@color/white"/>
-
-    </LinearLayout>
+        android:layout_alignParentTop="true"
+        android:src="@drawable/meeting_landing"
+        android:layout_above="@+id/rlLoginContent"/>
 
     <RelativeLayout
+        android:id="@id/rlLoginContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

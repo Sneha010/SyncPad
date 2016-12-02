@@ -89,6 +89,7 @@
         android:textColor="@color/primaryTextColor"
         android:textColorHint="@color/light_gray"
         android:contentDescription="@string/input_field_for_adding_date"
+        android:enabled="false"
         android:layout_weight="1"/>
     <TextView
         android:id="@+id/select_date_button"
@@ -134,6 +135,7 @@
         android:textSize="16sp"
         android:layout_below="@id/add_title_time"
         android:textColor="@color/primaryTextColor"
+        android:enabled="false"
         android:contentDescription="@string/input_field_for_adding_time"
         android:layout_weight="1"
         android:textColorHint="@color/light_gray" />

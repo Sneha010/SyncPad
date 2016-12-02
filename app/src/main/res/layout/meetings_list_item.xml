@@ -6,6 +6,7 @@
     android:clickable="true"
     android:focusable="true"
     card_view:cardCornerRadius="2dp"
+    android:background="?android:attr/selectableItemBackground"
     android:foreground="?selectableItemBackground">
 
     <RelativeLayout

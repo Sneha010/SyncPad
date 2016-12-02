@@ -29,6 +29,7 @@
                 android:scaleType="centerCrop"
                 android:fitsSystemWindows="true"
                 app:layout_collapseMode="parallax"
+                android:src="@drawable/default_user"
                 android:contentDescription="@string/my_profile_photo"
                 />
 

@@ -1,15 +1,14 @@
 package com.nearby.syncpad;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,9 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -44,17 +41,20 @@ import com.nearby.syncpad.storedata.ProfileStore;
 import com.nearby.syncpad.util.Constants;
 import com.nearby.syncpad.util.DataItemDecoration;
 import com.nearby.syncpad.util.GeneralUtils;
-import com.nearby.syncpad.util.ImageUtility;
+import com.nearby.syncpad.util.ImageUtils;
+import com.nearby.syncpad.util.NotificationHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class ActiveMeetingActivity extends AppCompatActivity
+public class ActiveMeetingActivity extends BaseActivity
         implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -76,14 +76,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
     @BindView(R.id.rl_ParticipantsAttendance)
     RelativeLayout rl_ParticipantsAttendanceSlidingView;
 
-    @BindView(R.id.send_button)
-    ImageView btnSend;
-
-    @BindView(R.id.ivImgCross)
-    ImageView ivImgCross;
-
     @Inject
-    ImageUtility mImageUtility;
+    ImageUtils mImageUtility;
 
     @Inject
     PublishOptions mPublishOptions;
@@ -94,6 +88,12 @@ public class ActiveMeetingActivity extends AppCompatActivity
     @Inject
     ProfileStore mProfileStore;
 
+    @Inject
+    PowerManager.WakeLock mWakeLock;
+
+    @Inject
+    NotificationHelper mNotificationHelper;
+
     private ArrayList<Participant> chatParticipantsList;
     private ChatListItemAdapter adapter;
     private GoogleApiClient mGoogleApiClient;
@@ -101,11 +101,13 @@ public class ActiveMeetingActivity extends AppCompatActivity
     private boolean mIsHost;
     private Meeting mCurrentMeeting;
     private boolean mResolvingNearbyPermissionError = false;
-    Animation animationIn;
+    private Animation animationIn;
     private ParticipantsFragment participantListFragment;
     private ArrayList<String> noteList = new ArrayList<>();
     private ArrayList<String> participantNameList = new ArrayList<>();
     private MessageListener mMessageListener;
+    private HashMap<String,String> mLatestMessages = new HashMap<>();
+    private boolean isMeetingActive;
 
 
     @Override
@@ -113,7 +115,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.broadcast_activity_layout);
-        ButterKnife.bind(this);
+        mUnbinder = ButterKnife.bind(this);
 
         ((SyncPadApplication) getApplication()).getMyApplicationComponent().inject(this);
 
@@ -122,7 +124,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
             mIsHost = getIntent().getBooleanExtra(Constants.IS_HOST, false);
         }
 
-        init();
+        setToolbar();
         setUpUI();
     }
 
@@ -131,27 +133,12 @@ public class ActiveMeetingActivity extends AppCompatActivity
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    private void init() {
 
+    private void setToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(mCurrentMeeting.getMeetingName());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                publishNotes();
-            }
-        });
-
-        ivImgCross.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                closeParticipantsSlidingLayout();
-            }
-        });
-
     }
 
     public void setUpUI() {
@@ -160,17 +147,18 @@ public class ActiveMeetingActivity extends AppCompatActivity
         setMessageListener();
         addParticipantListFragment();
 
-        startMeetingText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (((TextView) view).getText().equals(getString(R.string.stop_meeting))) {
-                    stopMeeting();
-                } else if (((TextView) view).getText().equals(getString(R.string.start_meeting))) {
-                    startMeeting();
-                }
-            }
-        });
 
+    }
+
+    @OnClick(R.id.startMeetingText)
+    public void startOrStopMeeting(View view){
+        if (((TextView) view).getText().equals(getString(R.string.stop_meeting))) {
+            mWakeLock.release();
+            stopMeeting();
+        } else if (((TextView) view).getText().equals(getString(R.string.start_meeting))) {
+            mWakeLock.acquire();
+            startMeeting();
+        }
     }
 
 
@@ -213,8 +201,8 @@ public class ActiveMeetingActivity extends AppCompatActivity
                 .addConnectionCallbacks(this)
                 .enableAutoManage(this, this)
                 .build();
-        //mGoogleApiClient.connect();
 
+        //Auto Manage client will automatically connect on onStart()
     }
 
     //All related to NearBy Message API
@@ -247,7 +235,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
     private void startMeeting() {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-
+            isMeetingActive = true;
             GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, getString(R.string.meeting_started));
             startMeetingText.setText(getString(R.string.stop_meeting));
             startMeetingText.setCompoundDrawablesWithIntrinsicBounds(
@@ -268,6 +256,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
                     .setNegativeButton(getString(R.string.no), dialogClickListener).show();
         }
         else{
+            isMeetingActive = false;
             finish();
         }
 
@@ -278,6 +267,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
+                    isMeetingActive = false;
                     GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, getString(R.string.meeting_stopped));
                     startMeetingText.setText(getString(R.string.start_meeting));
                     startMeetingText.setCompoundDrawablesWithIntrinsicBounds(
@@ -288,6 +278,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
                     break;
 
                 case DialogInterface.BUTTON_NEGATIVE:
+
                     dialog.dismiss();
                     break;
             }
@@ -321,9 +312,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
         mMessageListener = new MessageListener() {
             @Override
             public void onFound(final Message message) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+
 
                         Log.i(TAG, "setMessageListener called");
 
@@ -336,17 +325,20 @@ public class ActiveMeetingActivity extends AppCompatActivity
                             Log.i(TAG, "participant addded");
                             GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, participant.getName());
                             participantListFragment.addParticipant(participant);
-                            participantNameList.add(participant.getName());
+                            updateParticipantlist(participant);
                         } else {
-                            noteList.add(participant.getMeetingNotes());
-                            adapter.updateList(participant);
+                            if(mLatestMessages.get(participant.getName()) == null || !mLatestMessages.get(participant.getName()).equals(participant.getMeetingNotes())){
+                                mLatestMessages.put(participant.getName() , participant.getMeetingNotes());
+                                noteList.add(participant.getMeetingNotes());
+                                mRecyclerView.scrollToPosition(noteList.size()-1);
+                                adapter.updateList(participant);
+                            }else{
+                                Log.d(TAG, "Repeated message ");
+                            }
                         }
 
                         publish_MyProfile();
 
-
-                    }
-                });
             }
 
             @Override
@@ -368,6 +360,26 @@ public class ActiveMeetingActivity extends AppCompatActivity
 
     }
 
+    public void updateParticipantlist(Participant participant) {
+
+        boolean gotSameProfile = false;
+        if (participantNameList.size() > 0) {
+            for (int i = 0; i < participantNameList.size(); i++) {
+                if (participantNameList.get(i) != null && participant.getName() != null
+                        && participantNameList.get(i).equals(participant.getName())) {
+                    gotSameProfile = true;
+                    break;
+                }
+            }
+
+            if (!gotSameProfile) {
+                participantNameList.add(participant.getName());
+            }
+        }else{
+            participantNameList.add(participant.getName());
+        }
+
+    }
     private void addParticipantListFragment() {
 
         participantListFragment = ParticipantsFragment.newInstance();
@@ -386,11 +398,12 @@ public class ActiveMeetingActivity extends AppCompatActivity
         chatParticipantsList = new ArrayList<>();
         adapter = new ChatListItemAdapter(ActiveMeetingActivity.this, chatParticipantsList);
         mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+       mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     }
 
-    private void publishNotes() {
+    @OnClick(R.id.send_button)
+    public void publishNotes(View view) {
 
         Log.i(TAG, "publishNotes called");
 
@@ -404,7 +417,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
             participant.setToWhom(Constants.TO_ME);
 
             myNotes = participant.newNearbyMessage();
-
+            mRecyclerView.scrollToPosition(noteList.size()-1);
             adapter.updateList(participant);
 
             edtMeetingNotes.setText("");
@@ -425,7 +438,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-
+        mNotificationHelper.cancelMeetingOngingNotification();
     }
 
 
@@ -696,6 +709,10 @@ public class ActiveMeetingActivity extends AppCompatActivity
     protected void onStop() {
 
         super.onStop();
+
+        if(isMeetingActive)
+            mNotificationHelper.showOnGoingNotification(getString(R.string.app_name),
+                    getString(R.string.notification_line1) +" "+mCurrentMeeting.getMeetingName()+" "+getString(R.string.notification_line2));
     }
 
 
@@ -710,6 +727,12 @@ public class ActiveMeetingActivity extends AppCompatActivity
             unpublishMyData();
 
         }
+        try {
+            if (mWakeLock!=null && mWakeLock.isHeld())
+                mWakeLock.release();
+        } catch (Throwable th) {
+            th.printStackTrace();
+        }
     }
 
 
@@ -722,6 +745,7 @@ public class ActiveMeetingActivity extends AppCompatActivity
         rl_ParticipantsAttendanceSlidingView.startAnimation(animationIn);
     }
 
+    @OnClick(R.id.ivImgCross)
     public void closeParticipantsSlidingLayout() {
         rl_ParticipantsAttendanceSlidingView.setVisibility(rl_ParticipantsAttendanceSlidingView.GONE);
         animationIn = AnimationUtils.loadAnimation(getApplicationContext(),
@@ -734,18 +758,25 @@ public class ActiveMeetingActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.confirm_end_meeting)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                finish();
-            }
+        if(isMeetingActive){
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(getString(R.string.confirm_end_meeting)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    isMeetingActive = false;
+                    finish();
+                }
             })
-                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                }).show();
+                    .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).show();
+        }else{
+            finish();
+        }
+
     }
 }

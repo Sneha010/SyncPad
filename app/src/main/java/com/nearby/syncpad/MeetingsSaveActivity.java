@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -30,6 +29,7 @@ import com.nearby.syncpad.data.ItemsContract;
 import com.nearby.syncpad.models.Meeting;
 import com.nearby.syncpad.models.User;
 import com.nearby.syncpad.util.Constants;
+import com.nearby.syncpad.util.DateTimeUtils;
 import com.nearby.syncpad.util.GeneralUtils;
 
 import org.json.JSONException;
@@ -43,14 +43,13 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.nearby.syncpad.R.id.llContainer;
 import static com.nearby.syncpad.R.id.tvAgendaValue;
 import static com.nearby.syncpad.R.id.tvAttendeesValue;
 
-public class MeetingsSaveActivity extends AppCompatActivity {
+public class MeetingsSaveActivity extends BaseActivity {
 
     private static final String TAG = "MeetingsSaveActivity";
     public static final String ACTION_DATA_UPDATED =
@@ -72,14 +71,11 @@ public class MeetingsSaveActivity extends AppCompatActivity {
     @Inject
     DatabaseReference mDatabase;
 
-    private Unbinder binder;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meetings_save);
-        binder = ButterKnife.bind(this);
+        mUnbinder = ButterKnife.bind(this);
 
         ((SyncPadApplication) getApplication()).getMyApplicationComponent().inject(this);
 
@@ -87,7 +83,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
             mMeeting = getIntent().getExtras().getParcelable(Constants.MEETING);
         }
 
-        init();
+        setToolbar();
         displayMeetingDetails();
     }
 
@@ -97,7 +93,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
     }
 
 
-    public void init() {
+    public void setToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
@@ -156,6 +152,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
                 params.setMargins(0 , 8 ,0,0);
                 textView.setPadding(17,17,17,17);
                 textView.setTextSize(16);
+                textView.setLineSpacing(0,1.2f);
                 textView.setTextColor(ContextCompat.getColor(this , R.color.primaryTextColor));
                 textView.setLayoutParams(params);
                 mLlContainer.addView(textView, params);
@@ -191,11 +188,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
     }
 
     private void saveAndSyncMeeting() {
-/*
 
-        syncWithFirebaseDb();
-        finish();
-*/
 
         mDatabase.child(Constants.USERS).child(GeneralUtils.getUid()).addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -232,7 +225,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         final String userId = GeneralUtils.getUid();
         String key = mDatabase.child(Constants.USER_MEETINGS + "/" + userId).push().getKey();
         mMeeting.setMeetingId(key);
-        mMeeting.setMeetingTimeStamp(GeneralUtils.getTimeInMillis(mMeeting.getMeetingDate(),
+        mMeeting.setMeetingTimeStamp(DateTimeUtils.getTimeInMillis(mMeeting.getMeetingDate(),
                 mMeeting.getMeetingTime()));
         Map<String, Object> postValues = mMeeting.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
@@ -244,12 +237,11 @@ public class MeetingsSaveActivity extends AppCompatActivity {
     }
 
     private void addMeetingToDb(Meeting meeting) {
-        try {
-
             ArrayList<ContentProviderOperation> cpo = new ArrayList<ContentProviderOperation>();
+
             Uri dirUri = ItemsContract.Items.buildDirUri();
 
-            ContentValues values = GeneralUtils.getContentValues(new JSONObject(new Gson().toJson(meeting)));
+            ContentValues values = GeneralUtils.getContentValues(meeting);
 
             cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
             try {
@@ -258,9 +250,7 @@ public class MeetingsSaveActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
     }
 
     private void updateWidgets() {
@@ -297,10 +287,4 @@ public class MeetingsSaveActivity extends AppCompatActivity {
         buildAlertDialog();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        binder.unbind();
-    }
 }

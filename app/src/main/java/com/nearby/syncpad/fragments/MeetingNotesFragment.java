@@ -2,6 +2,7 @@ package com.nearby.syncpad.fragments;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -41,6 +42,16 @@ public class MeetingNotesFragment extends Fragment {
         return fragment;
     }
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            mNotes = getArguments().getString(Constants.MEETING_NOTES);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,7 +59,12 @@ public class MeetingNotesFragment extends Fragment {
 
         binder = ButterKnife.bind(this, view);
 
-        mNotes = getArguments().getString(Constants.MEETING_NOTES);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         if (mNotes != null) {
             tvError.setVisibility(View.GONE);
@@ -59,8 +75,6 @@ public class MeetingNotesFragment extends Fragment {
             llContainer.setVisibility(View.GONE);
         }
 
-
-        return view;
     }
 
     private void showMeetingNotes() {
