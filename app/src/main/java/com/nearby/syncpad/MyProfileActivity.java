@@ -141,8 +141,6 @@ public class MyProfileActivity extends BaseActivity {
     }
 
     private void setUpFirebaseLogout() {
-        //get firebase auth instance
-        //mAuth = FirebaseAuth.getInstance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
