@@ -155,6 +155,7 @@
     <string name="profile">Profile</string>
     <string name="share">Share</string>
     <string name="camera">Camera</string>
+    <string name="title">Title:</string>
 
 
 </resources>

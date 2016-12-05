@@ -46,7 +46,7 @@
                     android:textSize="20sp"
                     android:layout_below="@id/sep_line"
                     android:contentDescription="@string/add_meeting_name_label"
-                    android:text="Title:" />
+                    android:text="@string/title" />
 
 
                 <EditText
@@ -167,7 +167,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_below="@id/ll_time"
                     android:contentDescription="@string/add_meeting_venue_label"
-                    android:text="Venue:" />
+                    android:text="@string/venue" />
 
 
                 <EditText

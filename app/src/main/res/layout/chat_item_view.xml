@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:textSize="17sp"
             android:textStyle="bold"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             fontPath="fonts/gothamblack.ttf"
             android:textColor="@color/colorPrimary" />
 
@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:gravity="right"
+            android:gravity="end"
             android:textColor="@color/secondaryTextColor"
             android:lineSpacingMultiplier="1.2" />
 
