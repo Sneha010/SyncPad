@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/ripplePrimaryColor">
+<selector xmlns:android="http://schemas.android.com/apk/res/android" android:color="@color/ripplePrimaryColor">
     <item>
         <shape xmlns:android="http://schemas.android.com/apk/res/android">
             <corners android:radius="2dp" />

@@ -113,6 +113,7 @@ public abstract class GeneralUtils {
             return null;
         }
     }
+
     public static int calculateInSampleSize(BitmapFactory.Options options,
                                             int reqWidth, int reqHeight) {
         // Raw height and width of image
@@ -137,10 +138,10 @@ public abstract class GeneralUtils {
 
         TextView toastMessage = (TextView) toastView.findViewById(android.R.id.message);
         toastMessage.setTextSize(17);
-        toastMessage.setPadding(40,10,40,10);
-        toastMessage.setTextColor(ContextCompat.getColor(context , R.color.white));
+        toastMessage.setPadding(40, 10, 40, 10);
+        toastMessage.setTextColor(ContextCompat.getColor(context, R.color.white));
         toastMessage.setGravity(Gravity.CENTER);
-        toastView.setBackground(ContextCompat.getDrawable(context , R.drawable.toast_bg));
+        toastView.setBackground(ContextCompat.getDrawable(context, R.drawable.toast_bg));
         toast.show();
     }
 
@@ -165,7 +166,7 @@ public abstract class GeneralUtils {
 
     }
 
-    public static JSONArray convertToArray(JSONObject jsonObject){
+    public static JSONArray convertToArray(JSONObject jsonObject) {
         JSONArray convertedArray = new JSONArray();
         try {
 
@@ -195,7 +196,7 @@ public abstract class GeneralUtils {
             return false;
     }
 
-    public static ContentValues getContentValues(Meeting meeting){
+    public static ContentValues getContentValues(Meeting meeting) {
 
         ContentValues values = new ContentValues();
         values.put(ItemsContract.Items.MEETING_ID, meeting.getMeetingId());

@@ -52,6 +52,7 @@ public class Participant {
     public void setToWhom(String toWhom) {
         this.toWhom = toWhom;
     }
+
     public String getName() {
         return mName;
     }

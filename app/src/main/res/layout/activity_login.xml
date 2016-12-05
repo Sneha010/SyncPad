@@ -8,14 +8,13 @@
     tools:context="com.nearby.syncpad.LoginActivity">
 
 
-
     <ImageView
         android:id="@+id/ivMeetingImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:src="@drawable/meeting_landing"
-        android:layout_above="@+id/rlLoginContent"/>
+        android:layout_above="@+id/rlLoginContent" />
 
     <RelativeLayout
         android:id="@id/rlLoginContent"
@@ -86,6 +85,7 @@
                 android:text="@string/sign_up" />
 
         </LinearLayout>
+
         <TextView
             android:id="@+id/forgot_password"
             android:layout_width="wrap_content"

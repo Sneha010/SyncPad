@@ -19,7 +19,7 @@ import com.nearby.syncpad.util.GeneralUtils;
  * on 11/21/2016.
  */
 
-public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory{
+public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory {
 
     private Context mContext;
     private Cursor mCursor;
@@ -45,26 +45,28 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
 
     @Override
     public int getCount() {
-        if(mCursor!=null){
+        if (mCursor != null) {
             return mCursor.getCount();
         }
         return 0;
     }
+
     RemoteViews remoteViews;
+
     @Override
     public RemoteViews getViewAt(int position) {
 
-        if(mCursor != null && mCursor.moveToPosition(position) ){
-            remoteViews = new RemoteViews(mContext.getPackageName() , R.layout.meetings_list_item_widget);
-            remoteViews.setTextViewText(R.id.tvMeetingTitle , mCursor.getString(MeetingNotesLoader.Query.MEETING_NAME));
-            remoteViews.setTextViewText(R.id.tvDate , DateTimeUtils.getFormattedDate(mCursor.getString(MeetingNotesLoader.Query.MEETING_DATE)));
-            remoteViews.setTextViewText(R.id.tvTime ,mCursor.getString(MeetingNotesLoader.Query.MEETING_TIME));
+        if (mCursor != null && mCursor.moveToPosition(position)) {
+            remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.meetings_list_item_widget);
+            remoteViews.setTextViewText(R.id.tvMeetingTitle, mCursor.getString(MeetingNotesLoader.Query.MEETING_NAME));
+            remoteViews.setTextViewText(R.id.tvDate, DateTimeUtils.getFormattedDate(mCursor.getString(MeetingNotesLoader.Query.MEETING_DATE)));
+            remoteViews.setTextViewText(R.id.tvTime, mCursor.getString(MeetingNotesLoader.Query.MEETING_TIME));
 
             Intent intent = new Intent();
-            intent.putExtra("item_id" , mCursor.getString(MeetingNotesLoader.Query.MEETING_ID));
-            remoteViews.setOnClickFillInIntent(R.id.rlMainContentView , intent);
+            intent.putExtra("item_id", mCursor.getString(MeetingNotesLoader.Query.MEETING_ID));
+            remoteViews.setOnClickFillInIntent(R.id.rlMainContentView, intent);
             return remoteViews;
-        }else{
+        } else {
             Log.d("@@@", "getViewAt: null");
             return null;
         }
@@ -91,12 +93,12 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
         return true;
     }
 
-    private void fetchData(){
+    private void fetchData() {
         final long identityToken = Binder.clearCallingIdentity();
         mCursor = mContext.getContentResolver().query(
                 ItemsContract.Items.buildDirUri(),
                 MeetingNotesLoader.Query.PROJECTION,
-               null,
+                null,
                 null,
                 ItemsContract.Items.DEFAULT_SORT);
         Binder.restoreCallingIdentity(identityToken);

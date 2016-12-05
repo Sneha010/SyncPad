@@ -35,12 +35,12 @@ public class ImageUtils {
     @Inject
     public ImageUtils(Application context) {
 
-        this.mContext =  context;
+        this.mContext = context;
     }
 
     public String getProfileImageBytes(Bitmap photo) {
 
-        int finalWidth,finalHeight;
+        int finalWidth, finalHeight;
 
         if (maxHeight > 0 && maxWidth > 0) {
             int width = photo.getWidth();
@@ -82,6 +82,7 @@ public class ImageUtils {
         return bmp;
 
     }
+
     public Bitmap grabImage(String path) throws FileNotFoundException,
             IOException {
         Bitmap bitmap = null;
@@ -133,7 +134,6 @@ public class ImageUtils {
 
         return MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
     }
-
 
 
 }

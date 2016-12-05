@@ -29,16 +29,16 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
 
-        for (int appWidgetId :  appWidgetIds) {
+        for (int appWidgetId : appWidgetIds) {
 
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
             // Create an Intent to launch MainActivity
             Intent intent;
-            if(!GeneralUtils.isEmpty(GeneralUtils.getUid())){
+            if (!GeneralUtils.isEmpty(GeneralUtils.getUid())) {
                 intent = new Intent(context, MainActivity.class);
                 Log.d("@@@", "onUpdate: MainActivity");
-            }else{
+            } else {
                 intent = new Intent(context, LoginActivity.class);
                 Log.d("@@@", "onUpdate: LoginActivity");
             }
@@ -58,7 +58,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
             remoteViews.setEmptyView(R.id.widget_list, R.id.ll_no_meetings);
 
 
-            appWidgetManager.updateAppWidget(appWidgetId , remoteViews);
+            appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
         }
 
 

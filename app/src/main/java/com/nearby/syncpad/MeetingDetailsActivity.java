@@ -243,19 +243,19 @@ public class MeetingDetailsActivity extends BaseActivity implements LoaderManage
 
     private void createShareChooser() {
 
-        String venue , agenda , notes ;
+        String venue, agenda, notes;
         venue = !GeneralUtils.isEmpty(mMeeting.getMeetingVenue()) ? mMeeting.getMeetingVenue() : "NA";
-        agenda =  !GeneralUtils.isEmpty(mMeeting.getMeetingAgenda()) ? mMeeting.getMeetingAgenda() : "NA";
-        notes =  !GeneralUtils.isEmpty(mMeeting.getMeetingNotes())? mMeeting.getMeetingNotes().replace("||", "\n") : "";
+        agenda = !GeneralUtils.isEmpty(mMeeting.getMeetingAgenda()) ? mMeeting.getMeetingAgenda() : "NA";
+        notes = !GeneralUtils.isEmpty(mMeeting.getMeetingNotes()) ? mMeeting.getMeetingNotes().replace("||", "\n") : "";
 
         String shareBody = mMeeting.getMeetingDate() + " at " + mMeeting.getMeetingTime() + "\n" +
-                "Venue : "+venue +"\n"+ "Agenda : "+ agenda +"\n"+ "Points : " + notes;
+                "Venue : " + venue + "\n" + "Agenda : " + agenda + "\n" + "Points : " + notes;
 
-        Log.d(TAG, "createShareChooser: "+shareBody);
+        Log.d(TAG, "createShareChooser: " + shareBody);
 
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "MOM of "+mMeeting.getMeetingName());
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "MOM of " + mMeeting.getMeetingName());
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
         startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_via)));
     }

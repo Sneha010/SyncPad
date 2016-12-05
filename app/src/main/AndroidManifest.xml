@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -27,7 +27,7 @@
         <activity
             android:name=".ActiveMeetingActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask" />
 
         <activity
             android:name=".MainActivity"
@@ -43,7 +43,7 @@
         <activity
             android:name=".MeetingDetailsActivity"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -54,7 +54,7 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
-            </activity>
+        </activity>
 
         <meta-data
             android:name="com.google.android.nearby.messages.API_KEY"
@@ -71,13 +71,15 @@
             android:authorities="com.nearby.syncpad.contentprovider"
             android:exported="false" />
 
-        <receiver android:name=".widget.MyAppWidgetProvider"
+        <receiver
+            android:name=".widget.MyAppWidgetProvider"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.nearby.syncpad.ACTION_DATA_UPDATED" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
+            <meta-data
+                android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info_detail" />
         </receiver>
 

@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class DateTimeUtils {
 
-    private static final String DATE_FORMAT ="dd/MM/yyyy";
+    private static final String DATE_FORMAT = "dd/MM/yyyy";
 
     private static final String TIME_FORMAT = "hh:mm aa";
 
@@ -63,7 +63,7 @@ public class DateTimeUtils {
 
     public static long getTimeInMillis(String date, String time) {
 
-        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT+" "+TIME_FORMAT);
+        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT + " " + TIME_FORMAT);
         try {
             Date dateNew = format.parse(date + " " + time);
             Calendar calendar = Calendar.getInstance();
@@ -77,7 +77,7 @@ public class DateTimeUtils {
 
     public static String getFormattedDate(String date) {
 
-        Date actualDateFormat ;
+        Date actualDateFormat;
 
         SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
         try {

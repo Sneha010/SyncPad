@@ -106,7 +106,7 @@ public class ActiveMeetingActivity extends BaseActivity
     private ArrayList<String> noteList = new ArrayList<>();
     private ArrayList<String> participantNameList = new ArrayList<>();
     private MessageListener mMessageListener;
-    private HashMap<String,String> mLatestMessages = new HashMap<>();
+    private HashMap<String, String> mLatestMessages = new HashMap<>();
     private boolean isMeetingActive;
 
 
@@ -151,7 +151,7 @@ public class ActiveMeetingActivity extends BaseActivity
     }
 
     @OnClick(R.id.startMeetingText)
-    public void startOrStopMeeting(View view){
+    public void startOrStopMeeting(View view) {
         if (((TextView) view).getText().equals(getString(R.string.stop_meeting))) {
             mWakeLock.release();
             stopMeeting();
@@ -254,8 +254,7 @@ public class ActiveMeetingActivity extends BaseActivity
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(getString(R.string.confirm_end_meeting)).setPositiveButton(getString(R.string.yes), dialogClickListener)
                     .setNegativeButton(getString(R.string.no), dialogClickListener).show();
-        }
-        else{
+        } else {
             isMeetingActive = false;
             finish();
         }
@@ -314,30 +313,30 @@ public class ActiveMeetingActivity extends BaseActivity
             public void onFound(final Message message) {
 
 
-                        Log.i(TAG, "setMessageListener called");
+                Log.i(TAG, "setMessageListener called");
 
-                        //get message from this, use it later to get profile data and other stuff
-                        Participant participant = Participant.fromNearbyMessage(message);
-                        participant.setToWhom(Constants.FROM_OTHER);
+                //get message from this, use it later to get profile data and other stuff
+                Participant participant = Participant.fromNearbyMessage(message);
+                participant.setToWhom(Constants.FROM_OTHER);
 
-                        if (participantListFragment.isAdded() && (participant.getAttendance() != null
-                                && participant.getAttendance().equals(Constants.PRESENT))) {
-                            Log.i(TAG, "participant addded");
-                            GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, participant.getName());
-                            participantListFragment.addParticipant(participant);
-                            updateParticipantlist(participant);
-                        } else {
-                            if(mLatestMessages.get(participant.getName()) == null || !mLatestMessages.get(participant.getName()).equals(participant.getMeetingNotes())){
-                                mLatestMessages.put(participant.getName() , participant.getMeetingNotes());
-                                noteList.add(participant.getMeetingNotes());
-                                mRecyclerView.scrollToPosition(noteList.size()-1);
-                                adapter.updateList(participant);
-                            }else{
-                                Log.d(TAG, "Repeated message ");
-                            }
-                        }
+                if (participantListFragment.isAdded() && (participant.getAttendance() != null
+                        && participant.getAttendance().equals(Constants.PRESENT))) {
+                    Log.i(TAG, "participant addded");
+                    GeneralUtils.displayCustomToast(ActiveMeetingActivity.this, participant.getName());
+                    participantListFragment.addParticipant(participant);
+                    updateParticipantlist(participant);
+                } else {
+                    if (mLatestMessages.get(participant.getName()) == null || !mLatestMessages.get(participant.getName()).equals(participant.getMeetingNotes())) {
+                        mLatestMessages.put(participant.getName(), participant.getMeetingNotes());
+                        noteList.add(participant.getMeetingNotes());
+                        mRecyclerView.scrollToPosition(noteList.size() - 1);
+                        adapter.updateList(participant);
+                    } else {
+                        Log.d(TAG, "Repeated message ");
+                    }
+                }
 
-                        publish_MyProfile();
+                publish_MyProfile();
 
             }
 
@@ -375,11 +374,12 @@ public class ActiveMeetingActivity extends BaseActivity
             if (!gotSameProfile) {
                 participantNameList.add(participant.getName());
             }
-        }else{
+        } else {
             participantNameList.add(participant.getName());
         }
 
     }
+
     private void addParticipantListFragment() {
 
         participantListFragment = ParticipantsFragment.newInstance();
@@ -398,7 +398,7 @@ public class ActiveMeetingActivity extends BaseActivity
         chatParticipantsList = new ArrayList<>();
         adapter = new ChatListItemAdapter(ActiveMeetingActivity.this, chatParticipantsList);
         mRecyclerView.setAdapter(adapter);
-       mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     }
 
@@ -417,7 +417,7 @@ public class ActiveMeetingActivity extends BaseActivity
             participant.setToWhom(Constants.TO_ME);
 
             myNotes = participant.newNearbyMessage();
-            mRecyclerView.scrollToPosition(noteList.size()-1);
+            mRecyclerView.scrollToPosition(noteList.size() - 1);
             adapter.updateList(participant);
 
             edtMeetingNotes.setText("");
@@ -710,9 +710,9 @@ public class ActiveMeetingActivity extends BaseActivity
 
         super.onStop();
 
-        if(isMeetingActive)
+        if (isMeetingActive)
             mNotificationHelper.showOnGoingNotification(getString(R.string.app_name),
-                    getString(R.string.notification_line1) +" "+mCurrentMeeting.getMeetingName()+" "+getString(R.string.notification_line2));
+                    getString(R.string.notification_line1) + " " + mCurrentMeeting.getMeetingName() + " " + getString(R.string.notification_line2));
     }
 
 
@@ -728,7 +728,7 @@ public class ActiveMeetingActivity extends BaseActivity
 
         }
         try {
-            if (mWakeLock!=null && mWakeLock.isHeld())
+            if (mWakeLock != null && mWakeLock.isHeld())
                 mWakeLock.release();
         } catch (Throwable th) {
             th.printStackTrace();
@@ -758,7 +758,7 @@ public class ActiveMeetingActivity extends BaseActivity
     @Override
     public void onBackPressed() {
 
-        if(isMeetingActive){
+        if (isMeetingActive) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(getString(R.string.confirm_end_meeting)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
@@ -774,7 +774,7 @@ public class ActiveMeetingActivity extends BaseActivity
                             dialogInterface.dismiss();
                         }
                     }).show();
-        }else{
+        } else {
             finish();
         }
 

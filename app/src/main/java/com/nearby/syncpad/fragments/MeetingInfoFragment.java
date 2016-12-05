@@ -79,28 +79,28 @@ public class MeetingInfoFragment extends Fragment {
     private void showMeetingInfo() {
 
         if (mMeeting != null) {
-            if(!GeneralUtils.isEmpty(mMeeting.getMeetingDate()))
+            if (!GeneralUtils.isEmpty(mMeeting.getMeetingDate()))
                 tvDateValue.setText(DateTimeUtils.getFormattedDate(mMeeting.getMeetingDate()));
             else
                 tvDateValue.setText(getString(R.string.na));
 
-            if(!GeneralUtils.isEmpty(mMeeting.getMeetingTime()))
+            if (!GeneralUtils.isEmpty(mMeeting.getMeetingTime()))
                 tvTimeValue.setText(mMeeting.getMeetingTime());
             else
                 tvTimeValue.setText(getString(R.string.na));
 
-            if(!GeneralUtils.isEmpty(mMeeting.getMeetingVenue()))
+            if (!GeneralUtils.isEmpty(mMeeting.getMeetingVenue()))
                 tvVenueValue.setText(mMeeting.getMeetingVenue());
             else
                 tvVenueValue.setText(getString(R.string.na));
 
-            if(!GeneralUtils.isEmpty(mMeeting.getMeetingAgenda()))
+            if (!GeneralUtils.isEmpty(mMeeting.getMeetingAgenda()))
                 tvAgendaValue.setText(mMeeting.getMeetingAgenda());
             else
                 tvAgendaValue.setText(getString(R.string.na));
 
-            if(!GeneralUtils.isEmpty(mMeeting.getMeetingParticipants()))
-                tvAttendeesValue.setText(mMeeting.getMeetingParticipants().replace("||","\n"));
+            if (!GeneralUtils.isEmpty(mMeeting.getMeetingParticipants()))
+                tvAttendeesValue.setText(mMeeting.getMeetingParticipants().replace("||", "\n"));
             else
                 tvAttendeesValue.setText(getString(R.string.na));
 

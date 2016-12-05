@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class LoginActivity extends BaseActivity{
+public class LoginActivity extends BaseActivity {
 
     private static final String TAG = "LoginActivity";
 
@@ -88,7 +88,7 @@ public class LoginActivity extends BaseActivity{
         if (mAuth.getCurrentUser() != null) {
             isAlreadyLogin = true;
             onAuthSuccess(mAuth.getCurrentUser());
-        }else{
+        } else {
             isAlreadyLogin = false;
         }
     }
@@ -166,16 +166,16 @@ public class LoginActivity extends BaseActivity{
     private void onAuthSuccess(FirebaseUser user) {
         String username = usernameFromEmail(user.getEmail());
 
-        if(!isAlreadyLogin){
+        if (!isAlreadyLogin) {
             //Save username and email in my profile shared preferences
             saveBasicInfoToProfile(user, username);
         }
         // Write new user
         writeNewUser(user.getUid(), username, user.getEmail());
 
-        if(!mProfileStore.isFirstLaunchDone()){
+        if (!mProfileStore.isFirstLaunchDone()) {
             startActivity(new Intent(LoginActivity.this, MyProfileActivity.class));
-        }else{
+        } else {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
         }
 

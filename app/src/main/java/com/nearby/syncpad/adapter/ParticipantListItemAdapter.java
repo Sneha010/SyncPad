@@ -59,7 +59,7 @@ public class ParticipantListItemAdapter extends RecyclerView.Adapter<Participant
         if (mParticipants.get(position).getImageBytes() != null)
             holder.profileImage.setImageDrawable(GeneralUtils.getImageFromByteArray(mParticipants.get(position).getImageBytes()));
         else
-            holder.profileImage.setImageDrawable(ContextCompat.getDrawable(mContext , R.drawable.default_user));
+            holder.profileImage.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_user));
 
         String role = "", org = "";
         if (mParticipants.get(position).getRole() != null) {
@@ -71,10 +71,10 @@ public class ParticipantListItemAdapter extends RecyclerView.Adapter<Participant
 
         }
 
-        if(!GeneralUtils.isEmpty(role) || !GeneralUtils.isEmpty(org)){
+        if (!GeneralUtils.isEmpty(role) || !GeneralUtils.isEmpty(org)) {
             holder.personOrgAndRole.setVisibility(View.VISIBLE);
-            holder.personOrgAndRole.setText(role +", "+org);
-        }else{
+            holder.personOrgAndRole.setText(role + ", " + org);
+        } else {
             holder.personOrgAndRole.setVisibility(View.GONE);
         }
 
@@ -99,7 +99,7 @@ public class ParticipantListItemAdapter extends RecyclerView.Adapter<Participant
         }
         if (!gotSameProfile) {
             mParticipants.add(participant);
-            notifyItemChanged(mParticipants.size()-1);
+            notifyItemChanged(mParticipants.size() - 1);
         }
     }
 

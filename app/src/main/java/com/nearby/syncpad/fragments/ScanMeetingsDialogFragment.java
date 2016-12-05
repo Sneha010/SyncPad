@@ -162,7 +162,6 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
     }
 
 
-
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.i(TAG, "connection to GoogleApiClient failed");
@@ -178,19 +177,19 @@ public class ScanMeetingsDialogFragment extends AppCompatDialogFragment
             public void onFound(final Message message) {
 
 
-                        Log.i(TAG, "setMessageListener called");
+                Log.i(TAG, "setMessageListener called");
 
-                        //get message from this, use it later to get profile data and other stuff
-                        Participant participant = Participant.fromNearbyMessage(message);
+                //get message from this, use it later to get profile data and other stuff
+                Participant participant = Participant.fromNearbyMessage(message);
 
-                        if (participant.getMeeting() != null && participant.isIsHost()) {
+                if (participant.getMeeting() != null && participant.isIsHost()) {
 
-                            GeneralUtils.displayCustomToast(getActivity(), participant.getMeeting().getMeetingName());
+                    GeneralUtils.displayCustomToast(getActivity(), participant.getMeeting().getMeetingName());
 
-                            mAdapter.updateList(participant);
+                    mAdapter.updateList(participant);
 
-                            showList();
-                        }
+                    showList();
+                }
 
             }
 

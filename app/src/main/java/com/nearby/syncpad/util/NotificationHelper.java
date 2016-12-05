@@ -21,7 +21,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 public class NotificationHelper {
 
     public static final int NOTIFICATION_ID = 123;
-    private  Application mApplication;
+    private Application mApplication;
 
     public NotificationHelper(Application application) {
 
@@ -57,10 +57,10 @@ public class NotificationHelper {
                 .setContentIntent(pendingIntent)
                 .setStyle(bigTextStyle)
                 .setAutoCancel(true)
-                .setColor(ContextCompat.getColor(mApplication ,R.color.colorPrimary))
+                .setColor(ContextCompat.getColor(mApplication, R.color.colorPrimary))
                 .setOngoing(true)
                 .build();
-        notification.flags =  Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
+        notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
 
 
         mNotifyMgr.notify(NOTIFICATION_ID, notification);

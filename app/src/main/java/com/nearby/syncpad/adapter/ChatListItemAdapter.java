@@ -89,7 +89,7 @@ public class ChatListItemAdapter extends RecyclerView.Adapter<ChatListItemAdapte
         }
         if (!gotSameProfile) {
             mParticipants.add(participant);
-           notifyItemChanged(mParticipants.size()-1);
+            notifyItemChanged(mParticipants.size() - 1);
         }
     }
 

@@ -87,20 +87,19 @@ public class MeetingNotesFragment extends Fragment {
                 textView.setText(noteList[i]);
                 textView.setTypeface(Typeface.createFromAsset(getContext().getAssets(), Constants.GOTHAMBOOK_FONT));
 
-                if(i%2==0)
-                    textView.setBackground(ContextCompat.getDrawable(getActivity() , R.drawable.notes_bg_pink));
+                if (i % 2 == 0)
+                    textView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.notes_bg_pink));
                 else
-                    textView.setBackground(ContextCompat.getDrawable(getActivity() , R.drawable.notes_bg_blue));
-
+                    textView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.notes_bg_blue));
 
 
                 LinearLayout.LayoutParams params =
                         new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0 , 8 ,0,0);
-                textView.setPadding(17,17,17,17);
+                params.setMargins(0, 8, 0, 0);
+                textView.setPadding(17, 17, 17, 17);
                 textView.setTextSize(16);
-                textView.setTextColor(ContextCompat.getColor(getActivity() , R.color.primaryTextColor));
+                textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryTextColor));
                 textView.setLayoutParams(params);
                 llContainer.addView(textView, params);
             }

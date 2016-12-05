@@ -25,7 +25,7 @@ public class RemoteEndpointUtil {
     public static JSONArray fetchJsonArray(String user_id) {
         String itemsJson = null;
         try {
-            itemsJson = fetchPlainText(Config.BASE_URL , user_id);
+            itemsJson = fetchPlainText(Config.BASE_URL, user_id);
         } catch (IOException e) {
             Log.e(TAG, "Error fetching items JSON", e);
             return null;
@@ -44,7 +44,7 @@ public class RemoteEndpointUtil {
         return null;
     }
 
-    static String fetchPlainText(URL url , String user_id) throws IOException {
+    static String fetchPlainText(URL url, String user_id) throws IOException {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()

@@ -152,6 +152,9 @@
     <string name="close_button">Close button</string>
     <string name="notification_line1">"Your meeting "</string>
     <string name="notification_line2">" is active. Tap to resume"</string>
+    <string name="profile">Profile</string>
+    <string name="share">Share</string>
+    <string name="camera">Camera</string>
 
 
 </resources>

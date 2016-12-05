@@ -24,8 +24,7 @@
             android:textSize="17sp"
             android:textStyle="bold"
             fontPath="fonts/gothamblack.ttf"
-            android:textColor="@color/colorAccent"
-            />
+            android:textColor="@color/colorAccent" />
 
 
         <TextView
@@ -35,8 +34,7 @@
             android:layout_marginTop="3dp"
             android:textSize="16sp"
             android:textColor="@color/secondaryTextColor"
-            android:lineSpacingMultiplier="1.2"
-            />
+            android:lineSpacingMultiplier="1.2" />
 
     </LinearLayout>
 
@@ -49,8 +47,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:orientation="vertical"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
 
         <TextView
@@ -61,8 +58,7 @@
             android:textStyle="bold"
             android:layout_gravity="right"
             fontPath="fonts/gothamblack.ttf"
-            android:textColor="@color/colorPrimary"
-            />
+            android:textColor="@color/colorPrimary" />
 
         <TextView
             android:id="@+id/meetingNotes_mine"
@@ -71,8 +67,7 @@
             android:layout_marginTop="3dp"
             android:gravity="right"
             android:textColor="@color/secondaryTextColor"
-            android:lineSpacingMultiplier="1.2"
-            />
+            android:lineSpacingMultiplier="1.2" />
 
     </LinearLayout>
 

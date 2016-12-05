@@ -167,7 +167,7 @@ public class AddMeetingDialogFragment extends AppCompatDialogFragment {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                edtMeetingTime.setText(DateTimeUtils.getTimeUsingData(hourOfDay,minute));
+                edtMeetingTime.setText(DateTimeUtils.getTimeUsingData(hourOfDay, minute));
             }
         }, hour, minute, false);
         timePickerDialog.show();

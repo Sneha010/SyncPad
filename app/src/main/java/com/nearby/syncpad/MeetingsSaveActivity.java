@@ -109,13 +109,13 @@ public class MeetingsSaveActivity extends BaseActivity {
 
         if (mMeeting != null) {
 
-            if(!GeneralUtils.isEmpty(mMeeting.getMeetingAgenda()))
+            if (!GeneralUtils.isEmpty(mMeeting.getMeetingAgenda()))
                 mTvAgendaValue.setText(mMeeting.getMeetingAgenda());
             else
                 mTvAgendaValue.setText(getString(R.string.na));
 
-            if(!GeneralUtils.isEmpty(mMeeting.getMeetingParticipants()))
-                mTvAttendeesValue.setText(mMeeting.getMeetingParticipants().replace("||","\n"));
+            if (!GeneralUtils.isEmpty(mMeeting.getMeetingParticipants()))
+                mTvAttendeesValue.setText(mMeeting.getMeetingParticipants().replace("||", "\n"));
             else
                 mTvAttendeesValue.setText(getString(R.string.na));
 
@@ -139,21 +139,20 @@ public class MeetingsSaveActivity extends BaseActivity {
                 textView.setText(noteList[i]);
                 textView.setTypeface(Typeface.createFromAsset(getAssets(), Constants.GOTHAMBOOK_FONT));
 
-                if(i%2==0)
-                    textView.setBackground(ContextCompat.getDrawable(this , R.drawable.notes_bg_pink));
+                if (i % 2 == 0)
+                    textView.setBackground(ContextCompat.getDrawable(this, R.drawable.notes_bg_pink));
                 else
-                    textView.setBackground(ContextCompat.getDrawable(this , R.drawable.notes_bg_blue));
-
+                    textView.setBackground(ContextCompat.getDrawable(this, R.drawable.notes_bg_blue));
 
 
                 LinearLayout.LayoutParams params =
                         new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0 , 8 ,0,0);
-                textView.setPadding(17,17,17,17);
+                params.setMargins(0, 8, 0, 0);
+                textView.setPadding(17, 17, 17, 17);
                 textView.setTextSize(16);
-                textView.setLineSpacing(0,1.2f);
-                textView.setTextColor(ContextCompat.getColor(this , R.color.primaryTextColor));
+                textView.setLineSpacing(0, 1.2f);
+                textView.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
                 textView.setLayoutParams(params);
                 mLlContainer.addView(textView, params);
             }
@@ -229,7 +228,7 @@ public class MeetingsSaveActivity extends BaseActivity {
                 mMeeting.getMeetingTime()));
         Map<String, Object> postValues = mMeeting.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/"+Constants.USER_MEETINGS +"/"+ userId + "/" + key, postValues);
+        childUpdates.put("/" + Constants.USER_MEETINGS + "/" + userId + "/" + key, postValues);
         mDatabase.updateChildren(childUpdates);
 
         addMeetingToDb(mMeeting);
@@ -237,18 +236,18 @@ public class MeetingsSaveActivity extends BaseActivity {
     }
 
     private void addMeetingToDb(Meeting meeting) {
-            ArrayList<ContentProviderOperation> cpo = new ArrayList<ContentProviderOperation>();
+        ArrayList<ContentProviderOperation> cpo = new ArrayList<ContentProviderOperation>();
 
-            Uri dirUri = ItemsContract.Items.buildDirUri();
+        Uri dirUri = ItemsContract.Items.buildDirUri();
 
-            ContentValues values = GeneralUtils.getContentValues(meeting);
+        ContentValues values = GeneralUtils.getContentValues(meeting);
 
-            cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
-            try {
-                getContentResolver().applyBatch(ItemsContract.CONTENT_AUTHORITY, cpo);
-            } catch (RemoteException | OperationApplicationException e) {
-                e.printStackTrace();
-            }
+        cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
+        try {
+            getContentResolver().applyBatch(ItemsContract.CONTENT_AUTHORITY, cpo);
+        } catch (RemoteException | OperationApplicationException e) {
+            e.printStackTrace();
+        }
 
 
     }

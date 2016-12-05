@@ -22,7 +22,7 @@ public class ProfileStore {
     @Inject
     public ProfileStore(Application context) {
 
-        this.mContext =  context;
+        this.mContext = context;
     }
 
 
@@ -53,27 +53,27 @@ public class ProfileStore {
 
     }
 
-    public void clearProfileData(){
+    public void clearProfileData() {
 
         getSharedPreference().edit().putString(MY_PROFILE, null).commit();
     }
 
-    public void firstLaunchDone(boolean data){
+    public void firstLaunchDone(boolean data) {
 
         getSharedPreference().edit().putBoolean(IS_FIRST_LAUNCH, data).commit();
     }
 
 
-    public boolean isFirstLaunchDone(){
+    public boolean isFirstLaunchDone() {
         return getSharedPreference().getBoolean(IS_FIRST_LAUNCH, false);
     }
 
-    public void setMeetingDataAvailable(boolean data){
+    public void setMeetingDataAvailable(boolean data) {
 
         getSharedPreference().edit().putBoolean(IS_MEETINGDATA_AVAILABLE, data).commit();
     }
 
-    public boolean isMeetingDataAvailable(){
+    public boolean isMeetingDataAvailable() {
 
         return getSharedPreference().getBoolean(IS_MEETINGDATA_AVAILABLE, false);
     }

@@ -108,7 +108,7 @@ public class MyProfileActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myprofile_layout);
-        mUnbinder =  ButterKnife.bind(this);
+        mUnbinder = ButterKnife.bind(this);
 
         ((SyncPadApplication) getApplication()).getMyApplicationComponent().inject(this);
 
@@ -170,12 +170,12 @@ public class MyProfileActivity extends BaseActivity {
             myName.setText(participant.getName());
             myEmailId.setText(participant.getEmailAddress());
 
-            if(!GeneralUtils.isEmpty(participant.getRole()))
+            if (!GeneralUtils.isEmpty(participant.getRole()))
                 myRole.setText(participant.getRole());
-            if(!GeneralUtils.isEmpty(participant.getOrganisation()))
+            if (!GeneralUtils.isEmpty(participant.getOrganisation()))
                 myOrg.setText(participant.getOrganisation());
 
-            if(!GeneralUtils.isEmpty(participant.getImageBytes())){
+            if (!GeneralUtils.isEmpty(participant.getImageBytes())) {
                 mProfileBitmap = mImageUtility.getBitmapFromImageBytes(participant.getImageBytes());
                 ivPhoto.setImageBitmap(mProfileBitmap);
             }
@@ -185,7 +185,7 @@ public class MyProfileActivity extends BaseActivity {
     }
 
     @OnClick(R.id.tvLogout)
-    public void logOut(View view){
+    public void logOut(View view) {
         mAuth.signOut();
     }
 
@@ -222,11 +222,11 @@ public class MyProfileActivity extends BaseActivity {
 
             mProfileBitmap.recycle();
 
-        }else{
+        } else {
 
             mProfileBitmap = BitmapFactory.decodeResource(getResources(),
                     R.drawable.default_user);
-            profileImageBytes = mImageUtility.getProfileImageBytes(mProfileBitmap );
+            profileImageBytes = mImageUtility.getProfileImageBytes(mProfileBitmap);
 
             mProfileBitmap.recycle();
         }
@@ -244,9 +244,9 @@ public class MyProfileActivity extends BaseActivity {
 
     }
 
-    private void launchMainActivity(){
+    private void launchMainActivity() {
 
-        if(!mProfileStore.isFirstLaunchDone()){
+        if (!mProfileStore.isFirstLaunchDone()) {
             mProfileStore.firstLaunchDone(true);
             startActivity(new Intent(MyProfileActivity.this, MainActivity.class));
         }
@@ -302,7 +302,7 @@ public class MyProfileActivity extends BaseActivity {
             }
             if (!(isFinishing()) && !GeneralUtils.isEmpty(alertMsg)) {
 
-               GeneralUtils.displayCustomToast(this, alertMsg);
+                GeneralUtils.displayCustomToast(this, alertMsg);
             }
 
         } catch (OutOfMemoryError e) {
@@ -347,7 +347,7 @@ public class MyProfileActivity extends BaseActivity {
 
                 if (err) {
 
-                    if(!GeneralUtils.isEmpty(MyProfileActivity.this))
+                    if (!GeneralUtils.isEmpty(MyProfileActivity.this))
                         GeneralUtils.displayCustomToast(MyProfileActivity.this, errMessage);
 
                 } else {
@@ -396,34 +396,34 @@ public class MyProfileActivity extends BaseActivity {
 
     private void performAction(final int via) {
 
-                PermissionRequest.inside(this)
-                        .withRequestId(getString(R.string.gallery))
-                        .forPermissions(new MPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
-                                getString(R.string.photo_permission)))
-                        .request(new PermissionRequest.GrantPermissionListener() {
-                            @Override
-                            public void grantedPermission(List<String> permissions) {
+        PermissionRequest.inside(this)
+                .withRequestId(getString(R.string.gallery))
+                .forPermissions(new MPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        getString(R.string.photo_permission)))
+                .request(new PermissionRequest.GrantPermissionListener() {
+                    @Override
+                    public void grantedPermission(List<String> permissions) {
 
-                                switch (via) {
-                                    case 0: {
+                        switch (via) {
+                            case 0: {
 
 
-                                        startGallery();
-                                        break;
-                                    }
-
-                                    case 1:
-                                        startCamera();
-                                }
+                                startGallery();
+                                break;
                             }
 
-                            @Override
-                            public void rejected(List<String> permissions) {
+                            case 1:
+                                startCamera();
+                        }
+                    }
 
-                                // Do nothing or show error
+                    @Override
+                    public void rejected(List<String> permissions) {
 
-                            }
-                        });
+                        // Do nothing or show error
+
+                    }
+                });
 
     }
 

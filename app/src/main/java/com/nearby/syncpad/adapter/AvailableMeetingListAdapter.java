@@ -63,7 +63,7 @@ public class AvailableMeetingListAdapter extends RecyclerView.Adapter<AvailableM
 
     }
 
-    public interface OnMeetingItemSelectedListener{
+    public interface OnMeetingItemSelectedListener {
         void onMeetingItemSelected(Participant meeting);
     }
 
@@ -75,7 +75,7 @@ public class AvailableMeetingListAdapter extends RecyclerView.Adapter<AvailableM
     public void updateList(Participant meeting) {
 
         meetingHosts.add(meeting);
-        notifyItemChanged(meetingHosts.size()-1);
+        notifyItemChanged(meetingHosts.size() - 1);
 
     }
 

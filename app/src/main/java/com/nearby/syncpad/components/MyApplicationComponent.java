@@ -20,7 +20,7 @@ import dagger.Component;
  */
 
 @Singleton
-@Component(modules = {MyApplicationModule.class, FirebaseModule.class , GoogleApiModule.class})
+@Component(modules = {MyApplicationModule.class, FirebaseModule.class, GoogleApiModule.class})
 public interface MyApplicationComponent {
 
     void inject(LoginActivity loginActivity);

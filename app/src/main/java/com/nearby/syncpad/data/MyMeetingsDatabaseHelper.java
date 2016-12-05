@@ -25,7 +25,7 @@ public class MyMeetingsDatabaseHelper extends SQLiteOpenHelper {
                 + ItemsContract.ItemsColumns.MEETING_NOTES + " TEXT NOT NULL,"
                 + ItemsContract.ItemsColumns.MEETING_PARTICIPANTS + " TEXT NOT NULL,"
                 + ItemsContract.ItemsColumns.MEETING_TIMESTAMP + " INTEGER"
-                + ")" );
+                + ")");
     }
 
     @Override

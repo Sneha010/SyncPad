@@ -19,7 +19,7 @@ public class FirebaseModule {
 
     @Provides
     @Singleton
-    DatabaseReference provideFirebaseDatabase(){
+    DatabaseReference provideFirebaseDatabase() {
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseDatabase.setPersistenceEnabled(true);
@@ -28,7 +28,7 @@ public class FirebaseModule {
 
     @Provides
     @Singleton
-    FirebaseAuth provideFirebaseAuth(){
+    FirebaseAuth provideFirebaseAuth() {
         return FirebaseAuth.getInstance();
     }
 }

@@ -27,8 +27,8 @@ public class GoogleApiModule {
     @Provides
     @Singleton
     @Named("Scan")
-    Strategy provideSubscribeStrategy(){
-       return new Strategy.Builder()
+    Strategy provideSubscribeStrategy() {
+        return new Strategy.Builder()
                 .setTtlSeconds(Strategy.TTL_SECONDS_MAX)
                 .setDiscoveryMode(Strategy.DISCOVERY_MODE_SCAN)
                 .setDistanceType(Strategy.DISTANCE_TYPE_EARSHOT).build();
@@ -37,7 +37,7 @@ public class GoogleApiModule {
     @Provides
     @Singleton
     @Named("Publish")
-    Strategy providePublishStrategy(){
+    Strategy providePublishStrategy() {
         return new Strategy.Builder()
                 .setTtlSeconds(Strategy.TTL_SECONDS_MAX)
                 .setDiscoveryMode(Strategy.DISCOVERY_MODE_BROADCAST)
@@ -46,8 +46,8 @@ public class GoogleApiModule {
 
     @Provides
     @Singleton
-    SubscribeOptions provideSubscribeOptions(@Named("Scan") Strategy subscriptionStrategy){
-       return new SubscribeOptions.Builder()
+    SubscribeOptions provideSubscribeOptions(@Named("Scan") Strategy subscriptionStrategy) {
+        return new SubscribeOptions.Builder()
                 .setStrategy(subscriptionStrategy)
                 .setCallback(new SubscribeCallback() {
                     @Override
@@ -60,7 +60,7 @@ public class GoogleApiModule {
 
     @Provides
     @Singleton
-    PublishOptions providePublishOptions(@Named("Publish") Strategy publishStrategy){
+    PublishOptions providePublishOptions(@Named("Publish") Strategy publishStrategy) {
         return new PublishOptions.Builder()
                 .setStrategy(publishStrategy)
                 .setCallback(new PublishCallback() {

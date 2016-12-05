@@ -48,12 +48,12 @@ public class ResetPasswordActivity extends BaseActivity {
     }
 
     @OnClick(R.id.btn_back)
-    public void onBackButtonClicked(){
+    public void onBackButtonClicked() {
         finish();
     }
 
     @OnClick(R.id.btn_reset_password)
-    public void onResetButtonClick(View view){
+    public void onResetButtonClick(View view) {
         String email = inputEmail.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {

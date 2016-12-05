@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
     android:layout_marginBottom="10dp">
@@ -10,14 +11,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tvMeetingTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:textColor="@color/primaryTextColor"
-        android:contentDescription="@string/meeting_title"
-        />
+        <TextView
+            android:id="@+id/tvMeetingTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:textColor="@color/primaryTextColor"
+            android:contentDescription="@string/meeting_title" />
 
         <TextView
             android:id="@+id/tvInitiatedBy"
@@ -28,9 +28,8 @@
             android:textColor="@color/colorPrimary"
             android:layout_below="@+id/tvMeetingTitle"
             android:text="@string/initiated_by"
-            android:contentDescription="@string/initiated_by_description"
-            />
+            android:contentDescription="@string/initiated_by_description" />
 
-        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -13,7 +13,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  * Created by Sneha on 11/19/2016.
  */
 
-public class SyncPadApplication extends Application{
+public class SyncPadApplication extends Application {
 
     private MyApplicationComponent mMyApplicationComponent;
 

@@ -84,7 +84,7 @@ public class MainActivity extends BaseActivity implements
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(!mProfileStore.isMeetingDataAvailable())
+                if (!mProfileStore.isMeetingDataAvailable())
                     refresh();
                 else
                     swipeRefreshLayout.setRefreshing(false);
@@ -108,7 +108,7 @@ public class MainActivity extends BaseActivity implements
         super.onStart();
         Log.d("@@@", "onStart: mainActivity");
 
-        if(!mProfileStore.isMeetingDataAvailable()){
+        if (!mProfileStore.isMeetingDataAvailable()) {
             swipeRefreshLayout.setRefreshing(true);
             refresh();
         }
@@ -122,8 +122,6 @@ public class MainActivity extends BaseActivity implements
         super.onStop();
         unregisterReceiver(mRefreshingReceiver);
     }
-
-
 
 
     private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
@@ -179,8 +177,8 @@ public class MainActivity extends BaseActivity implements
         addMeetingDialogFragment.show(ft, getString(R.string.meeting_dialog));
     }
 
-    private void closeFabMenu(){
-       floatingActionMenu.close(true);
+    private void closeFabMenu() {
+        floatingActionMenu.close(true);
     }
 
     @OnClick(R.id.menu_item2)
@@ -201,13 +199,12 @@ public class MainActivity extends BaseActivity implements
     }
 
 
-
-    private void displayNoNnotes(){
+    private void displayNoNnotes() {
         llNoMeetingsAdded.setVisibility(View.VISIBLE);
         swipeRefreshLayout.setVisibility(View.GONE);
     }
 
-    private void displayMeetingList(){
+    private void displayMeetingList() {
         llNoMeetingsAdded.setVisibility(View.GONE);
         swipeRefreshLayout.setVisibility(View.VISIBLE);
     }
@@ -234,10 +231,9 @@ public class MainActivity extends BaseActivity implements
             swipeRefreshLayout.setRefreshing(mIsRefreshing);
             mProfileStore.setMeetingDataAvailable(true);
 
-        }
-        else{
+        } else {
             Log.d("@@@", "onLoadFinished: cursor null");
-           mProfileStore.setMeetingDataAvailable(false);
+            mProfileStore.setMeetingDataAvailable(false);
             displayNoNnotes();
         }
 
@@ -245,7 +241,7 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        if (meetingRycyclerView != null){
+        if (meetingRycyclerView != null) {
             mProfileStore.setMeetingDataAvailable(false);
             meetingRycyclerView.setAdapter(null);
         }
