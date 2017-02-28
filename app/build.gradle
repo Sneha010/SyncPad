@@ -28,6 +28,10 @@ android {
             signingConfig signingConfigs.myConfig
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {

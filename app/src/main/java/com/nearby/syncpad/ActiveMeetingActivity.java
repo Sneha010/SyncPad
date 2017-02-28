@@ -502,6 +502,8 @@ public class ActiveMeetingActivity extends BaseActivity
      */
     private void subscribe() {
         Log.i(TAG, "subscribe called");
+        // Cannot proceed without a connected GoogleApiClient. Reconnect and execute the pending
+        // task in onConnected().
         if (!mGoogleApiClient.isConnected()) {
             if (!mGoogleApiClient.isConnecting()) {
                 mGoogleApiClient.connect();
@@ -533,6 +535,8 @@ public class ActiveMeetingActivity extends BaseActivity
      */
     private void unsubscribe() {
         Log.i(TAG, "unsubscribe called");
+        // Cannot proceed without a connected GoogleApiClient. Reconnect and execute the pending
+        // task in onConnected().
         if (!mGoogleApiClient.isConnected()) {
             if (!mGoogleApiClient.isConnecting()) {
                 mGoogleApiClient.connect();
@@ -587,6 +591,8 @@ public class ActiveMeetingActivity extends BaseActivity
 
     private void publish_MyNotes() {
         Log.i(TAG, "publish called");
+        // Cannot proceed without a connected GoogleApiClient. Reconnect and execute the pending
+        // task in onConnected().
         if (mGoogleApiClient != null && !mGoogleApiClient.isConnected()) {
             if (!mGoogleApiClient.isConnecting()) {
                 mGoogleApiClient.connect();
@@ -621,6 +627,8 @@ public class ActiveMeetingActivity extends BaseActivity
      */
     private void unpublish_MyProfile() {
         Log.i(TAG, "unpublish called");
+        // Cannot proceed without a connected GoogleApiClient. Reconnect and execute the pending
+        // task in onConnected().
         if (!mGoogleApiClient.isConnected()) {
             if (!mGoogleApiClient.isConnecting()) {
                 mGoogleApiClient.connect();
@@ -644,6 +652,8 @@ public class ActiveMeetingActivity extends BaseActivity
 
     private void unpublish_MyNotes() {
         Log.i(TAG, "unpublish called");
+        // Cannot proceed without a connected GoogleApiClient. Reconnect and execute the pending
+        // task in onConnected().
         if (!mGoogleApiClient.isConnected()) {
             if (!mGoogleApiClient.isConnecting()) {
                 mGoogleApiClient.connect();
@@ -711,6 +721,8 @@ public class ActiveMeetingActivity extends BaseActivity
         super.onDestroy();
         Log.i(TAG, "onDestroy called");
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !isChangingConfigurations()) {
+            // Using Nearby is battery intensive. To preserve battery, stop subscribing or
+            // publishing when the fragment is inactive.
             unsubscribe();
             unpublishMyData();
 
